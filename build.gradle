@@ -1,0 +1,61 @@
+import org.apache.tools.ant.filters.*
+
+apply plugin: "groovy"
+apply plugin: 'application'
+
+sourceCompatibility = "1.8"
+mainClassName = "io.infrastructor.cli.Starter"
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src/main/java']
+        }
+    }
+    test {
+        groovy {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+processResources {
+    filter ReplaceTokens, tokens: [
+        "application.version" : '0.0.1',
+        "build.number" : new Date().format("dd-MM-yyyy HH:mm")
+    ]
+}
+
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:2.4.9"
+    compile "com.beust:jcommander:1.58"
+    compile "com.jcabi:jcabi-ssh:1.5.2"
+    compile "org.apache.bval:bval-jsr:1.1.2"
+    compile "com.amazonaws:aws-java-sdk-ec2:1.11.97"
+    compile "ch.qos.logback:logback-classic:1.2.1"
+    compile "org.fusesource.jansi:jansi:1.14"
+    
+    testCompile "org.testng:testng:6.10"
+}
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useTestNG() {
+        // activate AWS tests
+        if (!project.hasProperty('testAws')) {
+            excludeGroups "aws" 
+        } else {
+            systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
+            systemProperty "awsSecretKey", project.getProperty("awsSecretKey")
+            systemProperty "awsRegion", project.getProperty("awsRegion")
+        }
+    }
+    
+    systemProperty "LOG_LEVEL", "2"
+    testLogging.showStandardStreams = true
+    maxParallelForks = 20
+}
