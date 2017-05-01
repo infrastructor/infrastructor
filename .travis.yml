@@ -21,3 +21,7 @@ deploy:
   on:
     repo: infrastructor/infrastructor
     tags: true
+cache:
+  directories:
+  - ~/.gradle/wrapper
+  - ~/.gradle/caches
