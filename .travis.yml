@@ -20,4 +20,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: infrastructor/infrastructor
-    branch: feature/travisci-release
+    branch: master
