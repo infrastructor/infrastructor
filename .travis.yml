@@ -11,6 +11,7 @@ after_success:
   - git config --global user.name "Travis CI"
   - export GIT_TAG=build-$(date "+%F-%H-%I")
   - git tag $GIT_TAG -a -m "Generated tag from TravisCI"
+  - git push origin --tags
 deploy:
   provider: releases
   api_key:
