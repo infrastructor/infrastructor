@@ -20,4 +20,3 @@ cache:
   directories:
   - ~/.gradle/wrapper
   - ~/.gradle/caches
-  
