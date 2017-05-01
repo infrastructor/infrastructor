@@ -10,7 +10,8 @@ deploy:
   provider: releases
   api_key:
     secure: HuAmDEUQlCaLdVy9wNcGNkZQLA1e1iO4hNv594DLkZ7KySHHaRGzFALP598iFuJPYctUuTiv1aFxmviRvZ7KHHJDYPbkcFqMF3Djz2r5adCWNw93MY1nhMJB+cKd/kx9ob5/nwkDl6J/E9WNHiPwbPe/DtwWH5D4j0QE2ikMXjLEW0BNR7cCY1tR7f8A0nnCH8XcxiQ7hqm/uCYUBw2podYGzPcjnTWUiOD0yzIdXZIO3Jj+wVE/zaRu+BMdHxFVLwl/9E/8Fo+I4KWl6yJlw8wpMrgvIPsCBsKKLYDVqwkkXYw+eg6HOM6XRzJonpy+N5wvZ0lhNGpQvgpeq/96c1HhEmyrKYdCdXpz/dtFYJzeqzmR0bRx1SMakxBHTpnRvYbwXBbalNaqEJAp/kOokcwoRYhLgPAsyTPQ1FrAEXjkSEo/y77OJ2klzfdIX07HFHn8LTKtFV8XAKu9gC/He5xYqqkxu1Qd/UHrBKcBde8whww1DOs1sLZkKrYaje1hJf3drd2C5I1hpZVH+AjVL5f6lU1DPZj+skvC3OX+DCGs5hevLzZyw45kYOwSV1Z2YelNAV+GcGukQVxesslB5bQDYKxWGMqUF4WWElRJvvCMoRbjWGk0MgKEoAwfdmwIm9LCkSAcm6W41K4otK86T6e3NnWFeFckMHdjM+0rBhM=
-  file: build/distributions/infrastructor.zip
+  file: ./build/distributions/infrastructor.zip
+  skip_cleanup: true
   on:
     repo: infrastructor/infrastructor
     branch: feature/travisci-release
