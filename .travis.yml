@@ -20,7 +20,7 @@ deploy:
   skip_cleanup: true
   on:
     repo: infrastructor/infrastructor
-    tags: true
+    branch: feature/travisci-release
 cache:
   directories:
   - ~/.gradle/wrapper
