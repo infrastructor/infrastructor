@@ -72,7 +72,7 @@ public class HelpHandler {
     def compileApplicationUsage() {
         def applicationUsage = new StringBuffer()
         
-        applicationUsage << yellow("\nUsage: ") << "infrastructor COMMAND\n"
+        applicationUsage << yellow("\nUsage: ") << "infrastructor COMMAND [OPTIONS]\n"
         applicationUsage << yellow("\nCommands:\n")
         handlers.each { name, handler ->
             applicationUsage << "  " << name.padRight(12) + handler.description() << "\n"
