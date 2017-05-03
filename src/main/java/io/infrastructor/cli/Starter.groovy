@@ -22,7 +22,7 @@ public class Starter {
             HANDLERS['help'].execute()
         } else {
             def handler = HANDLERS[args.head()]
-            if (handler) {
+            if (!handler) {
                 error "Uknown command '${args.head()}'"
                 HANDLERS['help'].execute()
             } else {
