@@ -1,5 +1,7 @@
 package io.infrastructor.cli.handlers
 
+import io.infrastructor.cli.ApplicationProperties
+
 
 public class VersionHandler {
     

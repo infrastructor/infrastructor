@@ -59,3 +59,8 @@ test {
     testLogging.showStandardStreams = true
     maxParallelForks = 20
 }
+
+task unpack(type: Copy) {
+    from zipTree(file("${buildDir}/distributions/infrastructor.zip"))
+    into file("${buildDir}/distributions/")
+}
