@@ -21,12 +21,17 @@ public class Starter {
         if (args.length == 0) {
             HANDLERS['help'].execute()
         } else {
-            try {
-                def handler = HANDLERS[args.head()]
-                new JCommander(handler).parse(args.tail())
-                handler.execute()
-            } catch (Exception ex) {
-                error ex.getMessage()
+            def handler = HANDLERS[args.head()]
+            if (!handler) {
+                error "Uknown command '${args.head()}'"
+                HANDLERS['help'].execute()
+            } else {
+                try {
+                    new JCommander(handler).parse(args.tail())
+                    handler.execute()
+                } catch (Exception ex) {
+                    error ex.getMessage()
+                }
             }
         }
     }
