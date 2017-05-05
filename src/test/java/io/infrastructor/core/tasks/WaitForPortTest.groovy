@@ -1,6 +1,7 @@
 package io.infrastructor.core.tasks
 
 import io.infrastructor.core.processing.ActionProcessingException
+import io.infrastructor.core.validation.ValidationException
 import org.testng.annotations.Test
 
 public class WaitForPortTest extends TaskTestBase {
@@ -9,6 +10,15 @@ public class WaitForPortTest extends TaskTestBase {
         inventory.setup {
             nodes('as:root') { 
                waitForPort port: 10000
+            }
+        }
+    }
+    
+    @Test(expectedExceptions = [ValidationException])
+    public void waitForUnknownPort() {
+        inventory.setup {
+            nodes('as:root') { 
+               waitForPort delay: 100, attempts: 10
             }
         }
     }
