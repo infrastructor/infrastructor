@@ -2,11 +2,14 @@ package io.infrastructor.core.tasks
 
 import io.infrastructor.core.inventory.Node
 import io.infrastructor.core.processing.ActionProcessingException
+import javax.validation.constraints.NotNull
+
 import static io.infrastructor.cli.ConsoleLogger.*
 
 
 public class WaitForPortAction {
     
+    @NotNull
     def port
     def delay = 1000
     def attempts = 3

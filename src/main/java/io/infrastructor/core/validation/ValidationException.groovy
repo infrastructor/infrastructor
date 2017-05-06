@@ -1,4 +1,4 @@
-package io.infrastructor.core.validation;
+package io.infrastructor.core.validation
 
 
 public class ValidationException extends RuntimeException {
