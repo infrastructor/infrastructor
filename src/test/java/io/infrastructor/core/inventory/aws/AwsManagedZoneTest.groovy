@@ -287,6 +287,32 @@ public class AwsManagedZoneTest {
     
     
     @Test
+    public void mergeTypelessTagsComparison() {
+        
+        def target = []
+        target << AwsNode.build {
+            name = "node_A"
+            tags = [1: '12', 'test': true]
+        } 
+        
+        def current = []
+        current << AwsNode.build {
+            name = "node_A"
+            tags = [test: 'true', 1: 12]
+        } 
+
+        def result = AwsManagedZone.merge(current, target)
+        
+        assert result.size() == 1
+        
+        def updated = result.find { it.state == '' }
+        assert updated
+        assert updated.name == 'node_A'
+        assert updated.tags == [1: '12', 'test': true]
+    }
+    
+    
+    @Test
     public void comprehensiveMerge() {
         
         def current = []

@@ -92,8 +92,8 @@ public class AwsManagedZone {
     }
     
     private static boolean needUpdate(def tc, def cn) {
-        return ((cn.securityGroupIds as Set) != (tc.securityGroupIds as Set)) || (cn.tags != tc.tags)
+        def cnTags = cn.tags.collectEntries { k, v -> [k as String, v as String] }
+        def tcTags = tc.tags.collectEntries { k, v -> [k as String, v as String] }
+        return ((cn.securityGroupIds as Set) != (tc.securityGroupIds as Set)) || (cnTags != tcTags)
     }
 }
-
-
