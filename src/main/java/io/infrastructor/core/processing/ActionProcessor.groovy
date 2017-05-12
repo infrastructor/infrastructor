@@ -10,6 +10,7 @@ import io.infrastructor.core.tasks.GroupActionBuilder
 import io.infrastructor.core.tasks.GroupActionBuilder
 import io.infrastructor.core.tasks.InsertBlockActionBuilder
 import io.infrastructor.core.tasks.ReplaceActionBuilder
+import io.infrastructor.core.tasks.ReplaceLineActionBuilder
 import io.infrastructor.core.tasks.ShellActionBuilder
 import io.infrastructor.core.tasks.TemplateActionBuilder
 import io.infrastructor.core.tasks.UserActionBuilder
@@ -35,6 +36,7 @@ public class ActionProcessor {
         builders['insertBlock'] = new InsertBlockActionBuilder()
         builders['shell']       = new ShellActionBuilder()
         builders['replace']     = new ReplaceActionBuilder()
+        builders['replaceLine'] = new ReplaceLineActionBuilder()
         builders['template']    = new TemplateActionBuilder()
         builders['upload']      = new FileUploadActionBuilder()
         builders['user']        = new UserActionBuilder()
