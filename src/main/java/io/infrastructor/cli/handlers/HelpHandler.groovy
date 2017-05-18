@@ -31,7 +31,7 @@ public class HelpHandler {
     }
     
     def description() {
-        "Prints usage information. Use 'help [command]' for a command specific usage information."
+        "Print usage information. Use 'help [command]' for a command specific usage information."
     }
     
     def options() {

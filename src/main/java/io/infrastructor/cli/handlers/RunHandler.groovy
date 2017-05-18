@@ -15,7 +15,7 @@ import static java.lang.String.valueOf
 
 public class RunHandler {
     
-    @DynamicParameter(names = ["-v", "-V", "--variables"])
+    @DynamicParameter(names = ["-v", "-V", "--variable"])
     Map variables = [:]
 
     @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)

@@ -14,7 +14,7 @@ public class VersionHandler {
     }
     
     def description() { 
-        "Prints version information."
+        "Print version information."
     }
 
     def execute() { 
