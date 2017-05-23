@@ -27,7 +27,6 @@ public class CryptoUtils {
                 return block(new String(encoded, ENCODING), blockSize)
             }
         } catch (Exception ex) {
-            println ex
             throw new CryptoUtilsException("unable to encrypt data", ex)
         }
     }
