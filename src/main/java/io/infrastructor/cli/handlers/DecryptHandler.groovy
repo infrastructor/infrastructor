@@ -20,7 +20,7 @@ public class DecryptHandler {
     }
     
     def options() {
-        ["--file, -f" : "File to decrypt. This file will be replaced with an decrypted one.",
+        ["--file, -f" : "File to decrypt. This file will be replaced with a decrypted one.",
          "--password, -p" : "Secret decryption password."]
     }
     
