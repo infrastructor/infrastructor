@@ -31,7 +31,7 @@ public class DecryptHandler {
     }
     
     def description() {
-        "Decrypt specified file (AES algorithm + Base64 encoding)."
+        "Decrypt a specified file or template (AES algorithm + Base64 encoding)."
     }
     
     def execute() {

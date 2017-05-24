@@ -31,7 +31,7 @@ public class EncryptHandler {
     }
     
     def description() {
-        "Encrypt specified file (AES algorithm + Base64 encoding)."
+        "Encrypt a specified file or template (AES algorithm + Base64 encoding)."
     }
     
     def execute() {
