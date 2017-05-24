@@ -21,11 +21,7 @@ public class CryptoUtils {
             byte [] encrypted = cipher.doFinal(data.getBytes(ENCODING))
             byte [] encoded   = Base64.getEncoder().encode(encrypted)
             
-            if (blockSize == 0) {
-                return new String(encoded, ENCODING)
-            } else {
-                return block(new String(encoded, ENCODING), blockSize)
-            }
+            return block(new String(encoded, ENCODING), blockSize)
         } catch (Exception ex) {
             throw new CryptoUtilsException("unable to encrypt data", ex)
         }
@@ -46,6 +42,28 @@ public class CryptoUtils {
     }
 
     
+    public static String encryptTemplate(String key, String template, int blockSize = 0) {
+        def bindings = [:]
+        bindings.encrypt = { 
+            field -> "\${decrypt('${encrypt(key, field, blockSize)}')}"
+        }
+
+        def engine = new groovy.text.SimpleTemplateEngine()
+        engine.createTemplate(template).make(bindings).toString()
+    }
+    
+    
+    public static String decryptTemplate(String key, String template) {
+        def bindings = [:]
+        bindings.decrypt = {
+            field -> "${decrypt(key, field)}"
+        }
+        
+        def engine = new groovy.text.SimpleTemplateEngine()
+        engine.createTemplate(template).make(bindings).toString()
+    }
+    
+    
     private static SecretKeySpec prepareKey(String key) {
         MessageDigest digest = MessageDigest.getInstance("SHA-256")
         byte[] keyBytes = digest.digest(key.getBytes(ENCODING))
@@ -54,15 +72,16 @@ public class CryptoUtils {
     
     
     private static def block(def data, size) {
-        def result = ""
-        doBlock([], data, size).each {
-            result = (result + it + '\n')
-        }
-        result
+        doBlock([], data, size).join('\n')
     }
 
     
     private static def doBlock(def collection, tail, size) {
+        if (size == 0) {
+            collection << tail
+            return collection
+        }
+        
         def length = tail.length()
         if (length > size) {
             collection << tail.take(size)
@@ -70,6 +89,7 @@ public class CryptoUtils {
         } else if (length != 0) {
             collection << tail
         }
-        collection
+        
+        return collection
     }
 }

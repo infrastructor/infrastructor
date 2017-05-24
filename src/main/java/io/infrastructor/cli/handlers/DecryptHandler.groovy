@@ -11,16 +11,22 @@ public class DecryptHandler {
     @Parameter(names = ["-p", "--password"], required = true)
     String password
 
-    @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)
-    def file
+    @Parameter(names = ["-f", "--file"], validateWith = FileValidator)
+    def files
+    
+    @Parameter(names = ["-t", "--templates"], validateWith = FileValidator)
+    def templates
 
     def usage() {
         ["infrastructor decrypt -f FILE -p SECRET", 
-         "infrastructor decrypt --file FILE --password SECRET"]
+         "infrastructor decrypt -t TEMPLATE -p SECRET", 
+         "infrastructor decrypt -f FILE1 -f FILE2 -t TEMPLATE1 -t TEMPLATE2 --password SECRET",
+         "infrastructor decrypt --file FILE --template TEMPLATE --password SECRET"]
     }
     
     def options() {
         ["--file, -f" : "File to decrypt. This file will be replaced with a decrypted one.",
+         "--template, -t" : "Template to decrypt. Replace all marked fields with decrypted values.",
          "--password, -p" : "Secret decryption password."]
     }
     
@@ -29,9 +35,25 @@ public class DecryptHandler {
     }
     
     def execute() {
-        file.each {
+        decryptFiles()
+        decryptTemplates() 
+    }
+    
+    def decryptFiles() {
+        files?.each {
             def dataToDecrypt = new File(it).text
             def decrypted = CryptoUtils.decrypt(password, dataToDecrypt)
+            def output = new FileOutputStream(it, false)
+            output.withCloseable { out ->
+                out << decrypted
+            }
+        }
+    }
+    
+    def decryptTemplates() {
+        templates?.each {
+            def dataToDecrypt = new File(it).text
+            def decrypted = CryptoUtils.decryptTemplate(password, dataToDecrypt)
             def output = new FileOutputStream(it, false)
             output.withCloseable { out ->
                 out << decrypted

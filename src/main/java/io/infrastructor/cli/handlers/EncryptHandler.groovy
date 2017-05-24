@@ -11,16 +11,22 @@ public class EncryptHandler {
     @Parameter(names = ["-p", "--password"], required = true)
     String password
 
-    @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)
-    def file
+    @Parameter(names = ["-f", "--file"], validateWith = FileValidator)
+    def files = []
+    
+    @Parameter(names = ["-t", "--template"], validateWith = FileValidator)
+    def templates = []
 
     def usage() {
         ["infrastructor encrypt -f FILE -p SECRET", 
-         "infrastructor encrypt --file FILE --password SECRET"]
+         "infrastructor encrypt -t TEMPLATE -p SECRET", 
+         "infrastructor encrypt -f FILE1 -f FILE2 -t TEMPLATE1 -t TEMPLATE2 --password SECRET",
+         "infrastructor encrypt --file FILE --template TEMPLATE --password SECRET"]
     }
     
     def options() {
         ["--file, -f" : "File to encrypt. This file will be replaced with an encrypted one.",
+         "--template, -t" : "Template to encrypt. Replace all marked fields with decryption placeholders.",
          "--password, -p" : "Secret encryption password."]
     }
     
@@ -29,7 +35,13 @@ public class EncryptHandler {
     }
     
     def execute() {
-        file.each {
+        encryptFiles()
+        encryptTemplates()
+    }
+    
+    
+    def encryptFiles() {
+        files?.each {
             def dataToEncrypt = new File(it).text
             def encrypted = CryptoUtils.encrypt(password, dataToEncrypt, 80)
             def output = new FileOutputStream(it, false)
@@ -38,5 +50,15 @@ public class EncryptHandler {
             }
         }
     }
+    
+    def encryptTemplates() {
+        templates?.each {
+            def dataToEncrypt = new File(it).text
+            def encrypted = CryptoUtils.encryptTemplate(password, dataToEncrypt, 80)
+            def output = new FileOutputStream(it, false)
+            output.withCloseable { out ->
+                out << encrypted
+            }
+        }
+    }
 }
-
