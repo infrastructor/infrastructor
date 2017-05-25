@@ -3,6 +3,7 @@ package io.infrastructor.cli.handlers
 import com.beust.jcommander.Parameter
 import io.infrastructor.cli.ConsoleLogger
 import io.infrastructor.cli.validation.FileValidator
+import io.infrastructor.cli.validation.ModeValidator
 import io.infrastructor.core.utils.CryptoUtils
 
 
@@ -14,47 +15,34 @@ public class EncryptHandler {
     @Parameter(names = ["-f", "--file"], validateWith = FileValidator)
     def files = []
     
-    @Parameter(names = ["-t", "--template"], validateWith = FileValidator)
-    def templates = []
+    @Parameter(names = ["-m", "--mode"], validateWith = ModeValidator)
+    String mode = 'FULL'
 
+    
     def usage() {
-        ["infrastructor encrypt -f FILE -p SECRET", 
-         "infrastructor encrypt -t TEMPLATE -p SECRET", 
-         "infrastructor encrypt -f FILE1 -f FILE2 -t TEMPLATE1 -t TEMPLATE2 --password SECRET",
-         "infrastructor encrypt --file FILE --template TEMPLATE --password SECRET"]
+        ["infrastructor encrypt -f FILE1 -f FILE2 -p SECRET -m FULL", 
+         "infrastructor encrypt -f TEMPLATE1 -f TEMPLATE2 -p SECRET -m PART"]
     }
+    
     
     def options() {
-        ["--file, -f" : "File to encrypt. This file will be replaced with an encrypted one.",
-         "--template, -t" : "Template to encrypt. Replace all marked fields with decryption placeholders.",
-         "--password, -p" : "Secret encryption password."]
+        ["--file, -f" : "A file to encrypt. This file will be replaced with an encrypted one.",
+         "--mode, -m" : "Encryption mode: FULL or PART. Full mode to encrypt entire file. Part mode to substitute 'encrypt' placeholders only.",
+         "--password, -p" : "An encryption key."]
     }
+    
     
     def description() {
-        "Encrypt a specified file or template (AES algorithm + Base64 encoding)."
+        "Encrypt specified files (AES + Base64)."
     }
+    
     
     def execute() {
-        encryptFiles()
-        encryptTemplates()
-    }
-    
-    
-    def encryptFiles() {
         files?.each {
             def dataToEncrypt = new File(it).text
-            def encrypted = CryptoUtils.encrypt(password, dataToEncrypt, 80)
-            def output = new FileOutputStream(it, false)
-            output.withCloseable { out ->
-                out << encrypted
-            }
-        }
-    }
-    
-    def encryptTemplates() {
-        templates?.each {
-            def dataToEncrypt = new File(it).text
-            def encrypted = CryptoUtils.encryptTemplate(password, dataToEncrypt, 80)
+            def encrypted = (mode == 'FULL') ?
+                CryptoUtils.encryptFull(password, dataToEncrypt, 80) :
+                CryptoUtils.encryptPart(password, dataToEncrypt, 80)
             def output = new FileOutputStream(it, false)
             output.withCloseable { out ->
                 out << encrypted

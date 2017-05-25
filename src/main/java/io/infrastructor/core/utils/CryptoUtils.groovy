@@ -14,7 +14,7 @@ public class CryptoUtils {
     private static final def ENCODING = StandardCharsets.UTF_8
 
 
-    public static String encrypt(String key, String data, int blockSize = 0) {
+    public static String encryptFull(String key, String data, int blockSize = 0) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, prepareKey(key))
@@ -28,7 +28,7 @@ public class CryptoUtils {
     }
 
     
-    public static String decrypt(String key, String data) {
+    public static String decryptFull(String key, String data) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.DECRYPT_MODE, prepareKey(key))
@@ -42,10 +42,10 @@ public class CryptoUtils {
     }
 
     
-    public static String encryptTemplate(String key, String template, int blockSize = 0) {
+    public static String encryptPart(String key, String template, int blockSize = 0) {
         def bindings = [:]
         bindings.encrypt = { 
-            field -> "\${decrypt('${encrypt(key, field, blockSize)}')}"
+            field -> "\${decrypt('${encryptFull(key, field, blockSize)}')}"
         }
 
         def engine = new groovy.text.SimpleTemplateEngine()
@@ -53,10 +53,10 @@ public class CryptoUtils {
     }
     
     
-    public static String decryptTemplate(String key, String template) {
+    public static String decryptPart(String key, String template) {
         def bindings = [:]
         bindings.decrypt = {
-            field -> "${decrypt(key, field)}"
+            field -> "${decryptFull(key, field)}"
         }
         
         def engine = new groovy.text.SimpleTemplateEngine()
