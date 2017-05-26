@@ -85,5 +85,48 @@ public class TemplateActionTest extends TaskTestBase {
             }
         }
     }
+    
+    @Test
+    public void templateWithEncryptedValues() {
+        inventory.setup {
+            nodes('as:devops') {
+                template {
+                    source = 'resources/encrypted_part.tmpl'
+                    target = '/tmp/test.txt'
+                    bindings = [message: "simple!"]
+                    mode = '644'
+                    decryptionKey = 'secret'
+                }
+                
+                def result = shell "cat /tmp/test.txt"
+                
+                assert result.exitcode == 0
+                assert result.output.find(/secret message/)
+            }
+        }
+    }
+    
+    
+    @Test
+    public void templateWithFullyEncryptedContent() {
+        inventory.setup {
+            nodes('as:devops') {
+                template {
+                    source = 'resources/encrypted_full.tmpl'
+                    target = '/tmp/test.txt'
+                    bindings = [message: "simple!"]
+                    mode = '644'
+                    decryptionKey = 'secret'
+                    decryptionMode = FULL
+                }
+                
+                def result = shell "cat /tmp/test.txt"
+                
+                assert result.exitcode == 0
+                assert result.output.find(/secret message/)
+                assert result.output.find(/simple!/)
+            }
+        }
+    }
 }
 

@@ -1,12 +1,17 @@
 package io.infrastructor.core.tasks
 
 import groovy.text.SimpleTemplateEngine
-import io.infrastructor.core.inventory.CommandExecutionException
 import javax.validation.constraints.NotNull
+import io.infrastructor.core.inventory.CommandExecutionException
 import io.infrastructor.core.inventory.Node
+import io.infrastructor.core.processing.ActionProcessingException
+import io.infrastructor.core.utils.CryptoUtils
 
 
 public class TemplateAction {
+    
+    static final FULL = 'FULL'
+    static final PART = 'PART'
     
     @NotNull
     def target
@@ -17,12 +22,27 @@ public class TemplateAction {
     def owner
     def mode
     def sudo = false
+    def decryptionKey
+    def decryptionMode = PART
     def engine = new SimpleTemplateEngine()
+    
     
     def execute(Node node) {
         def template = new File(source).text
-        def content = engine.createTemplate(template).make(bindings).toString()
-        node.writeText(target, content, sudo)
+        def content = ''
+            
+        if (!decryptionKey) {
+            content = engine.createTemplate(template).make(bindings)
+        } else if (decryptionMode == PART) {
+            content = CryptoUtils.decryptPart(decryptionKey, template, bindings)
+        } else if (decryptionMode == FULL) {
+            def decrypted = CryptoUtils.decryptFull(decryptionKey, template)
+            content = engine.createTemplate(decrypted).make(bindings)
+        } else {
+            throw new ActionProcessingException("Unable to process template using decryption mode: $decryptionMode")
+        }
+        
+        node.writeText(target, content.toString(), sudo)
         node.updateOwner(target, owner, sudo)
         node.updateGroup(target, group, sudo)
         node.updateMode(target, mode, sudo)

@@ -53,8 +53,7 @@ public class CryptoUtils {
     }
     
     
-    public static String decryptPart(String key, String template) {
-        def bindings = [:]
+    public static String decryptPart(String key, String template, def bindings = [:]) {
         bindings.decrypt = {
             field -> "${decryptFull(key, field)}"
         }
