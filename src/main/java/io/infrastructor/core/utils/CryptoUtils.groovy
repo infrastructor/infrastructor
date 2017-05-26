@@ -29,13 +29,16 @@ public class CryptoUtils {
 
     
     public static String decryptFull(String key, String data) {
+        new String(decryptFullBytes(key, data), ENCODING)
+    }
+    
+    
+    public static byte [] decryptFullBytes(String key, String data) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.DECRYPT_MODE, prepareKey(key))
-            byte [] decoded   = Base64.getDecoder().decode(data.replaceAll("[\n\r]", "").getBytes(ENCODING))
-            byte [] decrypted = cipher.doFinal(decoded)
-            
-            return new String(decrypted, ENCODING)
+            byte [] decoded = Base64.getDecoder().decode(data.replaceAll("[\n\r]", "").getBytes(ENCODING))
+            return cipher.doFinal(decoded)
         } catch (Exception ex) {
             throw new CryptoUtilsException("unable to decrypt, did you provide encrypted data?", ex)
         }

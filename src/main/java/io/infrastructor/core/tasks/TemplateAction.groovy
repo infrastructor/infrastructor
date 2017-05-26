@@ -2,7 +2,6 @@ package io.infrastructor.core.tasks
 
 import groovy.text.SimpleTemplateEngine
 import javax.validation.constraints.NotNull
-import io.infrastructor.core.inventory.CommandExecutionException
 import io.infrastructor.core.inventory.Node
 import io.infrastructor.core.processing.ActionProcessingException
 import io.infrastructor.core.utils.CryptoUtils
