@@ -10,15 +10,15 @@ import java.util.Base64
 
 public class CryptoUtils {
     
-    private static final String ALGORITHM = "AES"
-    private static final def ENCODING = StandardCharsets.UTF_8
+    static final String ALGORITHM = "AES"
+    static final def ENCODING = StandardCharsets.UTF_8
 
 
-    public static String encryptFull(String key, String data, int blockSize = 0) {
+    public static String encryptFullBytes(String key, byte [] data, int blockSize = 0) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, prepareKey(key))
-            byte [] encrypted = cipher.doFinal(data.getBytes(ENCODING))
+            byte [] encrypted = cipher.doFinal(data)
             byte [] encoded   = Base64.getEncoder().encode(encrypted)
             
             return block(new String(encoded, ENCODING), blockSize)
@@ -27,12 +27,7 @@ public class CryptoUtils {
         }
     }
 
-    
-    public static String decryptFull(String key, String data) {
-        new String(decryptFullBytes(key, data), ENCODING)
-    }
-    
-    
+
     public static byte [] decryptFullBytes(String key, String data) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
@@ -43,7 +38,17 @@ public class CryptoUtils {
             throw new CryptoUtilsException("unable to decrypt, did you provide encrypted data?", ex)
         }
     }
-
+    
+    
+    public static String encryptFull(String key, String data, int blockSize = 0) {
+        return encryptFullBytes(key, data.getBytes(ENCODING), blockSize)
+    }
+    
+    
+    public static String decryptFull(String key, String data) {
+        new String(decryptFullBytes(key, data), ENCODING)
+    }
+    
     
     public static String encryptPart(String key, String template, int blockSize = 0) {
         def bindings = [:]

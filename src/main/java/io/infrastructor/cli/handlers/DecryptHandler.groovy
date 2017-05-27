@@ -38,15 +38,24 @@ public class DecryptHandler {
     
     
     def execute() {
-        files?.each {
-            def dataToDecrypt = new File(it).text
-            def decrypted = (mode == 'FULL') ? 
-                CryptoUtils.decryptFull(password, dataToDecrypt) : 
-                CryptoUtils.decryptPart(password, dataToDecrypt)
-            def output = new FileOutputStream(it, false)
-            output.withCloseable { out ->
-                out << decrypted
-            }
+        decryptFiles( files.collect { new File(it) } ) 
+    }
+    
+    
+    def decryptFiles(def files) {
+        files?.each { file ->
+            file.isDirectory() ? decryptFiles(file.listFiles()) : decryptFile(file)
+        }
+    }
+
+    
+    def decryptFile(def file) {
+        def encrypted = (mode == 'FULL') ?
+            CryptoUtils.decryptFullBytes(password, file.getText()) :
+            CryptoUtils.decryptPart(password, file.getText())
+        def output = new FileOutputStream(file, false)
+        output.withCloseable { out ->
+            out << encrypted
         }
     }
 }

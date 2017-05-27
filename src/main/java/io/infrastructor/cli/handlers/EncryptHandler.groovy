@@ -38,15 +38,24 @@ public class EncryptHandler {
     
     
     def execute() {
-        files?.each {
-            def dataToEncrypt = new File(it).text
-            def encrypted = (mode == 'FULL') ?
-                CryptoUtils.encryptFull(password, dataToEncrypt, 80) :
-                CryptoUtils.encryptPart(password, dataToEncrypt, 80)
-            def output = new FileOutputStream(it, false)
-            output.withCloseable { out ->
-                out << encrypted
-            }
+        encryptFiles(files.collect { new File(it) }) 
+    }
+    
+    
+    def encryptFiles(def files) {
+        files?.each { file ->
+            file.isDirectory() ? encryptFiles(file.listFiles()) : encryptFile(file)
+        }
+    }
+    
+    
+    def encryptFile(def file) {
+        def encrypted = (mode == 'FULL') ?
+        CryptoUtils.encryptFullBytes(password, file.getBytes(), 80) :
+        CryptoUtils.encryptPart(password, file.getText(), 80)
+        def output = new FileOutputStream(file, false)
+        output.withCloseable { out ->
+            out << encrypted
         }
     }
 }
