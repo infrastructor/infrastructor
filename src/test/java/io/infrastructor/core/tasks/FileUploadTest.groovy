@@ -93,5 +93,23 @@ public class FileUploadTest extends TaskTestBase {
             }
         }
     }
+    
+    
+    @Test
+    public void decryptAndUploadFileToRemoteHost() {
+        inventory.setup {
+            nodes('as:devops') {
+                def result = upload {
+                    sudo = true
+                    source = 'resources/encrypted_full.tmpl'
+                    target = '/fileupload.txt'
+                    decryptionKey = 'secret'
+                }
+                
+                assert result.exitcode == 0
+                assert shell("cat /fileupload.txt").output.find(/secret message/)
+            }
+        }
+    }
 }
 

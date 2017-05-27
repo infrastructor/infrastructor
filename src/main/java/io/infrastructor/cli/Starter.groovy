@@ -1,9 +1,12 @@
 package io.infrastructor.cli
 
 import com.beust.jcommander.JCommander
+import io.infrastructor.cli.handlers.DecryptHandler
+import io.infrastructor.cli.handlers.EncryptHandler
 import io.infrastructor.cli.handlers.HelpHandler
 import io.infrastructor.cli.handlers.RunHandler
 import io.infrastructor.cli.handlers.VersionHandler
+
 import static io.infrastructor.cli.ConsoleLogger.error
 
 
@@ -13,6 +16,8 @@ public class Starter {
     
     static {
         HANDLERS << ['run': new RunHandler()]
+        HANDLERS << ['encrypt': new EncryptHandler()]
+        HANDLERS << ['decrypt': new DecryptHandler()]
         HANDLERS << ['version': new VersionHandler()]
         HANDLERS << ['help': new HelpHandler(handlers: HANDLERS)]
     }
@@ -23,7 +28,7 @@ public class Starter {
         } else {
             def handler = HANDLERS[args.head()]
             if (!handler) {
-                error "Uknown command '${args.head()}'"
+                error "Unknown command '${args.head()}'"
                 HANDLERS['help'].execute()
             } else {
                 try {

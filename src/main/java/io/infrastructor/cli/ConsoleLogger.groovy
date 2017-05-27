@@ -43,4 +43,28 @@ public class ConsoleLogger {
                 fg(color).a(message).
                 reset())
     }
+    
+    public static final def red(String text) {
+        ansi().fg(Color.RED).a(text).reset()
+    }
+    
+    public static final def green(String text) {
+        ansi().fg(Color.GREEN).a(text).reset()
+    }
+    
+    public static final def yellow(String text) {
+        ansi().fg(Color.YELLOW).a(text).reset()
+    }
+    
+    public static final def blue(String text) {
+        ansi().fg(Color.BLUE).a(text).reset()
+    }
+    
+    public static final def magenta(String text) {
+        ansi().fg(Color.MAGENTA).a(text).reset()
+    }
+    
+    public static final def cyan(String text) {
+        ansi().fg(Color.CYAN).a(text).reset()
+    }
 }
