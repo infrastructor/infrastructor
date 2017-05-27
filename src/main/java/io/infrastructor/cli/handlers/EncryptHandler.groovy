@@ -10,7 +10,7 @@ import static io.infrastructor.cli.ConsoleLogger.*
 
 public class EncryptHandler extends LoggingAwareHandler {
     
-    @Parameter(names = ["-p", "--password"], required = true)
+    @Parameter(names = ["-p", "--password"], required = true, description = "Encryption password", password = true)
     String password
 
     @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)

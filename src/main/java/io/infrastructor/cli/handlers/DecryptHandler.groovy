@@ -11,7 +11,7 @@ import static io.infrastructor.cli.ConsoleLogger.*
 
 public class DecryptHandler extends LoggingAwareHandler {
     
-    @Parameter(names = ["-p", "--password"], required = true)
+    @Parameter(names = ["-p", "--password"], required = true, description = "Decryption password", password = true)
     String password
 
     @Parameter(names = ["-f", "--file"], validateWith = FileValidator)
