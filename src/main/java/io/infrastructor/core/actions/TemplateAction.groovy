@@ -1,4 +1,4 @@
-package io.infrastructor.core.tasks
+package io.infrastructor.core.actions
 
 import groovy.text.SimpleTemplateEngine
 import javax.validation.constraints.NotNull

@@ -2,19 +2,19 @@ package io.infrastructor.core.processing
 
 import io.infrastructor.core.inventory.CommandExecutionException
 import io.infrastructor.core.processing.ActionProcessingException
-import io.infrastructor.core.tasks.DirectoryActionBuilder
-import io.infrastructor.core.tasks.FetchActionBuilder
-import io.infrastructor.core.tasks.FileActionBuilder
-import io.infrastructor.core.tasks.FileUploadActionBuilder
-import io.infrastructor.core.tasks.GroupActionBuilder
-import io.infrastructor.core.tasks.GroupActionBuilder
-import io.infrastructor.core.tasks.InsertBlockActionBuilder
-import io.infrastructor.core.tasks.ReplaceActionBuilder
-import io.infrastructor.core.tasks.ReplaceLineActionBuilder
-import io.infrastructor.core.tasks.ShellActionBuilder
-import io.infrastructor.core.tasks.TemplateActionBuilder
-import io.infrastructor.core.tasks.UserActionBuilder
-import io.infrastructor.core.tasks.WaitForPortActionBuilder
+import io.infrastructor.core.actions.DirectoryActionBuilder
+import io.infrastructor.core.actions.FetchActionBuilder
+import io.infrastructor.core.actions.FileActionBuilder
+import io.infrastructor.core.actions.FileUploadActionBuilder
+import io.infrastructor.core.actions.GroupActionBuilder
+import io.infrastructor.core.actions.GroupActionBuilder
+import io.infrastructor.core.actions.InsertBlockActionBuilder
+import io.infrastructor.core.actions.ReplaceActionBuilder
+import io.infrastructor.core.actions.ReplaceLineActionBuilder
+import io.infrastructor.core.actions.ShellActionBuilder
+import io.infrastructor.core.actions.TemplateActionBuilder
+import io.infrastructor.core.actions.UserActionBuilder
+import io.infrastructor.core.actions.WaitForPortActionBuilder
 
 import static io.infrastructor.cli.ConsoleLogger.debug
 import static io.infrastructor.cli.ConsoleLogger.info

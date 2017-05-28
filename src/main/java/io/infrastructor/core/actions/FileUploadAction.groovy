@@ -1,4 +1,4 @@
-package io.infrastructor.core.tasks
+package io.infrastructor.core.actions
 
 import javax.validation.constraints.NotNull
 import io.infrastructor.core.inventory.Node

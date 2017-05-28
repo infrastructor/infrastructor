@@ -1,19 +1,18 @@
-package io.infrastructor.core.tasks
+package io.infrastructor.core.actions
 
 import javax.validation.constraints.NotNull
 import io.infrastructor.core.inventory.CommandExecutionException
 import io.infrastructor.core.inventory.Node
 
 
-public class GroupAction {
+public class ShellAction {
     
     @NotNull
-    def name
-    def gid
-    def sudo = false
+    def command
+    boolean sudo = false
     
     def execute(Node node) {
-        node.execute(command: "groupadd ${gid ? '-g ' + gid : ''} $name", sudo: sudo)
+        node.execute(command: command, sudo: sudo)
     }
 }
 

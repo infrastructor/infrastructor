@@ -1,4 +1,4 @@
-package io.infrastructor.core.tasks
+package io.infrastructor.core.actions
 
 import io.infrastructor.core.inventory.Node
 import io.infrastructor.core.processing.ActionProcessingException

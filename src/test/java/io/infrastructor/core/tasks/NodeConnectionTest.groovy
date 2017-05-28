@@ -1,6 +1,6 @@
 package io.infrastructor.core.inventory
 
-import io.infrastructor.core.tasks.TaskTestBase
+import io.infrastructor.core.actions.TaskTestBase
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test

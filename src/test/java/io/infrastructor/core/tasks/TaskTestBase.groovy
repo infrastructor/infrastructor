@@ -1,4 +1,4 @@
-package io.infrastructor.core.tasks
+package io.infrastructor.core.actions
 
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
