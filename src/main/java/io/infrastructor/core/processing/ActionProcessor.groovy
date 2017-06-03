@@ -20,6 +20,7 @@ import static io.infrastructor.cli.ConsoleLogger.debug
 import static io.infrastructor.cli.ConsoleLogger.info
 import static io.infrastructor.cli.ConsoleLogger.error
 import static io.infrastructor.core.validation.ValidationHelper.validate
+import static io.infrastructor.core.actions.InputAction.*
 
 
 public class ActionProcessor {
