@@ -1,12 +1,8 @@
-package io.infrastructor.core.inventory
+package io.infrastructor.core.actions
 
-import io.infrastructor.core.actions.TaskTestBase
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import org.junit.Test
 
-
-public class NodeConnectionTest extends TaskTestBase {
+public class NodeConnectionTest extends ActionTestBase {
     
     @Test
     public void useSshKeyToConnectToNode() {

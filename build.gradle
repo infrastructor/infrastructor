@@ -37,7 +37,7 @@ dependencies {
     compile "org.fusesource.jansi:jansi:1.14"
     compile group: 'com.jcraft', name: 'jsch', version: '0.1.53'
     
-    testCompile "org.testng:testng:6.10"
+    testCompile "junit:junit:4.12"
 }
 
 repositories {
@@ -45,10 +45,10 @@ repositories {
 }
 
 test {
-    useTestNG() {
+    useJUnit {
         // activate AWS tests
         if (!project.hasProperty('testAws')) {
-            excludeGroups "aws" 
+            excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
         } else {
             systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
             systemProperty "awsSecretKey", project.getProperty("awsSecretKey")

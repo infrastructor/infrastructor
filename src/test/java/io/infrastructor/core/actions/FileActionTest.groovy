@@ -1,9 +1,8 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 
-
-public class FileActionTest extends TaskTestBase {
+public class FileActionTest extends ActionTestBase {
    
     @Test
     public void writeAContentToAFileOnRemoteServerWithSudo() {

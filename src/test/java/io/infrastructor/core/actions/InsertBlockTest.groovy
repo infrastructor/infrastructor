@@ -1,9 +1,8 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 
-
-public class InsertBlockTest extends TaskTestBase {
+public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockAtTheBeginningOfAFile() {

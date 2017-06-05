@@ -1,8 +1,8 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 
-public class ShellActionTest extends TaskTestBase {
+public class ShellActionTest extends ActionTestBase {
 
     @Test
     public void simpleShellAction() {

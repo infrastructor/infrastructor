@@ -1,8 +1,8 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 
-public class ReplaceLineActionTest extends TaskTestBase {
+public class ReplaceLineActionTest extends ActionTestBase {
     
     @Test
     public void replaceLineInFile() {

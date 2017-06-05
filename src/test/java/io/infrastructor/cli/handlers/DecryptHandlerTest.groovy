@@ -1,8 +1,9 @@
 package io.infrastructor.cli.handlers
 
-import org.testng.annotations.Test
+import org.junit.Test
 
 public class DecryptHandlerTest {
+    
     @Test
     public void decryptFull() {
         def file = 'build/resources/test/decryption/file.txt'

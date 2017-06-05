@@ -1,7 +1,6 @@
 package io.infrastructor.core.inventory.aws
 
-import org.testng.annotations.Test
-
+import org.junit.Test
 
 public class AwsManagedZoneTest {
     

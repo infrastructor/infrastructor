@@ -1,9 +1,8 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 
-
-public class DirectoryActionTest extends TaskTestBase {
+public class DirectoryActionTest extends ActionTestBase {
     
     @Test
     public void createDirectoryAsRoot() {

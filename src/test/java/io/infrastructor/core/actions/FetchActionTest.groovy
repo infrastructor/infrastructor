@@ -1,11 +1,10 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 import io.infrastructor.core.validation.ValidationException
 import io.infrastructor.core.utils.FlatUUID
 
-
-public class FetchActionTest extends TaskTestBase {
+public class FetchActionTest extends ActionTestBase {
     
     @Test
     public void fetchFileFromRemoteHost() {
@@ -71,7 +70,7 @@ public class FetchActionTest extends TaskTestBase {
         }
     }
     
-    @Test(expectedExceptions = [ValidationException])
+    @Test(expected = ValidationException)
     public void fetchFileWithEmptyArguments() {
         inventory.setup {
             nodes('as:root') {

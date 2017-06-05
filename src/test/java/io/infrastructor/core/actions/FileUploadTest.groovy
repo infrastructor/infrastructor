@@ -1,9 +1,8 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 
-
-public class FileUploadTest extends TaskTestBase {
+public class FileUploadTest extends ActionTestBase {
     
     @Test
     public void uploadAFileToRemoteHost() {

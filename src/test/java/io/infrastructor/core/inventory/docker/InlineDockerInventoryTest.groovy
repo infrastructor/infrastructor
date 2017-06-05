@@ -1,8 +1,7 @@
 package io.infrastructor.core.inventory.docker
 
-import org.testng.annotations.Test
+import org.junit.Test
 import io.infrastructor.core.inventory.docker.InlineDockerInventory
-
 
 public class InlineDockerInventoryTest {
     

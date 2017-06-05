@@ -1,4 +1,4 @@
-package io.infrastructor.core.utils
+package io.infrastructor.core.inventory.aws
 
 
 public class AwsTestBase {
