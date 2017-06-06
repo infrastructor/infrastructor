@@ -2,7 +2,7 @@ package io.infrastructor.core.inventory.aws
 
 import static io.infrastructor.core.utils.AmazonEC2Utils.amazonEC2
 import static io.infrastructor.core.processing.ActionPlanRunner.setup
-
+import static io.infrastructor.cli.ConsoleLogger.*
 
 public class ManagedAwsInventory {
     
@@ -41,6 +41,33 @@ public class ManagedAwsInventory {
     
     def getManagedNodes() {
         managedZones*.getInventory().flatten()
+    }
+    
+    def dry() {
+        info "DRY: analyzing changes..."
+        managedZones*.initialize(amazonEC2)
+        
+        printf ('%20s %28s %22s  %s\n', [defColor('STATE'), defColor('INSTANCE ID'), defColor('PRIVATE IP'), defColor('NAME')])
+        managedZones*.getAwsInventory().flatten().each {
+            def coloredState
+            
+            switch (it.state) {
+                case 'created':
+                    coloredState =  green("CREATED")
+                    break
+                case 'removed':
+                    coloredState =    red("REMOVED")
+                    break
+                case 'updated':
+                    coloredState = yellow("UPDATED")
+                    break
+                case '':
+                    coloredState = blue('UNMODIFIED')
+                    break
+            }
+            
+            printf ('%20s %28s %22s  %s\n', [coloredState, cyan(it.instanceId ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
+        } 
     }
 }
 

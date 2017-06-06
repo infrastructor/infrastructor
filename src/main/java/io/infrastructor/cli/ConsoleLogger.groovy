@@ -67,4 +67,8 @@ public class ConsoleLogger {
     public static final def cyan(String text) {
         ansi().fg(Color.CYAN).a(text).reset()
     }
+    
+    public static final def defColor(String text) {
+        ansi().fg(Color.DEFAULT).a(text).reset()
+    }
 }

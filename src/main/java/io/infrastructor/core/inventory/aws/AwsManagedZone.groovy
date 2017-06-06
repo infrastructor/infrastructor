@@ -47,6 +47,10 @@ public class AwsManagedZone {
         inventory.collect { it as Node }
     }
     
+    def getAwsInventory() {
+        inventory
+    }
+    
     def findAllInstancesWithTags(def amazonEC2) {
         def reservations = amazonEC2.describeInstances().getReservations();
         def allExistingRunningInstances = reservations.collect { 
@@ -66,34 +70,34 @@ public class AwsManagedZone {
         current*.state = ''
         target*.state = 'created'
         
-        current.each { cn ->
-            def tc = target.find { it.name == cn.name }
-            if (tc == null) { 
-                cn.state = 'removed'
-            } else if (needRebuild(tc, cn)) {
-                tc.state = 'created'
-                cn.state = 'removed'
+        current.each { existing ->
+            def candidate = target.find { it.name == existing.name }
+            if (candidate == null) { 
+                existing.state = 'removed'
+            } else if (needRebuild(candidate, existing)) {
+                candidate.state = 'created'
+                existing.state = 'removed'
             } else {
-                tc.state = needUpdate(tc, cn) ? 'updated' : ''
-                tc.instanceId = cn.instanceId
-                tc.publicIp   = cn.publicIp
-                tc.privateIp  = cn.privateIp
+                candidate.state = needUpdate(candidate, existing) ? 'updated' : ''
+                candidate.instanceId = existing.instanceId
+                candidate.publicIp   = existing.publicIp
+                candidate.privateIp  = existing.privateIp
             }
         }
         
-        [*target, *current.findAll { it.state == 'removed' }]
+        [*target, *current.findAll { it.state == 'removed' }].toSorted { a, b -> a.name <=> b.name }
     }
     
-    private static boolean needRebuild(def tc, def cn) {
-        return (cn.imageId != tc.imageId) ||
-        (cn.instanceType != tc.instanceType) ||
-        (cn.subnetId != tc.subnetId) ||
-        (cn.keyName != tc.keyName)
+    private static boolean needRebuild(def candidate, def existing) {
+        ((existing.imageId != candidate.imageId) ||
+        (existing.instanceType != candidate.instanceType) ||
+        (existing.subnetId != candidate.subnetId) ||
+        (existing.keyName != candidate.keyName))
     }
     
-    private static boolean needUpdate(def tc, def cn) {
-        def cnTags = cn.tags.collectEntries { k, v -> [k as String, v as String] }
-        def tcTags = tc.tags.collectEntries { k, v -> [k as String, v as String] }
-        return ((cn.securityGroupIds as Set) != (tc.securityGroupIds as Set)) || (cnTags != tcTags)
+    private static boolean needUpdate(def candidate, def existing) {
+        def existingTags = existing.tags.collectEntries { k, v -> [k as String, v as String] }
+        def candidateTags = candidate.tags.collectEntries { k, v -> [k as String, v as String] }
+        return ((existing.securityGroupIds as Set) != (candidate.securityGroupIds as Set)) || (existingTags != candidateTags)
     }
 }
