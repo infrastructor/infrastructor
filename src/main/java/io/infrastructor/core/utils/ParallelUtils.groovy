@@ -3,9 +3,6 @@ package io.infrastructor.core.utils
 import java.util.concurrent.Executors
 import java.util.concurrent.ExecutionException
 
-import static io.infrastructor.cli.ConsoleLogger.debug
-
-
 public class ParallelUtils {
 
     public static def executeParallel(def collection, def threads, def closure) {
