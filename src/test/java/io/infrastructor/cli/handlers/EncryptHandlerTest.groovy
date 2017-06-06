@@ -1,8 +1,9 @@
 package io.infrastructor.cli.handlers
 
-import org.testng.annotations.Test
+import org.junit.Test
 
 public class EncryptHandlerTest {
+    
     @Test
     public void encryptFull() {
         def file = 'build/resources/test/encryption/file.txt'

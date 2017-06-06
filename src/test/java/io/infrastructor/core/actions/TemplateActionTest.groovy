@@ -1,9 +1,8 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 
-
-public class TemplateActionTest extends TaskTestBase {
+public class TemplateActionTest extends ActionTestBase {
 
     @Test
     public void generateAFileOnRemoteServer() {

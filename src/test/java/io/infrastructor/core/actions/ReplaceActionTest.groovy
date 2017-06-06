@@ -1,9 +1,8 @@
 package io.infrastructor.core.actions
 
-import org.testng.annotations.Test
+import org.junit.Test
 
-
-public class ReplaceActionTest extends TaskTestBase {
+public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceAllOccurrencesInFileUsingRegex() {

@@ -1,9 +1,8 @@
 package io.infrastructor.core.inventory
 
-import org.testng.annotations.Test
+import org.junit.Test
 
 import static io.infrastructor.core.inventory.InlineInventory.inlineInventory
-
 
 public class InlineInventoryTest {
 

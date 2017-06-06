@@ -1,15 +1,15 @@
 package io.infrastructor.core.inventory.aws
 
-import io.infrastructor.core.utils.AwsTestBase
-import org.testng.annotations.Test
+import org.junit.Test
+import org.junit.experimental.categories.Category
 
 import static io.infrastructor.core.utils.AmazonEC2Utils.assertInstanceExists
 import static io.infrastructor.core.inventory.aws.ManagedAwsInventory.managedAwsInventory
 
-
+@Category(AwsCategory.class)
 public class ManagedAwsInventoryTest extends AwsTestBase  {
     
-    @Test(groups = ['aws'])
+    @Test
     public void createInventory() {
         try {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
