@@ -48,7 +48,7 @@ public class ManagedAwsInventory {
         managedZones*.initialize(amazonEC2)
         
         printf ('%20s %28s %22s  %s\n', [defColor('STATE'), defColor('INSTANCE ID'), defColor('PRIVATE IP'), defColor('NAME')])
-        managedZones*.getAwsInventory().flatten().each {
+        getManagedNodes().each {
             def coloredState
             
             switch (it.state) {

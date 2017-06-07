@@ -6,7 +6,6 @@ import io.infrastructor.core.inventory.Node
 import static io.infrastructor.core.utils.AmazonEC2Utils.amazonEC2
 import static io.infrastructor.cli.ConsoleLogger.debug
 
-
 public class AwsInventory {
 
     def username
@@ -22,7 +21,6 @@ public class AwsInventory {
     public AwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion) {
         this.amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
     }
-    
     
     public Inventory build() {
         amazonEC2.describeInstances().getReservations().collect { 
@@ -43,7 +41,6 @@ public class AwsInventory {
             }
     }
 
-    
     public static Inventory awsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, Closure definition) {
         def awsInventory = new AwsInventory(awsAccessKey, awsSecretKey, awsRegion)
         awsInventory.with(definition)

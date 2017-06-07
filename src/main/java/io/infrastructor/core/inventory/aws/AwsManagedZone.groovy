@@ -1,8 +1,7 @@
 package io.infrastructor.core.inventory.aws
 
-import io.infrastructor.core.inventory.Node
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
-
+import static io.infrastructor.core.inventory.aws.AwsNodeUtils.findAwsNodesWithTags
 
 public class AwsManagedZone {
     
@@ -23,12 +22,12 @@ public class AwsManagedZone {
     def ec2(Map params, Closure closure) {
         def node = new AwsNode(params)
         node.with(closure)
-        node.tags << tags.collectEntries { k, v -> [(k as String), (v as String)] }
+        node.tags << tags
         targetState << node
     }
         
     def initialize(def amazonEC2) {
-        inventory = merge(findAllInstancesWithTags(amazonEC2), targetState)
+        inventory = merge(findAwsNodesWithTags(amazonEC2, tags), targetState)
     }
     
     def createInstances(def amazonEC2) {
@@ -44,28 +43,9 @@ public class AwsManagedZone {
     }
     
     def getInventory() {
-        inventory.collect { it as Node }
-    }
-    
-    def getAwsInventory() {
         inventory
     }
     
-    def findAllInstancesWithTags(def amazonEC2) {
-        def reservations = amazonEC2.describeInstances().getReservations();
-        def allExistingRunningInstances = reservations.collect { 
-            it.getInstances().findAll { 
-                it.getState().getCode() == 16 // running
-            } 
-        }.flatten()
-        
-        return allExistingRunningInstances.collect { 
-            AwsNode.convert(it) 
-        }.findAll { 
-            it.tags.intersect(tags) == tags
-        }
-    }
-
     public static def merge(def current, def target) {
         current*.state = ''
         target*.state = 'created'
@@ -79,9 +59,9 @@ public class AwsManagedZone {
                 existing.state = 'removed'
             } else {
                 candidate.state = needUpdate(candidate, existing) ? 'updated' : ''
-                candidate.instanceId = existing.instanceId
-                candidate.publicIp   = existing.publicIp
-                candidate.privateIp  = existing.privateIp
+                candidate.id        = existing.id
+                candidate.publicIp  = existing.publicIp
+                candidate.privateIp = existing.privateIp
             }
         }
         
