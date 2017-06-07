@@ -9,7 +9,7 @@ public class AwsManagedZoneTest {
         
         def target = []
         
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             imageId = "image_A"
             instanceType = "type_A"
@@ -35,7 +35,7 @@ public class AwsManagedZoneTest {
         def target = []
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             imageId = "image_A"
             instanceType = "type_A"
@@ -55,7 +55,7 @@ public class AwsManagedZoneTest {
     public void mergeTargetOneIsSameAsCurrentOne() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             imageId = "image_A"
             instanceType = "type_A"
@@ -66,7 +66,7 @@ public class AwsManagedZoneTest {
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             imageId = "image_A"
             instanceType = "type_A"
@@ -86,12 +86,12 @@ public class AwsManagedZoneTest {
     public void mergeTargetOneIsCreatedCurrentOneIsRemoved() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_B"
         } 
 
@@ -113,13 +113,13 @@ public class AwsManagedZoneTest {
     public void mergeRebuild_imageId() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             imageId = "image_B"
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             imageId = "image_A"
         } 
@@ -144,13 +144,13 @@ public class AwsManagedZoneTest {
     public void mergeRebuild_instanceType() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             instanceType = "B"
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             instanceType = "A"
         } 
@@ -175,13 +175,13 @@ public class AwsManagedZoneTest {
     public void mergeRebuild_subnetId() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             subnetId = "B"
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             subnetId = "A"
         } 
@@ -206,13 +206,13 @@ public class AwsManagedZoneTest {
     public void mergeRebuild_keyName() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             keyName = "B"
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             keyName = "A"
         } 
@@ -237,13 +237,13 @@ public class AwsManagedZoneTest {
     public void mergeUpdate_securityGroupIds() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             securityGroupIds = ["B"]
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             securityGroupIds = ["B", "A"]
         } 
@@ -263,13 +263,13 @@ public class AwsManagedZoneTest {
     public void mergeUpdate_tags() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             tags = [a: "A", b: "B"]
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             tags = [a: "A"]
         } 
@@ -289,13 +289,13 @@ public class AwsManagedZoneTest {
     public void mergeTypelessTagsComparison() {
         
         def target = []
-        target << AwsNode.build {
+        target << awsNode {
             name = "node_A"
             tags = [1: '12', 'test': true]
         } 
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
             tags = [test: 'true', 1: 12]
         } 
@@ -315,34 +315,34 @@ public class AwsManagedZoneTest {
     public void comprehensiveMerge() {
         
         def current = []
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_A"
         } 
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_B"
             tags = [a: "A"]
         } 
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_C"
             imageId = "C"
         } 
-        current << AwsNode.build {
+        current << awsNode {
             name = "node_D"
         } 
         
         def target = []
-        target << AwsNode.build { 
+        target << awsNode { 
             name = "node_A"
         } 
-        target << AwsNode.build { 
+        target << awsNode { 
             name = "node_B"
             tags = [a: "A", b: "B"]
         } 
-        target << AwsNode.build { 
+        target << awsNode { 
             name = "node_C"
             imageId = "newC"
         } 
-        target << AwsNode.build {  
+        target << awsNode {  
             name = "node_X"
         }
 
@@ -358,5 +358,10 @@ public class AwsManagedZoneTest {
         assert result.find { it.name == 'node_X' && it.state == 'created'}
     }
 
+    public static def awsNode(def definition) {
+        def node = new AwsNode()
+        node.with(definition)
+        node
+    }
 }
 
