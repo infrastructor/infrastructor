@@ -40,7 +40,6 @@ public class AwsNode extends Node {
             securityGroupIds = ec2instance.securityGroups.collect { it.groupId }
             privateIp        = ec2instance.privateIpAddress
             publicIp         = ec2instance.publicIpAddress
-            host = usePublicIp ? publicIp : privateIp
             tags             = ec2instance.tags.inject([:]) { tags, tag ->
                 if (tag.key != 'Name') { tags << [(tag.key) : (tag.value)] } 
                 tags

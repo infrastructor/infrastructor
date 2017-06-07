@@ -62,6 +62,7 @@ public class AwsManagedZone {
                 candidate.id        = existing.id
                 candidate.publicIp  = existing.publicIp
                 candidate.privateIp = existing.privateIp
+                candidate.host      = candidate.usePublicIp ? existing.publicIp : existing.privateIp
             }
         }
         
