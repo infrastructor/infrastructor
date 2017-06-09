@@ -46,6 +46,10 @@ repositories {
 }
 
 test {
+    systemProperty "LOG_LEVEL", "2"
+    testLogging.showStandardStreams = true
+    maxParallelForks = 20
+    
     useJUnit {
         // activate AWS tests
         if (!project.hasProperty('testAws')) {
@@ -54,12 +58,10 @@ test {
             systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
             systemProperty "awsSecretKey", project.getProperty("awsSecretKey")
             systemProperty "awsRegion", project.getProperty("awsRegion")
+            maxParallelForks = 1
         }
     }
     
-    systemProperty "LOG_LEVEL", "2"
-    testLogging.showStandardStreams = true
-    maxParallelForks = 20
 }
 
 task unpack(type: Copy) {

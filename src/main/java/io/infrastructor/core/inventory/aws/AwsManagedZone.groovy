@@ -1,14 +1,12 @@
 package io.infrastructor.core.inventory.aws
 
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
-import static io.infrastructor.core.inventory.aws.AwsNodeUtils.findAwsNodesWithTags
 
 public class AwsManagedZone {
     
     def tags = [:]
     def parallel = 1
     
-    private def inventory = []
     private def targetState = []
     
     def ec2(Map params) {
@@ -27,58 +25,24 @@ public class AwsManagedZone {
     }
         
     def initialize(def amazonEC2) {
-        inventory = merge(findAwsNodesWithTags(amazonEC2, tags), targetState)
+        def target  = AwsNodesBuilder.fromNodes(targetState)
+        def current = AwsNodesBuilder.fromEC2(amazonEC2).filterByTags(tags)
+        targetState = target.merge(current).nodes
     }
     
     def createInstances(def amazonEC2) {
-        executeParallel(inventory.findAll { it.state == 'created' }, parallel) { it.create(amazonEC2) }
+        executeParallel(targetState.findAll { it.state == 'created' }, parallel) { it.create(amazonEC2) }
     }
 
     def removeInstances(def amazonEC2) {
-        executeParallel(inventory.findAll { it.state == 'removed' }, parallel) { it.remove(amazonEC2) }
+        executeParallel(targetState.findAll { it.state == 'removed' }, parallel) { it.remove(amazonEC2) }
     }
     
     def updateInstances(def amazonEC2) {
-        executeParallel(inventory.findAll { it.state == 'updated' }, parallel) { it.update(amazonEC2) }
+        executeParallel(targetState.findAll { it.state == 'updated' }, parallel) { it.update(amazonEC2) }
     }
     
     def getInventory() {
-        inventory
-    }
-    
-    public static def merge(def current, def target) {
-        current*.state = ''
-        target*.state = 'created'
-        
-        current.each { existing ->
-            def candidate = target.find { it.name == existing.name }
-            if (candidate == null) { 
-                existing.state = 'removed'
-            } else if (needRebuild(candidate, existing)) {
-                candidate.state = 'created'
-                existing.state = 'removed'
-            } else {
-                candidate.state = needUpdate(candidate, existing) ? 'updated' : ''
-                candidate.id        = existing.id
-                candidate.publicIp  = existing.publicIp
-                candidate.privateIp = existing.privateIp
-                candidate.host      = candidate.usePublicIp ? existing.publicIp : existing.privateIp
-            }
-        }
-        
-        [*target, *current.findAll { it.state == 'removed' }].toSorted { a, b -> a.name <=> b.name }
-    }
-    
-    private static boolean needRebuild(def candidate, def existing) {
-        ((existing.imageId != candidate.imageId) ||
-        (existing.instanceType != candidate.instanceType) ||
-        (existing.subnetId != candidate.subnetId) ||
-        (existing.keyName != candidate.keyName))
-    }
-    
-    private static boolean needUpdate(def candidate, def existing) {
-        def existingTags = existing.tags.collectEntries { k, v -> [k as String, v as String] }
-        def candidateTags = candidate.tags.collectEntries { k, v -> [k as String, v as String] }
-        return ((existing.securityGroupIds as Set) != (candidate.securityGroupIds as Set)) || (existingTags != candidateTags)
+        targetState
     }
 }

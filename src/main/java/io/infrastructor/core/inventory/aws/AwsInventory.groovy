@@ -14,37 +14,16 @@ public class AwsInventory {
     def tags = [:]
     def usePublicIp = false
     
-    private final def amazonEC2
-    private final def awsNodes = AwsNode.&convert
-    private final def withTags = { it.tags.intersect(tags) == tags }
-    
-    public AwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion) {
-        this.amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
-    }
-    
-    public Inventory build() {
-        amazonEC2.describeInstances().getReservations().collect { 
-            it.getInstances().findAll { 
-                it.getState().getCode() == 16 // running
-            } 
-        }.flatten().
-            collect(awsNodes).
-            findAll(withTags).
-            inject(new Inventory()) { 
-                inventory, node -> 
-                    node.keyfile = keyfile
-                    node.port = port
-                    node.username = username
-                    node.usePublicIp = usePublicIp
-                    inventory << (node as Node) 
-                    inventory
-            }
+    public Inventory build(def awsAccessKey, def awsSecretKey, def awsRegion) {
+        def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
+        def awsNodes  = AwsNodesBuilder.fromEC2(amazonEC2).filterByTags(tags).usePublicHost(usePublicIp)
+        new Inventory(nodes: awsNodes.nodes)
     }
 
     public static Inventory awsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, Closure definition) {
-        def awsInventory = new AwsInventory(awsAccessKey, awsSecretKey, awsRegion)
+        def awsInventory = new AwsInventory()
         awsInventory.with(definition)
-        return awsInventory.build()
+        awsInventory.build(awsAccessKey, awsSecretKey, awsRegion)
     }
 }
 

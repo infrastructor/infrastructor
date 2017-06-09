@@ -20,19 +20,19 @@ public class ManagedAwsInventory {
     def managedZone(Map params, Closure setup) {
         def managedZone = new AwsManagedZone(params)
         managedZone.with(setup)
-        managedZone.tags = managedZone.tags.collectEntries { k, v -> [(k as String), (v as String)] }
+        managedZone.initialize(amazonEC2)
         managedZones << managedZone
     }
     
     public static ManagedAwsInventory managedAwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, def closure) {
-        def awsInventory = new ManagedAwsInventory(amazonEC2(awsAccessKey, awsSecretKey, awsRegion))
+        def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
+        def awsInventory = new ManagedAwsInventory(amazonEC2)
         closure.delegate = awsInventory
         closure()
         return awsInventory
     }
     
     def setup(Closure definition = {}) {
-        managedZones*.initialize(amazonEC2)
         managedZones*.createInstances(amazonEC2)
         managedZones*.updateInstances(amazonEC2)
         setup(getManagedNodes(), definition)
@@ -45,8 +45,6 @@ public class ManagedAwsInventory {
     
     def dry() {
         info "DRY: analyzing changes..."
-        managedZones*.initialize(amazonEC2)
-        
         printf ('%20s %28s %22s  %s\n', [defColor('STATE'), defColor('INSTANCE ID'), defColor('PRIVATE IP'), defColor('NAME')])
         getManagedNodes().each {
             def coloredState

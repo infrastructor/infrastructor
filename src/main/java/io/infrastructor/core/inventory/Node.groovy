@@ -73,4 +73,10 @@ public class Node {
     def allTags() {
         return tags
     }
+    
+    def listTags() {
+        def list = []
+        allTags().each() { k, v -> list << ("$k:$v" as String) } 
+        list
+    }
 }
