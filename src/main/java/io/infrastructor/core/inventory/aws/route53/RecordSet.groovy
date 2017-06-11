@@ -21,10 +21,10 @@ public class RecordSet {
     def usePublicIp
     
     def apply(def amazonRoute53, def hostedZoneId, AwsNodes nodes) {
-        info "route53 name '$name': filtering nodes"
+        info "route53 name '$name' - filtering nodes"
         
         def target = nodes.filter(resources)
-        info "route53 name '$name': apply for nodes: ${target.nodes}"
+        info "route53 name '$name' - apply for nodes: ${target.nodes}"
 
         if (target.nodes.size() > 0) {
             def records = []
