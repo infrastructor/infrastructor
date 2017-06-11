@@ -43,9 +43,8 @@ public class AwsRoute53Test extends AwsTestBase {
                 }
                 
                 route53(hostedZoneId: 'Z36BEXFJC6IRSG') {
-                    dns(name: 'simple.test.internal', ttl: 500, resources: {'managed:true'}, type: 'A')
+                    recordSet(type: 'A', name: 'simple.test.internal', ttl: 500, resources: {'managed:true'})
                 }
-                
             }
             
             inventory.setup {}
@@ -68,7 +67,7 @@ public class AwsRoute53Test extends AwsTestBase {
                 managedZone(tags: [managed: true]) {} 
                 
                 route53(hostedZoneId: 'Z36BEXFJC6IRSG') {
-                    dns(name: 'simple.test.internal', ttl: 500, resources: {'managed:true'}, type: 'A')
+                    recordSet(type: 'A', name: 'simple.test.internal', ttl: 500, resources: {'managed:true'})
                 }
                 
             }.setup {}

@@ -2,6 +2,7 @@ package io.infrastructor.core.inventory.aws
 
 import io.infrastructor.core.utils.AmazonEC2Utils
 import io.infrastructor.core.utils.AmazonRoute53Utils
+import io.infrastructor.core.inventory.aws.route53.Route53
 
 import static io.infrastructor.core.processing.ActionPlanRunner.setup
 import static io.infrastructor.cli.ConsoleLogger.*
@@ -39,9 +40,9 @@ public class ManagedAwsInventory {
     }
     
     def route53(Map params, Closure closure) {
-        AwsRoute53 awsRoute53 = new AwsRoute53(params)
-        awsRoute53.with(closure)
-        route53s << awsRoute53
+        Route53 route53 = new Route53(params)
+        route53.with(closure)
+        route53s << route53
     }
     
     public static ManagedAwsInventory managedAwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, def closure) {

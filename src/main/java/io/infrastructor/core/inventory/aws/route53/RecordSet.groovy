@@ -1,4 +1,4 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.core.inventory.aws.route53
 
 import com.amazonaws.services.route53.model.Change
 import com.amazonaws.services.route53.model.ChangeAction
@@ -7,11 +7,12 @@ import com.amazonaws.services.route53.model.ChangeResourceRecordSetsRequest
 import com.amazonaws.services.route53.model.ListResourceRecordSetsRequest
 import com.amazonaws.services.route53.model.ResourceRecord
 import com.amazonaws.services.route53.model.ResourceRecordSet
+import io.infrastructor.core.inventory.aws.AwsNodes
 
 import static io.infrastructor.cli.ConsoleLogger.info
 import static io.infrastructor.cli.ConsoleLogger.debug
 
-public class AwsRoute53Dns {
+public class RecordSet {
     
     def name
     def type
@@ -26,43 +27,35 @@ public class AwsRoute53Dns {
         info "route53 dns '$name': apply for nodes: ${target.nodes}"
 
         if (target.nodes.size() > 0) {
-            
             def records = []
             if (usePublicIp) {
-                debug "dns $name - update using public IPs"
-                (target.nodes*.publicIp).each { 
-                    debug "dns $name - $it"
-                    records << new ResourceRecord(it) 
-                }
+                debug "dns $name - update the record set with public IPs"
+                (target.nodes*.publicIp).each { records << new ResourceRecord(it) }
             } else {
-                debug "dns $name - update using private IPs"
-                (target.nodes*.privateIp).each { 
-                    debug "dns $name - $it"
-                    records << new ResourceRecord(it) 
-                }
+                debug "dns $name - update the record set with private IPs"
+                (target.nodes*.privateIp).each { records << new ResourceRecord(it) }
             }
             
-            ResourceRecordSet recordSet = new ResourceRecordSet()
-            recordSet.setName(name)
-            recordSet.setType(type)
+            ResourceRecordSet recordSet = new ResourceRecordSet(name, type)
             recordSet.setTTL(ttl)
             recordSet.setResourceRecords(records)
             
-            final ChangeResourceRecordSetsRequest request = 
-                new ChangeResourceRecordSetsRequest(hostedZoneId, new ChangeBatch([new Change(ChangeAction.UPSERT, recordSet)]))
+            def changeRequest = new ChangeResourceRecordSetsRequest(
+                hostedZoneId, 
+                new ChangeBatch([new Change(ChangeAction.UPSERT, recordSet)])
+            )
             
-            amazonRoute53.changeResourceRecordSets(request)
+            amazonRoute53.changeResourceRecordSets(changeRequest)
             
         } else {
-            
-            info "dns $name - no instances have been found. trying to remove existing DNS record."
+            info "route53 dns $name - no instances have been found. trying to remove existing DNS record."
             
             def result = amazonRoute53.listResourceRecordSets(new ListResourceRecordSetsRequest(hostedZoneId))
             
             for (ResourceRecordSet resourceRecordSet : result.getResourceRecordSets()) {
-                debug "found dns ${resourceRecordSet.getName()}"
+                debug "record set found '${resourceRecordSet.getName()}'"
                 if (resourceRecordSet.getName() == (name + '.')) {
-                    info "removing dns ${resourceRecordSet.getName()}"
+                    info "removing record set '${resourceRecordSet.getName()}'"
                     def deleteRequest = new ChangeResourceRecordSetsRequest()
                     deleteRequest.setHostedZoneId(hostedZoneId)
                     deleteRequest.setChangeBatch(new ChangeBatch([new Change(ChangeAction.DELETE, resourceRecordSet)]))

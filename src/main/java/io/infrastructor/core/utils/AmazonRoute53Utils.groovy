@@ -25,15 +25,16 @@ public class AmazonRoute53Utils {
     
     public static def findDnsRecordSet(def amazonRoute53, def hostedZoneId, def name) {
         def result = amazonRoute53.listResourceRecordSets(new ListResourceRecordSetsRequest(hostedZoneId))
-            
-        for (ResourceRecordSet resourceRecordSet : result.getResourceRecordSets()) {
-            if (resourceRecordSet.getName() == (name.endsWith('.') ? name : (name + '.'))) {
-                return new Route53DnsRecordSet([
-                        name : resourceRecordSet.name,
-                        type : resourceRecordSet.type,
-                        ttl  : resourceRecordSet.TTL,
-                        records : resourceRecordSet.resourceRecords*.getValue()
-                    ])
+        for (ResourceRecordSet recordSet : result.getResourceRecordSets()) {
+            if (recordSet.getName() == (name.endsWith('.') ? name : (name + '.'))) {
+                def record = [:]
+                record.with {
+                    name = recordSet.name
+                    type = recordSet.type
+                    ttl  = recordSet.TTL
+                    records = recordSet.resourceRecords*.getValue()
+                }
+                return record
             }
         }
     }
