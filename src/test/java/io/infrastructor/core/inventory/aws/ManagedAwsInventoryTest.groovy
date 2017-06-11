@@ -13,8 +13,8 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
     public void createInventory() {
         try {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
-                managedZone(tags: [managed: true]) {
-                    ec2 {
+                ec2(tags: [managed: true]) {
+                    node {
                         name = 'simple-y'
                         imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
                         instanceType = 't2.micro'
@@ -39,8 +39,8 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
             }
                 
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
-                managedZone(tags: [managed: true]) {
-                    ec2 {
+                ec2(tags: [managed: true]) {
+                    node {
                         name = 'simple-y'
                         imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
                         instanceType = 't2.micro'
@@ -67,7 +67,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
             }
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
-                managedZone(tags: [managed: true]) {} 
+                ec2(tags: [managed: true]) {} 
             }.setup()
         }
     }

@@ -1,32 +1,35 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.core.inventory.aws.ec2
 
+import io.infrastructor.core.inventory.aws.AwsNode
+import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromEC2
+import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromNodes
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
-public class AwsManagedZone {
+public class EC2 {
     
     def tags = [:]
     def parallel = 1
     
     private def targetState = []
     
-    def ec2(Map params) {
-        ec2(params, {})
+    def node(Map params) {
+        node(params, {})
     }
     
-    def ec2(Closure closure) {
-        ec2([:], closure)
+    def node(Closure closure) {
+        node([:], closure)
     }
     
-    def ec2(Map params, Closure closure) {
-        def node = new AwsNode(params)
-        node.with(closure)
-        node.tags << tags
-        targetState << node
+    def node(Map params, Closure closure) {
+        def awsNode = new AwsNode(params)
+        awsNode.with(closure)
+        awsNode.tags << tags
+        targetState << awsNode
     }
         
     def initialize(def amazonEC2) {
-        def target  = AwsNodesBuilder.fromNodes(targetState)
-        def current = AwsNodesBuilder.fromEC2(amazonEC2).filterByTags(tags)
+        def target  = fromNodes(targetState)
+        def current = fromEC2(amazonEC2).filterByTags(tags)
         targetState = target.merge(current).nodes
     }
     

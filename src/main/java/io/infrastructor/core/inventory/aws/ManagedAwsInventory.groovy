@@ -1,5 +1,6 @@
 package io.infrastructor.core.inventory.aws
 
+import io.infrastructor.core.inventory.aws.ec2.EC2
 import io.infrastructor.core.inventory.aws.route53.Route53
 import io.infrastructor.core.utils.AmazonEC2Utils
 import io.infrastructor.core.utils.AmazonRoute53Utils
@@ -20,12 +21,12 @@ public class ManagedAwsInventory {
         this.amazonRoute53 = AmazonRoute53Utils.amazonRoute53(awsAccessKey, awsSecretKey, awsRegion)
     }
     
-    def managedZone(Closure setup) {
-        managedZone([:], closure)
+    def ec2(Closure setup) {
+        ec2([:], closure)
     }
     
-    def managedZone(Map params, Closure setup) {
-        def managedZone = new AwsManagedZone(params)
+    def ec2(Map params, Closure setup) {
+        def managedZone = new EC2(params)
         managedZone.with(setup)
         managedZone.initialize(amazonEC2)
         managedZones << managedZone

@@ -22,7 +22,7 @@ public class AwsNodesBuilder {
         def builder = new AwsNodesBuilder()
         closure.delegate = builder
         closure()
-        new AwsNodes(nodes: builder.nodes)
+        fromNodes(builder.nodes)
     }
     
     public static AwsNodes fromEC2(def amazonEC2) {
@@ -32,8 +32,7 @@ public class AwsNodesBuilder {
                 it.getState().getCode() == 16 // running
             } 
         }.flatten().collect { AwsNode.fromEC2(it) }
-        
-        return new AwsNodes(nodes: nodes)
+        fromNodes(nodes)
     }
     
     public static AwsNodes fromNodes(def nodes) {
