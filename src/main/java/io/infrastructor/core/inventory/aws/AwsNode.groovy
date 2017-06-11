@@ -12,8 +12,8 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest
 import groovy.transform.ToString
 import io.infrastructor.core.inventory.Node
 
-import static io.infrastructor.cli.ConsoleLogger.info
 import static io.infrastructor.cli.ConsoleLogger.debug
+import static io.infrastructor.cli.ConsoleLogger.info
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class AwsNode extends Node {

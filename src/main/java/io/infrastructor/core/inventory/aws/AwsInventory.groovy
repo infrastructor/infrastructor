@@ -3,8 +3,8 @@ package io.infrastructor.core.inventory.aws
 import io.infrastructor.core.inventory.Inventory
 import io.infrastructor.core.inventory.Node
 
-import static io.infrastructor.core.utils.AmazonEC2Utils.amazonEC2
 import static io.infrastructor.cli.ConsoleLogger.debug
+import static io.infrastructor.core.utils.AmazonEC2Utils.amazonEC2
 
 public class AwsInventory {
 

@@ -9,8 +9,8 @@ import com.amazonaws.services.route53.model.ResourceRecord
 import com.amazonaws.services.route53.model.ResourceRecordSet
 import io.infrastructor.core.inventory.aws.AwsNodes
 
-import static io.infrastructor.cli.ConsoleLogger.info
 import static io.infrastructor.cli.ConsoleLogger.debug
+import static io.infrastructor.cli.ConsoleLogger.info
 
 public class RecordSet {
     

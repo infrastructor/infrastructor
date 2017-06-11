@@ -1,11 +1,11 @@
 package io.infrastructor.core.inventory.aws
 
+import io.infrastructor.core.inventory.aws.route53.Route53
 import io.infrastructor.core.utils.AmazonEC2Utils
 import io.infrastructor.core.utils.AmazonRoute53Utils
-import io.infrastructor.core.inventory.aws.route53.Route53
 
+import static io.infrastructor.cli.ConsoleLogger.info
 import static io.infrastructor.core.processing.ActionPlanRunner.setup
-import static io.infrastructor.cli.ConsoleLogger.*
 
 public class ManagedAwsInventory {
     
