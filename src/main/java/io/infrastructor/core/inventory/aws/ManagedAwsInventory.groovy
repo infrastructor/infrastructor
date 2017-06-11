@@ -13,7 +13,7 @@ public class ManagedAwsInventory {
     def amazonEC2
     def amazonRoute53
     
-    def managedZones = []
+    def ec2s = []
     def route53s = []
     
     public ManagedAwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion) {
@@ -26,10 +26,10 @@ public class ManagedAwsInventory {
     }
     
     def ec2(Map params, Closure setup) {
-        def managedZone = new EC2(params)
-        managedZone.with(setup)
-        managedZone.initialize(amazonEC2)
-        managedZones << managedZone
+        def ec2 = new EC2(params)
+        ec2.with(setup)
+        ec2.initialize(amazonEC2)
+        ec2s << ec2
     }
     
     def route53(Map params) {
@@ -41,7 +41,7 @@ public class ManagedAwsInventory {
     }
     
     def route53(Map params, Closure closure) {
-        Route53 route53 = new Route53(params)
+        def route53 = new Route53(params)
         route53.with(closure)
         route53s << route53
     }
@@ -54,15 +54,15 @@ public class ManagedAwsInventory {
     }
     
     def setup(Closure definition = {}) {
-        managedZones*.createInstances(amazonEC2)
-        managedZones*.updateInstances(amazonEC2)
+        ec2s*.createInstances(amazonEC2)
+        ec2s*.updateInstances(amazonEC2)
         setup(getManagedNodes(), definition)
-        managedZones*.removeInstances(amazonEC2)
+        ec2s*.removeInstances(amazonEC2)
         route53s*.apply(amazonEC2, amazonRoute53)
     }
     
     def getManagedNodes() {
-        managedZones*.getInventory().flatten()
+        ec2s*.getInventory().flatten()
     }
     
     def dry() {
@@ -70,22 +70,20 @@ public class ManagedAwsInventory {
         printf ('%20s %28s %22s  %s\n', [defColor('STATE'), defColor('INSTANCE ID'), defColor('PRIVATE IP'), defColor('NAME')])
         getManagedNodes().each {
             def coloredState
-            
             switch (it.state) {
                 case 'created':
-                    coloredState =  green("CREATED")
+                    coloredState =  vgreen("CREATED")
                     break
                 case 'removed':
-                    coloredState =    red("REMOVED")
+                    coloredState =    vred("REMOVED")
                     break
                 case 'updated':
-                    coloredState = yellow("UPDATED")
+                    coloredState = vyellow("UPDATED")
                     break
                 case '':
                     coloredState = blue('UNMODIFIED')
                     break
             }
-            
             printf ('%20s %28s %22s  %s\n', [coloredState, cyan(it.instanceId ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
         } 
     }
