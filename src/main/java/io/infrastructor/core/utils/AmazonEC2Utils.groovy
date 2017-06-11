@@ -14,24 +14,19 @@ public class AmazonEC2Utils {
         AmazonEC2ClientBuilder standard = AmazonEC2ClientBuilder.standard()
         standard.setCredentials(new AWSStaticCredentialsProvider(new AWSCredentials() {
                     @Override
-                    public String getAWSAccessKeyId() {
-                        return awsAccessKey
-                    }
+                    public String getAWSAccessKeyId() { awsAccessKey }
 
                     @Override
-                    public String getAWSSecretKey() {
-                        return awsSecretKey
-                    }
-                }));
+                    public String getAWSSecretKey() { awsSecretKey }
+                }))
         standard.setRegion(awsRegion)
         standard.build()
     }
     
-    
     public static void assertInstanceExists(def awsAccessKey, def awsSecretKey, def awsRegion, def definition) {
         def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
         
-        def reservations = amazonEC2.describeInstances().getReservations();
+        def reservations = amazonEC2.describeInstances().getReservations()
         def allExistingRunningInstances = reservations.collect { 
             it.getInstances().findAll { 
                 it.getState().getCode() == 16 // running
@@ -51,24 +46,20 @@ public class AmazonEC2Utils {
         if (expected.tags)             assert expected.tags                      == instance.tags.collectEntries { [(it.key as String) : (it.value as String)] } 
     }
     
-    
     public static def findSubnetIdByName(def awsAccessKey, def awsSecretKey, def awsRegion, def name) {
-         def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion) 
-         def result = amazonEC2.describeSubnets(
-             new DescribeSubnetsRequest().withFilters(new Filter("tag:Name", [name])));
+        def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion) 
+        def result = amazonEC2.describeSubnets(
+            new DescribeSubnetsRequest().withFilters(new Filter("tag:Name", [name])))
          
-         if (result.getSubnets().size() == 0) {
-             throw new RuntimeException("Unable to find subnet with name '$name'")
-         }
+        if (result.getSubnets().size() == 0) {
+            throw new RuntimeException("Unable to find subnet with name '$name'")
+        }
          
-         if (result.getSubnets().size() > 1) {
-             throw new RuntimeException("Multiple subnets with the same name ($name) has been found")
-         }
+        if (result.getSubnets().size() > 1) {
+            throw new RuntimeException("Multiple subnets with the same name ($name) has been found")
+        }
         
-         return result.getSubnets()[0].subnetId
+        return result.getSubnets()[0].subnetId
     }
-    
-    public String securityGroup(String id) {}
-    public String image(String id) {}
 }
 

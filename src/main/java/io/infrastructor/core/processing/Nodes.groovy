@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutionException
 import static io.infrastructor.cli.ConsoleLogger.debug
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
-
 public class Nodes {
     
     def tags = { true }
@@ -29,7 +28,7 @@ public class Nodes {
         def proxy = ProxyMetaClass.getInstance(String.class)
         proxy.use {
             def closure = { context -> context.contains(delegate) }
-            def stringTags = node.tags.inject([]) { list, k, v -> list << ("$k:$v" as String) }
+            def stringTags = node.allTags().inject([]) { list, k, v -> list << ("$k:$v" as String) }
             String.metaClass.asBoolean = closure.curry(stringTags)
             return (tags() as Boolean)
         }

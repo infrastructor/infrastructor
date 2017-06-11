@@ -32,7 +32,8 @@ dependencies {
     compile "com.beust:jcommander:1.58"
     compile "com.jcabi:jcabi-ssh:1.5.2"
     compile "org.apache.bval:bval-jsr:1.1.2"
-    compile "com.amazonaws:aws-java-sdk-ec2:1.11.97"
+    compile "com.amazonaws:aws-java-sdk-ec2:1.11.140"
+    compile "com.amazonaws:aws-java-sdk-route53:1.11.140"
     compile "ch.qos.logback:logback-classic:1.2.1"
     compile "org.fusesource.jansi:jansi:1.14"
     compile group: 'com.jcraft', name: 'jsch', version: '0.1.53'
@@ -45,6 +46,10 @@ repositories {
 }
 
 test {
+    systemProperty "LOG_LEVEL", "2"
+    testLogging.showStandardStreams = true
+    maxParallelForks = 20
+    
     useJUnit {
         // activate AWS tests
         if (!project.hasProperty('testAws')) {
@@ -53,12 +58,10 @@ test {
             systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
             systemProperty "awsSecretKey", project.getProperty("awsSecretKey")
             systemProperty "awsRegion", project.getProperty("awsRegion")
+            maxParallelForks = 1
         }
     }
     
-    systemProperty "LOG_LEVEL", "2"
-    testLogging.showStandardStreams = true
-    maxParallelForks = 20
 }
 
 task unpack(type: Copy) {

@@ -12,48 +12,28 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest
 import groovy.transform.ToString
 import io.infrastructor.core.inventory.Node
 
-import static io.infrastructor.cli.ConsoleLogger.info
 import static io.infrastructor.cli.ConsoleLogger.debug
-
+import static io.infrastructor.cli.ConsoleLogger.info
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
-public class AwsNode {
+public class AwsNode extends Node {
+    
     def name
     def imageId
     def instanceType
     def subnetId
     def keyName
     def securityGroupIds
-    def tags = [:]
-    
-    def username
-    def keyfile
-    def port = 22
-    def metadata = [:]
     def usePublicIp = false
-    
-    def instanceId
     def privateIp
     def publicIp
-    
     def state = ''
+
     
-    
-    public static AwsNode build(Map params, Closure definition = {}) {
-        def node = new AwsNode(params)
-        node.with(definition)
-        node
-    }
-    
-    
-    public static AwsNode build(Closure definition = {})  {
-        build([:], definition)
-    }
-    
-    
-    public static AwsNode convert(def instance) {
-        build {
-            instanceId       = instance.instanceId
+    public static AwsNode fromEC2(def instance) {
+        def node = new AwsNode()
+        node.with {
+            id               = instance.instanceId
             name             = instance.tags.find { it.key == 'Name' }?.value
             imageId          = instance.imageId
             instanceType     = instance.instanceType
@@ -63,12 +43,33 @@ public class AwsNode {
             privateIp        = instance.privateIpAddress
             publicIp         = instance.publicIpAddress
             tags             = instance.tags.inject([:]) { tags, tag ->
-                if (tag.key != 'Name') { 
-                    tags << [(tag.key) : (tag.value)] 
-                } 
+                if (tag.key != 'Name') { tags << [(tag.key) : (tag.value)] } 
                 tags
             }
         }
+        node
+    }
+    
+    
+    def allTags() {
+        def result = [:]
+        
+        // state tags
+        if (state != '') { result << ['aws:state': state] }
+        
+        // aws tags
+        result << ['aws:name': name]
+        result << ['aws:imageid': imageId]
+        result << ['aws:subnetid': subnetId]
+        result << ['aws:instancetype': instanceType]
+        result << ['aws:keyname': keyName]
+        result << ['aws:publicip': publicIp]
+        result << ['aws:privateip': privateIp]
+        
+        // node tags
+        tags.inject(result) { map, k, v -> map << [(k as String) : (v as String)] }
+        
+        return result
     }
     
     
@@ -82,20 +83,21 @@ public class AwsNode {
         request.setMinCount(1)
         request.setMaxCount(1)
         request.setPrivateIpAddress(privateIp)
+        
         info "creating EC2: $this" 
-        instanceId =  amazonEC2.runInstances(request).getReservation().getInstances().get(0).getInstanceId()
+        id = amazonEC2.runInstances(request).getReservation().getInstances().get(0).getInstanceId()
         updateTags(amazonEC2)
         
-        def instance = waitForInstanceStateIsRunning(amazonEC2, instanceId, 50, 7000)
+        def instance = waitForInstanceIsRunning(amazonEC2, 50, 7000)
         publicIp  = instance.publicIpAddress
         privateIp = instance.privateIpAddress
     }
     
     
     def remove(def amazonEC2) {
-        if (instanceId) {
+        if (id) {
             info "removing EC2: $this" 
-            amazonEC2.terminateInstances(new TerminateInstancesRequest([instanceId]))
+            amazonEC2.terminateInstances(new TerminateInstancesRequest([id]))
         }
     }
     
@@ -107,57 +109,10 @@ public class AwsNode {
     }
 
     
-    def waitForInstanceStateIsRunning(AmazonEC2 amazonEC2, String instanceId, int attempts, int interval) {
-        for (int i = attempts; i > 0; i--) {
-            DescribeInstancesRequest request = new DescribeInstancesRequest()
-            request.setInstanceIds([instanceId])
-            DescribeInstancesResult result = amazonEC2.describeInstances(request)
-            Instance instance = result.getReservations().get(0).getInstances().get(0)
-            debug "wait for instance '$instanceId' state is running, current state: ${instance.getState().getCode()}"
-            if (instance.getState().getCode() == 16) { // instance is running
-                return instance
-            }
-            sleep(interval)
-        }
-        throw new RuntimeException("timeout waiting for instance $instanceId state is running after $attempts attempts. node: $this")
-    }
-    
-    
-    public Object asType(Class clazz) {
-        if (clazz == Node) {
-            return new Node([
-                    id: name, 
-                    host: usePublicIp ? publicIp : privateIp, 
-                    port: port, 
-                    username: username, 
-                    keyfile: keyfile, 
-                    tags: prepareNodeTags(),
-                    metadata: metadata])
-        }
-        
-        throw new RuntimeException("Unable to convert AwsNode to $clazz")
-    }
-    
-
-    private def prepareNodeTags() {
-        def nodeTags = [:]
-        if (state != '') { nodeTags << ['aws:state': state] }
-        nodeTags << ['aws:name': name]
-        nodeTags << ['aws:imageid': imageId]
-        nodeTags << ['aws:subnetid': subnetId]
-        nodeTags << ['aws:instancetype': instanceType]
-        nodeTags << ['aws:keyname': keyName]
-        nodeTags << ['aws:publicip': publicIp]
-        nodeTags << ['aws:privateip': privateIp]
-        tags.inject(nodeTags) { map, k, v -> map << [(k as String): (v as String)] }
-        return nodeTags
-    }
-    
-    
     private def updateTags(def amazonEC2) {
-        debug "updating tags: $tags to the instance: $instanceId"
+        debug "updating tags: $tags to the instance: $id"
         CreateTagsRequest createTagsRequest = new CreateTagsRequest()
-        createTagsRequest.withResources(instanceId)
+        createTagsRequest.withResources(id)
         tags.each { key, value -> createTagsRequest.withTags(new Tag(key as String, value as String)) }
         createTagsRequest.withTags(new Tag("Name", name))
         amazonEC2.createTags(createTagsRequest)
@@ -165,10 +120,27 @@ public class AwsNode {
     
     
     private def updateSecurityGroupIds(def amazonEC2) {
+        debug "updating security groups: $securityGroupIds to the instance: $id"
         ModifyInstanceAttributeRequest request = new ModifyInstanceAttributeRequest();
-        request.setInstanceId(instanceId);
+        request.setInstanceId(id);
         request.setGroups(securityGroupIds);
         amazonEC2.modifyInstanceAttribute(request);
     }
+    
+    
+    private def waitForInstanceIsRunning(def amazonEC2, int attempts, int interval) {
+        for (int i = attempts; i > 0; i--) {
+            DescribeInstancesRequest request = new DescribeInstancesRequest()
+            request.setInstanceIds([id])
+            DescribeInstancesResult result = amazonEC2.describeInstances(request)
+            Instance instance = result.getReservations().get(0).getInstances().get(0)
+            debug "wait for instance '$id' state is running, current state: ${instance.getState().getCode()}"
+            if (instance.getState().getCode() == 16) { // instance is running
+                return instance
+            }
+            sleep(interval)
+        }
+        throw new RuntimeException("timeout waiting for instance $id state is running after $attempts attempts. node: $this")
+    }
+    
 }
-

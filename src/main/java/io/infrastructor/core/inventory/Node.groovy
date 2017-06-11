@@ -69,4 +69,14 @@ public class Node {
     def updateMode(def target, def mode, def sudo = false) {
         if (mode) execute(command: "chmod $mode $target", sudo: sudo)
     }
+    
+    def allTags() {
+        return tags
+    }
+    
+    def listTags() {
+        def list = []
+        allTags().each() { k, v -> list << ("$k:$v" as String) } 
+        list
+    }
 }

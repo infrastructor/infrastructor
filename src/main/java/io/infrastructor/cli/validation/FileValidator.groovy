@@ -3,7 +3,6 @@ package io.infrastructor.cli.validation
 import com.beust.jcommander.IParameterValidator
 import com.beust.jcommander.ParameterException
 
-
 public class FileValidator implements IParameterValidator {
     
     @Override
