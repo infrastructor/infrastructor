@@ -2,6 +2,7 @@ package io.infrastructor.core.inventory.aws
 
 import org.junit.Test
 import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.build
+import static io.infrastructor.core.inventory.aws.AwsBlockDeviceMapping.awsBlockDeviceMapping
 
 public class AwsNodesTest {
 
@@ -413,6 +414,67 @@ public class AwsNodesTest {
         assert removed.keyName == 'A'
     }
     
+    
+    @Test
+    public void mergeRebuild_blockDeviceMappings() {
+        
+        def target = build {
+            node {
+                name = "node_A"
+                blockDeviceMapping {
+                    name = '/dev/sda1'
+                    deleteOnTermination = false
+                    encrypted = false
+                    iops = 1000
+                    volumeSize = 8
+                    volumeType = 'gp2'
+                }
+            } 
+        }
+        
+        def current = build {
+            node {
+                name = "node_A"
+                blockDeviceMapping {
+                    name = '/dev/sda2'
+                    deleteOnTermination = false
+                    encrypted = false
+                    iops = 1000
+                    volumeSize = 8
+                    volumeType = 'gp2'
+                }
+            } 
+        }
+
+        def result = target.merge(current)
+        
+        assert result.nodes.size() == 2
+        
+        def created = result.nodes.find { it.state == 'created' }
+        assert created
+        assert created.name == 'node_A'
+        assert created.blockDeviceMappings[0] == awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = false
+            encrypted = false
+            iops = 1000
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        def removed = result.nodes.find { it.state == 'removed' }
+        assert removed
+        assert removed.name == 'node_A'
+        assert removed.blockDeviceMappings[0] == awsBlockDeviceMapping {
+            name = '/dev/sda2'
+            deleteOnTermination = false
+            encrypted = false
+            iops = 1000
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+    }
+    
 
     @Test
     public void mergeUpdate_securityGroupIds() {
@@ -440,7 +502,7 @@ public class AwsNodesTest {
         assert updated.name == 'node_A'
         assert updated.securityGroupIds == ["B"]
     }
-
+    
     
     @Test
     public void mergeUpdate_tags() {

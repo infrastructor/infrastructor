@@ -14,7 +14,7 @@ public class AwsNodesBuilder {
     
     def node(Map params, def closure) { 
         def node = new AwsNode(params)
-        node.with(closure) 
+        node.with(closure)
         nodes << node
     }
     

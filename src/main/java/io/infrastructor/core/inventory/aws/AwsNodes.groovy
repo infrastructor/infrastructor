@@ -65,7 +65,8 @@ public class AwsNodes {
         ((existing.imageId      != candidate.imageId)      ||
          (existing.instanceType != candidate.instanceType) ||
          (existing.subnetId     != candidate.subnetId)     ||
-         (existing.keyName      != candidate.keyName))
+         (existing.keyName      != candidate.keyName)      ||
+         (existing.blockDeviceMappings != candidate.blockDeviceMappings))
     }
     
     private static boolean needUpdate(def candidate, def existing) {
