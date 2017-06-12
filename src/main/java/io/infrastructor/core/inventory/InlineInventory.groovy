@@ -1,6 +1,5 @@
 package io.infrastructor.core.inventory
 
-
 public class InlineInventory {
     
     def inventory = new Inventory()

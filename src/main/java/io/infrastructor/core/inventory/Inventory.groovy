@@ -5,7 +5,6 @@ import io.infrastructor.core.processing.ActionPlanRunner
 import static io.infrastructor.core.processing.ActionPlanRunner.setup
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
-
 public class Inventory {
     
     def nodes = []

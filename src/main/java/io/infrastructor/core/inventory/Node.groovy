@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull
 import static io.infrastructor.cli.ConsoleLogger.debug
 import static io.infrastructor.cli.ConsoleLogger.info
 
-
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class Node {
     

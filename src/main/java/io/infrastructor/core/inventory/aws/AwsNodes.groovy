@@ -37,7 +37,6 @@ public class AwsNodes {
     }
     
     def merge(AwsNodes current) {
-        
         current.nodes*.state = ''
         nodes*.state = 'created'
         
