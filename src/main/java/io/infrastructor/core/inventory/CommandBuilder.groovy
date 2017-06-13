@@ -7,7 +7,6 @@ import com.jcabi.ssh.Shell
 import static io.infrastructor.cli.ConsoleLogger.error
 import static io.infrastructor.cli.ConsoleLogger.debug
 
-
 public class CommandBuilder {
 
     def command

@@ -1,9 +1,8 @@
 package io.infrastructor.core.inventory
 
-
 public class CommandExecutionException extends RuntimeException {
     
-    private def result
+    def result
     
     public CommandExecutionException(def result) {
         super()

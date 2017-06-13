@@ -1,6 +1,7 @@
 package io.infrastructor.core.inventory.aws.ec2
 
 import io.infrastructor.core.inventory.aws.AwsNode
+
 import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromEC2
 import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromNodes
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel

@@ -56,19 +56,19 @@ public class ManagedAwsInventory {
     def setup(Closure definition = {}) {
         ec2s*.createInstances(amazonEC2)
         ec2s*.updateInstances(amazonEC2)
-        setup(getManagedNodes(), definition)
+        setup(getNodes(), definition)
         ec2s*.removeInstances(amazonEC2)
         route53s*.apply(amazonEC2, amazonRoute53)
     }
     
-    def getManagedNodes() {
+    def getNodes() {
         ec2s*.getInventory().flatten()
     }
     
     def dry() {
         info "DRY: analyzing changes..."
         printf ('%20s %28s %22s  %s\n', [defColor('STATE'), defColor('INSTANCE ID'), defColor('PRIVATE IP'), defColor('NAME')])
-        getManagedNodes().each {
+        getNodes().each {
             def coloredState
             switch (it.state) {
                 case 'created':

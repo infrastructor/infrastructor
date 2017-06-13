@@ -9,7 +9,6 @@ import static io.infrastructor.cli.ConsoleLogger.debug
 import static io.infrastructor.core.utils.NodeUtils.randomPort
 import static io.infrastructor.core.utils.FlatUUID.flatUUID
 
-
 @ToString(includePackage = false, includeNames = true)
 public class DockerNode {
     

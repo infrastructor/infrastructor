@@ -1,9 +1,12 @@
 package io.infrastructor.core.inventory.aws
 
 import com.amazonaws.services.ec2.AmazonEC2
+import com.amazonaws.services.ec2.model.BlockDeviceMapping
 import com.amazonaws.services.ec2.model.CreateTagsRequest
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest
 import com.amazonaws.services.ec2.model.DescribeInstancesResult
+import com.amazonaws.services.ec2.model.DescribeVolumesRequest
+import com.amazonaws.services.ec2.model.EbsBlockDevice
 import com.amazonaws.services.ec2.model.Instance
 import com.amazonaws.services.ec2.model.ModifyInstanceAttributeRequest
 import com.amazonaws.services.ec2.model.RunInstancesRequest
@@ -27,51 +30,40 @@ public class AwsNode extends Node {
     def usePublicIp = false
     def privateIp
     def publicIp
+    def blockDeviceMappings = [] as Set
     def state = ''
-
     
-    public static AwsNode fromEC2(def instance) {
-        def node = new AwsNode()
-        node.with {
-            id               = instance.instanceId
-            name             = instance.tags.find { it.key == 'Name' }?.value
-            imageId          = instance.imageId
-            instanceType     = instance.instanceType
-            subnetId         = instance.subnetId
-            keyName          = instance.keyName
-            securityGroupIds = instance.securityGroups.collect { it.groupId }
-            privateIp        = instance.privateIpAddress
-            publicIp         = instance.publicIpAddress
-            tags             = instance.tags.inject([:]) { tags, tag ->
-                if (tag.key != 'Name') { tags << [(tag.key) : (tag.value)] } 
-                tags
-            }
-        }
-        node
+    def blockDeviceMapping(Map params) {
+        blockDeviceMapping(params, {})
     }
     
+    def blockDeviceMapping(Closure closure) {
+        blockDeviceMapping([:], closure)
+    }
+    
+    def blockDeviceMapping(Map params, Closure closure) {
+        def blockDeviceMapping = new AwsBlockDeviceMapping(params)
+        blockDeviceMapping.with(closure)
+        blockDeviceMappings << blockDeviceMapping
+    }
     
     def allTags() {
         def result = [:]
         
-        // state tags
         if (state != '') { result << ['aws:state': state] }
+        result << [
+            'aws:name': name,
+            'aws:imageid': imageId,
+            'aws:subnetid': subnetId,
+            'aws:instancetype': instanceType,
+            'aws:keyname': keyName,
+            'aws:publicip': publicIp,
+            'aws:privateip': privateIp
+        ]
+        tags.each { k, v -> result << [(k as String) : (v as String)] }
         
-        // aws tags
-        result << ['aws:name': name]
-        result << ['aws:imageid': imageId]
-        result << ['aws:subnetid': subnetId]
-        result << ['aws:instancetype': instanceType]
-        result << ['aws:keyname': keyName]
-        result << ['aws:publicip': publicIp]
-        result << ['aws:privateip': privateIp]
-        
-        // node tags
-        tags.inject(result) { map, k, v -> map << [(k as String) : (v as String)] }
-        
-        return result
+        result
     }
-    
     
     def create(def amazonEC2) {
         RunInstancesRequest request = new RunInstancesRequest()
@@ -83,6 +75,7 @@ public class AwsNode extends Node {
         request.setMinCount(1)
         request.setMaxCount(1)
         request.setPrivateIpAddress(privateIp)
+        request.setBlockDeviceMappings(buildBlockDeviceMappings())
         
         info "creating EC2: $this" 
         id = amazonEC2.runInstances(request).getReservation().getInstances().get(0).getInstanceId()
@@ -93,7 +86,6 @@ public class AwsNode extends Node {
         privateIp = instance.privateIpAddress
     }
     
-    
     def remove(def amazonEC2) {
         if (id) {
             info "removing EC2: $this" 
@@ -101,14 +93,12 @@ public class AwsNode extends Node {
         }
     }
     
-    
     def update(def amazonEC2) {
         info "updating EC2: $this"
         updateTags(amazonEC2)
         updateSecurityGroupIds(amazonEC2)
     }
 
-    
     private def updateTags(def amazonEC2) {
         debug "updating tags: $tags to the instance: $id"
         CreateTagsRequest createTagsRequest = new CreateTagsRequest()
@@ -118,7 +108,6 @@ public class AwsNode extends Node {
         amazonEC2.createTags(createTagsRequest)
     }
     
-    
     private def updateSecurityGroupIds(def amazonEC2) {
         debug "updating security groups: $securityGroupIds to the instance: $id"
         ModifyInstanceAttributeRequest request = new ModifyInstanceAttributeRequest();
@@ -126,7 +115,6 @@ public class AwsNode extends Node {
         request.setGroups(securityGroupIds);
         amazonEC2.modifyInstanceAttribute(request);
     }
-    
     
     private def waitForInstanceIsRunning(def amazonEC2, int attempts, int interval) {
         for (int i = attempts; i > 0; i--) {
@@ -143,4 +131,18 @@ public class AwsNode extends Node {
         throw new RuntimeException("timeout waiting for instance $id state is running after $attempts attempts. node: $this")
     }
     
+    private def buildBlockDeviceMappings() {
+        def mappings = []
+        blockDeviceMappings.each { mapping ->
+            mappings << new BlockDeviceMapping().
+                withDeviceName(mapping.name).
+                withEbs(new EbsBlockDevice().
+                    withDeleteOnTermination(mapping.deleteOnTermination).
+                    withEncrypted(mapping.encrypted).
+                    withIops(mapping.iops).
+                    withVolumeSize(mapping.volumeSize).
+                    withVolumeType(mapping.volumeType))
+        }
+        mappings
+    }
 }

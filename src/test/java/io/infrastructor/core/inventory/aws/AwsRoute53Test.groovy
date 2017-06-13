@@ -49,7 +49,7 @@ public class AwsRoute53Test extends AwsTestBase {
             
             inventory.setup {}
             
-            def nodes = inventory.getManagedNodes()
+            def nodes = inventory.getNodes()
             
             assert nodes
             assert nodes.size() == 2
