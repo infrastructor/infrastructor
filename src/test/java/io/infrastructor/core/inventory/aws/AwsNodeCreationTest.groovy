@@ -14,7 +14,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
         try {
             
             def initialInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
-                ec2(parallel: 2, tags: [managed: true]) {
+                ec2(tags: [managed: true]) {
                     node {
                         name = 'simple-y'
                         imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
@@ -36,11 +36,11 @@ public class AwsNodeCreationTest extends AwsTestBase {
             }
             
             initialInventory.setup {}  
-            assert initialInventory.managedNodes.size() == 1
-            assert initialInventory.managedNodes[0].state == 'created'
+            assert initialInventory.nodes.size() == 1
+            assert initialInventory.nodes[0].state == 'created'
             
             def updatedInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
-                ec2(parallel: 2, tags: [managed: true]) {
+                ec2(tags: [managed: true]) {
                     node {
                         name = 'simple-y'
                         imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
@@ -62,9 +62,9 @@ public class AwsNodeCreationTest extends AwsTestBase {
             }
             
             updatedInventory.setup {} 
-            assert updatedInventory.managedNodes.size() == 2
-            assert updatedInventory.managedNodes.find { it.state == 'created' }
-            assert updatedInventory.managedNodes.find { it.state == 'removed' }
+            assert updatedInventory.nodes.size() == 2
+            assert updatedInventory.nodes.find { it.state == 'created' }
+            assert updatedInventory.nodes.find { it.state == 'removed' }
             
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 

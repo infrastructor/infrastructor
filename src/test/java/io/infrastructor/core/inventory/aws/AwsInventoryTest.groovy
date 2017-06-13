@@ -12,7 +12,7 @@ public class AwsInventoryTest extends AwsTestBase {
     @Test
     public void findAwsNodes() {
         try {
-            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
                 ec2(parallel: 2, tags: [managed: true]) {
                     node {
                         name = 'simple-y'
@@ -40,22 +40,18 @@ public class AwsInventoryTest extends AwsTestBase {
                         usePublicIp = true
                     }
                 }
-            }.setup {
-                nodes {
-                    println "Setup Node: $node"
-                }
-            }
+            }.setup()
             
-            awsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            assert inventory.nodes.size() == 2
+            
+            def readOnlyInventory = awsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
                 username = 'ubuntu'
                 keyfile  = 'resources/aws/aws_infrastructor_ci'
                 usePublicIp = true
                 tags = [managed: 'true']
-            }.setup {
-                nodes {
-                    println "AwsInventory Node: $node"
-                }
             }
+            
+            assert readOnlyInventory.nodes.size() == 2
             
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
