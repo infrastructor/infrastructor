@@ -5,6 +5,7 @@ import com.amazonaws.services.ec2.model.BlockDeviceMapping
 import com.amazonaws.services.ec2.model.CreateTagsRequest
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest
 import com.amazonaws.services.ec2.model.DescribeInstancesResult
+import com.amazonaws.services.ec2.model.DescribeVolumesRequest
 import com.amazonaws.services.ec2.model.EbsBlockDevice
 import com.amazonaws.services.ec2.model.Instance
 import com.amazonaws.services.ec2.model.ModifyInstanceAttributeRequest
@@ -44,27 +45,6 @@ public class AwsNode extends Node {
         def blockDeviceMapping = new AwsBlockDeviceMapping(params)
         blockDeviceMapping.with(closure)
         blockDeviceMappings << blockDeviceMapping
-    }
-    
-    public static AwsNode fromEC2(def instance) {
-        def node = new AwsNode()
-        node.with {
-            id               = instance.instanceId
-            name             = instance.tags.find { it.key == 'Name' }?.value
-            imageId          = instance.imageId
-            instanceType     = instance.instanceType
-            subnetId         = instance.subnetId
-            keyName          = instance.keyName
-            securityGroupIds = instance.securityGroups.collect { it.groupId }
-            publicIp         = instance.publicIpAddress
-            privateIp        = instance.privateIpAddress
-            blockDeviceMappings = retriveBlockDeviceMappings(instance)
-            tags             = instance.tags.inject([:]) { tags, tag ->
-                if (tag.key != 'Name') { tags << [(tag.key) : (tag.value)] } 
-                tags
-            }
-        }
-        node
     }
     
     def allTags() {
@@ -155,28 +135,13 @@ public class AwsNode extends Node {
         def mappings = []
         blockDeviceMappings.each { mapping ->
             mappings << new BlockDeviceMapping().
-                withDeviceName(name).
+                withDeviceName(mapping.name).
                 withEbs(new EbsBlockDevice().
                     withDeleteOnTermination(mapping.deleteOnTermination).
                     withEncrypted(mapping.encrypted).
                     withIops(mapping.iops).
                     withVolumeSize(mapping.volumeSize).
                     withVolumeType(mapping.volumeType))
-        }
-        mappings
-    }
-    
-    
-    private def retriveBlockDeviceMappings(def instance) {
-        def mappings = [] as Set
-        instance.getBlockDeviceMappings().each { mapping ->
-            mappings << new AwsBlockDeviceMapping(
-                deleteOnTermination = mapping.deleteOnTermination
-                encrypted = mapping.encrypted
-                iops = mapping.iops
-                volumeSize = mapping.volumeSize
-                volumeType = mapping.volumeType
-            )
         }
         mappings
     }

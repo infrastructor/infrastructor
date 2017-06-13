@@ -8,7 +8,7 @@ import groovy.transform.ToString
 public class AwsBlockDeviceMapping {
     def name = ''
     def deleteOnTermination = true
-    def encrypted = false
+    def encrypted
     def iops
     def volumeSize = 8
     def volumeType = 'gp2'
