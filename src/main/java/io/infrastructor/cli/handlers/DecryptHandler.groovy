@@ -8,7 +8,6 @@ import io.infrastructor.core.utils.CryptoUtilsException
 
 import static io.infrastructor.cli.ConsoleLogger.*
 
-
 public class DecryptHandler extends LoggingAwareHandler {
     
     @Parameter(names = ["-p", "--password"], required = true, description = "Decryption password", password = true)

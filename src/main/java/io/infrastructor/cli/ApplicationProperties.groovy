@@ -22,12 +22,16 @@ public class ApplicationProperties {
         properties.getProperty("build.number")
     }
     
+    public static String buildRevision() {
+        properties.getProperty("build.revision")
+    }
+    
     public static String applicationVersion() {
         properties.getProperty("application.version")
     }
 
     public static String fullVersion() {
-        "version " + applicationVersion() + ", build " + buildNumber()
+        "version " + applicationVersion() + ", build " + buildNumber() + ", revision " + buildRevision()
     }
     
     
