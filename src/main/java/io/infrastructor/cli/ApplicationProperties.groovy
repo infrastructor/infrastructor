@@ -18,8 +18,8 @@ public class ApplicationProperties {
         properties.load(ApplicationProperties.class.getResourceAsStream("/build.properties"))
     }
 
-    public static String buildNumber() {
-        properties.getProperty("build.number")
+    public static String buildDate() {
+        properties.getProperty("build.date")
     }
     
     public static String buildRevision() {
@@ -30,11 +30,6 @@ public class ApplicationProperties {
         properties.getProperty("application.version")
     }
 
-    public static String fullVersion() {
-        "version " + applicationVersion() + ", build " + buildNumber() + ", revision " + buildRevision()
-    }
-    
-    
     public static final int logLevel() {
         parseInt(getProperty(LOG_LEVEL, valueOf(INFO)))
     }

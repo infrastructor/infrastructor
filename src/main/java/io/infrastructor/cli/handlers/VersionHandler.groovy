@@ -21,7 +21,7 @@ public class VersionHandler {
     def execute() { 
         println("version:    ${blue(ApplicationProperties.applicationVersion())}\n" +
                 "revision:   ${blue(ApplicationProperties.buildRevision())}\n" + 
-                "build date: ${blue(ApplicationProperties.buildNumber())}")
+                "build date: ${blue(ApplicationProperties.buildDate())}")
     }
 }
 
