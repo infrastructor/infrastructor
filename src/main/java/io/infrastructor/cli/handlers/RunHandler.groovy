@@ -7,7 +7,6 @@ import org.codehaus.groovy.control.CompilationFailedException
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
-
 public class RunHandler extends LoggingAwareHandler {
     
     @DynamicParameter(names = ["-v", "-V", "--variable"])

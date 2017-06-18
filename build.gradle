@@ -23,7 +23,8 @@ sourceSets {
 processResources {
     filter ReplaceTokens, tokens: [
         "application.version" : '0.0.1',
-        "build.number" : new Date().format("dd-MM-yyyy HH:mm")
+        "build.date"          : new Date().format("dd-MM-yyyy HH:mm"),
+        "build.revision"      : "git rev-parse HEAD".execute().text 
     ]
 }
 

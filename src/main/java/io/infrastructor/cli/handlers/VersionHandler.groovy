@@ -2,6 +2,7 @@ package io.infrastructor.cli.handlers
 
 import io.infrastructor.cli.ApplicationProperties
 
+import static io.infrastructor.cli.ConsoleLogger.*
 
 public class VersionHandler {
     
@@ -18,7 +19,9 @@ public class VersionHandler {
     }
 
     def execute() { 
-        println "Infrastructor ${ApplicationProperties.fullVersion()}" 
+        println("version:    ${blue(ApplicationProperties.applicationVersion())}\n" +
+                "revision:   ${blue(ApplicationProperties.buildRevision())}\n" + 
+                "build date: ${blue(ApplicationProperties.buildDate())}")
     }
 }
 
