@@ -24,7 +24,7 @@ public class Node {
     Map tags = [:]
     Map metadata = [:]
     
-    private def lastResult = [:]
+    protected def lastResult = [:]
     
     private def shell = new ThreadLocal<Shell>() {
         @Override 

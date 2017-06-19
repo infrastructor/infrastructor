@@ -17,6 +17,13 @@ public class AwsInventory {
     public Inventory build(def awsAccessKey, def awsSecretKey, def awsRegion) {
         def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
         def awsNodes  = AwsNodesBuilder.fromEC2(amazonEC2).filterByTags(tags).usePublicHost(usePublicIp)
+
+        awsNodes.nodes.each {
+            it.username = owner.username
+            it.keyfile = owner.keyfile
+            it.port = owner.port
+        }
+        
         new Inventory(nodes: awsNodes.nodes)
     }
 
