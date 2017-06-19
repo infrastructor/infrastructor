@@ -53,7 +53,7 @@ public class AwsNodesBuilder {
                         volumeType = volume.volumeType
                     }
                 }
-            }.flatten()
+            }.flatten() as Set
             fromEC2(instance, mappings) 
         }
         fromNodes(nodes)
