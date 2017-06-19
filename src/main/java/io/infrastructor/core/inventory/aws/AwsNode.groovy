@@ -82,6 +82,9 @@ public class AwsNode extends Node {
         updateTags(amazonEC2)
         
         def instance = waitForInstanceIsRunning(amazonEC2, 50, 7000)
+        
+        debug "updating host to publicIp: ${candidate.usePublicIp}"
+        host      = usePublicIp ? instance.publicIpAddress : instance.privateIpAddress
         publicIp  = instance.publicIpAddress
         privateIp = instance.privateIpAddress
     }
