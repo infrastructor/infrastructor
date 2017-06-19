@@ -84,7 +84,7 @@ public class ManagedAwsInventory {
                     coloredState = blue('UNMODIFIED')
                     break
             }
-            printf ('%20s %28s %22s  %s\n', [coloredState, cyan(it.instanceId ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
+            printf ('%20s %28s %22s  %s\n', [coloredState, cyan(it.id ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
         } 
     }
 }
