@@ -23,8 +23,8 @@ public class AwsInventory {
         debug 'AwsInventory :: updating username, keyfile and port information for all inventory nodes'
         awsNodes.nodes.each {
             it.username = owner.username
-            it.keyfile = owner.keyfile
-            it.port = owner.port
+            it.keyfile  = owner.keyfile
+            it.port     = owner.port
         }
         
         def inventory = new Inventory(nodes: awsNodes.nodes)
