@@ -68,7 +68,7 @@ public class AwsNodes {
             (existing.subnetId     != candidate.subnetId)          ||
             (existing.keyName      != candidate.keyName))     
      
-        if (existing.blockDeviceMappings != null) {
+        if (candidate.blockDeviceMappings.size() > 0) {
             return result || (existing.blockDeviceMappings != candidate.blockDeviceMappings)
         }
           
