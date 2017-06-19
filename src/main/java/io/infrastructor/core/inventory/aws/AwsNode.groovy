@@ -18,7 +18,7 @@ import io.infrastructor.core.inventory.Node
 import static io.infrastructor.cli.ConsoleLogger.debug
 import static io.infrastructor.cli.ConsoleLogger.info
 
-@ToString(includePackage = false, includeNames = true, ignoreNulls = true)
+@ToString(includePackage = false, includeNames = true, ignoreNulls = true, includeSuperProperties = true)
 public class AwsNode extends Node {
     
     def name

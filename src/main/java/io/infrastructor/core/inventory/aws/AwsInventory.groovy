@@ -16,15 +16,21 @@ public class AwsInventory {
     
     public Inventory build(def awsAccessKey, def awsSecretKey, def awsRegion) {
         def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
+        
+        debug 'AwsInventory :: connecting to AWS to retrieve a list of EC2 instances'
         def awsNodes  = AwsNodesBuilder.fromEC2(amazonEC2).filterByTags(tags).usePublicHost(usePublicIp)
 
+        debug 'AwsInventory :: updating username, keyfile and port information for all inventory nodes'
         awsNodes.nodes.each {
             it.username = owner.username
             it.keyfile = owner.keyfile
             it.port = owner.port
         }
         
-        new Inventory(nodes: awsNodes.nodes)
+        def inventory = new Inventory(nodes: awsNodes.nodes)
+        debug "AwsInventory :: the final AWS inventory: $inventory"
+        
+        inventory
     }
 
     public static Inventory awsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, Closure definition) {
