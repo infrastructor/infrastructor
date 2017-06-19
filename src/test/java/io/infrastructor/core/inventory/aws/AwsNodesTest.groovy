@@ -475,6 +475,46 @@ public class AwsNodesTest {
         }
     }
     
+    @Test
+    public void mergeUnmodifiedIfblockDeviceMappingsAreNotSet() {
+        
+        def target = build {
+            node {
+                name = "node_A"
+            } 
+        }
+        
+        def current = build {
+            node {
+                name = "node_A"
+                blockDeviceMapping {
+                    name = '/dev/sda2'
+                    deleteOnTermination = false
+                    encrypted = false
+                    iops = 1000
+                    volumeSize = 8
+                    volumeType = 'gp2'
+                }
+            } 
+        }
+
+        def result = target.merge(current)
+        
+        assert result.nodes.size() == 1
+        
+        def removed = result.nodes.find { it.state == '' }
+        assert removed
+        assert removed.name == 'node_A'
+        assert removed.blockDeviceMappings[0] == awsBlockDeviceMapping {
+            name = '/dev/sda2'
+            deleteOnTermination = false
+            encrypted = false
+            iops = 1000
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+    }
+    
 
     @Test
     public void mergeUpdate_securityGroupIds() {

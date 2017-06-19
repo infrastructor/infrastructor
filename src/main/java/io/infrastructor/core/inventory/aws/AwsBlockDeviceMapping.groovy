@@ -3,12 +3,12 @@ package io.infrastructor.core.inventory.aws
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
-@EqualsAndHashCode
+@EqualsAndHashCode(includeFields = true)
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class AwsBlockDeviceMapping {
     def name = ''
     def deleteOnTermination = true
-    def encrypted
+    def encrypted = false
     def iops
     def volumeSize = 8
     def volumeType = 'gp2'

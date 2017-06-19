@@ -2,6 +2,7 @@ package io.infrastructor.core.inventory.aws.ec2
 
 import io.infrastructor.core.inventory.aws.AwsNode
 
+import static io.infrastructor.cli.ConsoleLogger.info
 import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromEC2
 import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromNodes
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
@@ -29,20 +30,24 @@ public class EC2 {
     }
         
     def initialize(def amazonEC2) {
+        info "EC2 :: Initializing managed AWS inventory..."
         def target  = fromNodes(targetState)
         def current = fromEC2(amazonEC2).filterByTags(tags)
         targetState = target.merge(current).nodes
     }
     
     def createInstances(def amazonEC2) {
+        info "EC2 :: Creating instances..."
         executeParallel(targetState.findAll { it.state == 'created' }, parallel) { it.create(amazonEC2) }
     }
 
     def removeInstances(def amazonEC2) {
+        info "EC2 :: Removing instances..."
         executeParallel(targetState.findAll { it.state == 'removed' }, parallel) { it.remove(amazonEC2) }
     }
     
     def updateInstances(def amazonEC2) {
+        info "EC2 :: Updating instances..."
         executeParallel(targetState.findAll { it.state == 'updated' }, parallel) { it.update(amazonEC2) }
     }
     

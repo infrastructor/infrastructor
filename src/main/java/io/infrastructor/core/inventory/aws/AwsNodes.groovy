@@ -47,14 +47,14 @@ public class AwsNodes {
                 existing.state = 'removed'
             } else if (needRebuild(candidate, existing)) {
                 candidate.state = 'created'
-                existing.state = 'removed'
+                existing.state  = 'removed'
             } else {
-                candidate.state     = needUpdate(candidate, existing) ? 'updated' : ''
-                candidate.id        = existing.id
-                candidate.publicIp  = existing.publicIp
-                candidate.privateIp = existing.privateIp
-                debug "updating host to publicIp: ${candidate.usePublicIp}"
-                candidate.host      = candidate.usePublicIp ? existing.publicIp : existing.privateIp
+                candidate.state               = needUpdate(candidate, existing) ? 'updated' : ''
+                candidate.id                  = existing.id
+                candidate.publicIp            = existing.publicIp
+                candidate.privateIp           = existing.privateIp
+                candidate.blockDeviceMappings = existing.blockDeviceMappings
+                candidate.host                = candidate.usePublicIp ? existing.publicIp : existing.privateIp
             }
         }
         
@@ -63,16 +63,23 @@ public class AwsNodes {
     }
     
     private static boolean needRebuild(def candidate, def existing) {
-        def result = ((existing.imageId      != candidate.imageId) ||
-            (existing.instanceType != candidate.instanceType)      ||
-            (existing.subnetId     != candidate.subnetId)          ||
+        def result = ((existing.imageId != candidate.imageId) ||
+            (existing.instanceType != candidate.instanceType) ||
+            (existing.subnetId     != candidate.subnetId)     ||
             (existing.keyName      != candidate.keyName))     
      
         if (candidate.blockDeviceMappings.size() > 0) {
-            return result || (existing.blockDeviceMappings != candidate.blockDeviceMappings)
+            def hasBDMChange = (existing.blockDeviceMappings != candidate.blockDeviceMappings)
+            
+            debug "A block device mapping definition found for instance ${candidate.name}. Has it changed: $hasBDMChange"
+            debug "Existing BDM: $existing.blockDeviceMappings"
+            debug "Provided BDM: $candidate.blockDeviceMappings"
+            
+            return (result || hasBDMChange)
+        } else {
+            debug "Block device mapping for instance ${candidate.name} is not specified. Ignoring it during the merge."
+            return result
         }
-          
-        return result
     }
     
     private static boolean needUpdate(def candidate, def existing) {
