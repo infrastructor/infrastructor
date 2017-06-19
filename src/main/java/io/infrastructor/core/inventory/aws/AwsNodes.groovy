@@ -1,6 +1,7 @@
 package io.infrastructor.core.inventory.aws
 
 import static io.infrastructor.core.utils.FilteringUtils.match
+import static io.infrastructor.cli.ConsoleLogger.debug
 
 public class AwsNodes {
     
@@ -52,6 +53,7 @@ public class AwsNodes {
                 candidate.id        = existing.id
                 candidate.publicIp  = existing.publicIp
                 candidate.privateIp = existing.privateIp
+                debug "updating host to publicIp: ${candidate.usePublicIp}"
                 candidate.host      = candidate.usePublicIp ? existing.publicIp : existing.privateIp
             }
         }
@@ -61,11 +63,16 @@ public class AwsNodes {
     }
     
     private static boolean needRebuild(def candidate, def existing) {
-        ((existing.imageId      != candidate.imageId)      ||
-         (existing.instanceType != candidate.instanceType) ||
-         (existing.subnetId     != candidate.subnetId)     ||
-         (existing.keyName      != candidate.keyName)      ||
-         (existing.blockDeviceMappings != candidate.blockDeviceMappings))
+        def result = ((existing.imageId      != candidate.imageId) ||
+            (existing.instanceType != candidate.instanceType)      ||
+            (existing.subnetId     != candidate.subnetId)          ||
+            (existing.keyName      != candidate.keyName))     
+     
+        if (existing.blockDeviceMappings != null) {
+            return result || (existing.blockDeviceMappings != candidate.blockDeviceMappings)
+        }
+          
+        return result
     }
     
     private static boolean needUpdate(def candidate, def existing) {

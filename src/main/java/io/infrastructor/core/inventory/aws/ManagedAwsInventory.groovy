@@ -5,7 +5,7 @@ import io.infrastructor.core.inventory.aws.route53.Route53
 import io.infrastructor.core.utils.AmazonEC2Utils
 import io.infrastructor.core.utils.AmazonRoute53Utils
 
-import static io.infrastructor.cli.ConsoleLogger.info
+import static io.infrastructor.cli.ConsoleLogger.*
 import static io.infrastructor.core.processing.ActionPlanRunner.setup
 
 public class ManagedAwsInventory {
@@ -72,19 +72,19 @@ public class ManagedAwsInventory {
             def coloredState
             switch (it.state) {
                 case 'created':
-                    coloredState =  vgreen("CREATED")
+                    coloredState =   green("CREATED")
                     break
                 case 'removed':
-                    coloredState =    vred("REMOVED")
+                    coloredState =     red("REMOVED")
                     break
                 case 'updated':
-                    coloredState = vyellow("UPDATED")
+                    coloredState =  yellow("UPDATED")
                     break
                 case '':
                     coloredState = blue('UNMODIFIED')
                     break
             }
-            printf ('%20s %28s %22s  %s\n', [coloredState, cyan(it.instanceId ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
+            printf ('%20s %28s %22s  %s\n', [coloredState, cyan(it.id ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
         } 
     }
 }
