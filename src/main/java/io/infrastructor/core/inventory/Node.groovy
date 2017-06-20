@@ -32,7 +32,7 @@ public class Node {
             if (keyfile != null) {
                 return new SSH(host, port, username, new File(keyfile).text) 
             } else { 
-                return new SSHByPassword(host, port, username, password) 
+                return new SSHByPassword(host, port, username, password)
             } 
         }
     }

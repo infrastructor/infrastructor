@@ -29,7 +29,6 @@ public class AwsInventory {
         
         def inventory = new Inventory(nodes: awsNodes.nodes)
         debug "AwsInventory :: the final AWS inventory: $inventory"
-        
         inventory
     }
 
