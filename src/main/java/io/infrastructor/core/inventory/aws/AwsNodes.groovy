@@ -94,9 +94,9 @@ public class AwsNodes {
             def hasBDMChange = (existing.blockDeviceMappings != candidate.blockDeviceMappings)
             
             if (hasBDMChange) {
-                debug "A block device mapping definition found for instance ${candidate.name}. Has it changed: $hasBDMChange"
+                debug "A block device mapping has changed for instance ${candidate.name}."
                 debug "Existing BDM: $existing.blockDeviceMappings"
-                debug "Provided BDM: $candidate.blockDeviceMappings"
+                debug "Current BDM:  $candidate.blockDeviceMappings"
             }
             
             return (result || hasBDMChange)
