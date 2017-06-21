@@ -47,6 +47,10 @@ public class AwsNode extends Node {
         blockDeviceMappings << blockDeviceMapping
     }
     
+    def getHost() {
+        usePublicIp ? publicIp : privateIp
+    }
+    
     def allTags() {
         def result = [:]
         

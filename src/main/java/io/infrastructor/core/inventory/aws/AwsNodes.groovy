@@ -8,17 +8,17 @@ public class AwsNodes {
     def nodes = []
 
     def usePublicHost() {
-        nodes.each { it.host = it.publicIp }
+        nodes.each { it.usePublicIp = true }
         this
     }
     
     def usePrivateHost() {
-        nodes.each { it.host = it.privateIp }
+        nodes.each { it.usePublicIp = false }
         this
     }
     
     def usePublicHost(def usePublic) {
-        usePublic ? usePublicHost() : usePrivateHost()
+        nodes.each { it.usePublicIp = usePublic }
         this
     }
     
@@ -37,24 +37,25 @@ public class AwsNodes {
         new AwsNodes(nodes: newNodes)
     }
     
+    def each(Closure closure) {
+        nodes.each(closure)
+        this
+    }
+    
     def merge(AwsNodes current) {
         current.nodes*.state = ''
         nodes*.state = 'created'
         
         current.nodes.each { existing ->
             def candidate = nodes.find { it.name == existing.name }
-            if (candidate == null) { 
+            if (needRebuild(candidate, existing)) { 
                 existing.state = 'removed'
-            } else if (needRebuild(candidate, existing)) {
-                candidate.state = 'created'
-                existing.state  = 'removed'
             } else {
                 candidate.state               = needUpdate(candidate, existing) ? 'updated' : ''
                 candidate.id                  = existing.id
                 candidate.publicIp            = existing.publicIp
                 candidate.privateIp           = existing.privateIp
                 candidate.blockDeviceMappings = existing.blockDeviceMappings
-                candidate.host                = candidate.usePublicIp ? existing.publicIp : existing.privateIp
             }
         }
         
@@ -63,6 +64,8 @@ public class AwsNodes {
     }
     
     private static boolean needRebuild(def candidate, def existing) {
+        
+        if (candidate == null) return true
         
         def imageHasChanged = (existing.imageId != candidate.imageId)
         
@@ -94,7 +97,7 @@ public class AwsNodes {
             def hasBDMChange = (existing.blockDeviceMappings != candidate.blockDeviceMappings)
             
             if (hasBDMChange) {
-                debug "A block device mapping has changed for instance ${candidate.name}."
+                debug "A block device mapping has changed for instance ${existing.id}."
                 debug "Existing BDM: $existing.blockDeviceMappings"
                 debug "Current BDM:  $candidate.blockDeviceMappings"
             }

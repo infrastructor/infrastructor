@@ -137,8 +137,8 @@ public class AwsNodesTest {
         }
         
         assert awsNodes.nodes.size() == 2
-        assert awsNodes.nodes.find { it.id == 'id_A' }.host == null
-        assert awsNodes.nodes.find { it.id == 'id_B' }.host == null
+        assert awsNodes.nodes.find { it.id == 'id_A' }.host == 'private'
+        assert awsNodes.nodes.find { it.id == 'id_B' }.host == 'private'
         
         def result = awsNodes.usePublicHost()
         assert result.nodes.size() == 2
@@ -163,8 +163,8 @@ public class AwsNodesTest {
         }
         
         assert awsNodes.nodes.size() == 2
-        assert awsNodes.nodes.find { it.id == 'id_A' }.host == null
-        assert awsNodes.nodes.find { it.id == 'id_B' }.host == null
+        assert awsNodes.nodes.find { it.id == 'id_A' }.host == 'private'
+        assert awsNodes.nodes.find { it.id == 'id_B' }.host == 'private'
         
         
         def result = awsNodes.usePrivateHost()
