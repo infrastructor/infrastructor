@@ -1,7 +1,7 @@
 package io.infrastructor.core.inventory.aws
 
-import static io.infrastructor.core.utils.FilteringUtils.match
 import static io.infrastructor.cli.ConsoleLogger.debug
+import static io.infrastructor.core.utils.FilteringUtils.match
 
 public class AwsNodes {
     
@@ -63,23 +63,47 @@ public class AwsNodes {
     }
     
     private static boolean needRebuild(def candidate, def existing) {
-        def result = ((existing.imageId != candidate.imageId) ||
-            (existing.instanceType != candidate.instanceType) ||
-            (existing.subnetId     != candidate.subnetId)     ||
-            (existing.keyName      != candidate.keyName))     
+        
+        def imageHasChanged = (existing.imageId != candidate.imageId)
+        
+        if (imageHasChanged) {
+            debug "Image has changed for ${candidate.name}: existing imageId: ${existing.imageId}, current imageId: ${candidate.imageId}"
+        }
+        
+        def instanceTypeHasChanged = (existing.instanceType != candidate.instanceType)
+        
+        if (instanceTypeHasChanged) {
+            debug "Instance Type has changed for ${candidate.name}: existing instanceType: ${existing.instanceType}, current instanceType: ${candidate.instanceType}"
+        }
+        
+        def subnetIdHasChanged = (existing.subnetId != candidate.subnetId)
+        
+        if (subnetIdHasChanged) {
+            debug "Subnet has changed for ${candidate.name}: existing subnetId: ${existing.subnetId}, current subnetId: ${candidate.subnetId}"
+        }
+        
+        def keyNameHasChanged = (existing.keyName != candidate.keyName)
+        
+        if (keyNameHasChanged) {
+            debug "Key name has changed for ${candidate.name}: existing keyName: ${existing.keyName}, current keyName: ${candidate.keyName}"
+        }
+        
+        def result = (imageHasChanged || instanceTypeHasChanged || subnetIdHasChanged || keyNameHasChanged) 
      
         if (candidate.blockDeviceMappings.size() > 0) {
             def hasBDMChange = (existing.blockDeviceMappings != candidate.blockDeviceMappings)
             
-            debug "A block device mapping definition found for instance ${candidate.name}. Has it changed: $hasBDMChange"
-            debug "Existing BDM: $existing.blockDeviceMappings"
-            debug "Provided BDM: $candidate.blockDeviceMappings"
+            if (hasBDMChange) {
+                debug "A block device mapping has changed for instance ${candidate.name}."
+                debug "Existing BDM: $existing.blockDeviceMappings"
+                debug "Current BDM:  $candidate.blockDeviceMappings"
+            }
             
             return (result || hasBDMChange)
         } else {
-            debug "Block device mapping for instance ${candidate.name} is not specified. Ignoring it during the merge."
             return result
         }
+        
     }
     
     private static boolean needUpdate(def candidate, def existing) {

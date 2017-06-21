@@ -198,5 +198,149 @@ public class AwsBlockDeviceMappingTest {
         
         assert mappingA != mappingB
     }
+    
+   
+    @Test
+    public void emptyFieldComparison_name() {
+        
+        def mappingA = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        def mappingB = awsBlockDeviceMapping {
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        assert mappingA == mappingB
+        
+    }
+    
+    @Test
+    public void emptyFieldComparison_deleteOnTermination() {
+        
+        def mappingA = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        def mappingB = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        assert mappingA == mappingB
+        
+    }
+    
+    @Test
+    public void emptyFieldComparison_encrypted() {
+        
+        def mappingA = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        def mappingB = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        assert mappingA == mappingB
+        
+    }
+    
+    @Test
+    public void emptyFieldComparison_iops() {
+        
+        def mappingA = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        def mappingB = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        assert mappingA == mappingB
+        
+    }
+    
+    @Test
+    public void emptyFieldComparison_volumeSize() {
+        
+        def mappingA = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        def mappingB = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeType = 'gp2'
+        }
+        
+        assert mappingA == mappingB
+        
+    }
+    
+    @Test
+    public void emptyFieldComparison_volumeType() {
+        
+        def mappingA = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+            volumeType = 'gp2'
+        }
+        
+        def mappingB = awsBlockDeviceMapping {
+            name = '/dev/sda1'
+            deleteOnTermination = true
+            encrypted = true
+            iops = 100
+            volumeSize = 8
+        }
+        
+        assert mappingA == mappingB
+        
+    }
 }
-

@@ -37,7 +37,7 @@ dependencies {
     compile "com.amazonaws:aws-java-sdk-route53:1.11.140"
     compile "ch.qos.logback:logback-classic:1.2.1"
     compile "org.fusesource.jansi:jansi:1.14"
-    compile group: 'com.jcraft', name: 'jsch', version: '0.1.53'
+    compile group: 'com.jcraft', name: 'jsch', version: '0.1.54'
     
     testCompile "junit:junit:4.12"
 }
@@ -47,7 +47,7 @@ repositories {
 }
 
 test {
-    systemProperty "LOG_LEVEL", "2"
+    systemProperty "LOG_LEVEL", "3"
     testLogging.showStandardStreams = true
     maxParallelForks = 20
     
