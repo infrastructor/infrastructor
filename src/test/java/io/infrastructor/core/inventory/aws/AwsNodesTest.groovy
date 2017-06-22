@@ -283,7 +283,7 @@ public class AwsNodesTest {
     }
     
     @Test
-    public void mergeThenSeveralNodesAlreadyExistsWithTheSameName() {
+    public void mergeWhenSeveralNodesAlreadyExistsWithTheSameName() {
         
         def target = build {
             node {
@@ -320,7 +320,7 @@ public class AwsNodesTest {
     }
     
     @Test
-    public void mergeThenSeveralNodesAlreadyExistsWithTheSameNameAndChangedOrder() {
+    public void mergeWhenSeveralNodesAlreadyExistsWithTheSameNameAndChangedOrder() {
         
         def target = build {
             node {
@@ -355,7 +355,6 @@ public class AwsNodesTest {
         assert removed.name == 'node_A'
         assert removed.imageId == 'imageY'
     }
-    
     
     @Test
     public void mergeRebuild_imageId() {
@@ -389,7 +388,6 @@ public class AwsNodesTest {
         assert removed.imageId == 'image_A'
     }
     
-    
     @Test
     public void mergeRebuild_instanceType() {
         
@@ -422,7 +420,6 @@ public class AwsNodesTest {
         assert removed.instanceType == 'A'
     }
 
-    
     @Test
     public void mergeRebuild_subnetId() {
         
@@ -455,7 +452,6 @@ public class AwsNodesTest {
         assert removed.subnetId == 'A'
     }
     
-
     @Test
     public void mergeRebuild_keyName() {
         
@@ -487,7 +483,6 @@ public class AwsNodesTest {
         assert removed.name == 'node_A'
         assert removed.keyName == 'A'
     }
-    
     
     @Test
     public void mergeRebuild_blockDeviceMappings() {
@@ -589,7 +584,6 @@ public class AwsNodesTest {
         }
     }
     
-
     @Test
     public void mergeUpdate_securityGroupIds() {
         
@@ -616,7 +610,6 @@ public class AwsNodesTest {
         assert updated.name == 'node_A'
         assert updated.securityGroupIds == ["B"]
     }
-    
     
     @Test
     public void mergeUpdate_tags() {
@@ -645,7 +638,6 @@ public class AwsNodesTest {
         assert updated.tags == [a: "A", b: "B"]
     }
     
-    
     @Test
     public void mergeTypelessTagsComparison() {
             
@@ -672,7 +664,6 @@ public class AwsNodesTest {
         assert updated.name == 'node_A'
         assert updated.tags == [1: '12', 'test': true]
     }
-
     
     @Test
     public void comprehensiveMerge() {
