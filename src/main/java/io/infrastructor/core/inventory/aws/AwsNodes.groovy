@@ -7,6 +7,11 @@ public class AwsNodes {
     
     def nodes = []
 
+    def each(Closure closure) {
+        nodes.each(closure)
+        this
+    }
+    
     def usePublicHost() {
         nodes.each { it.usePublicIp = true }
         this
@@ -23,23 +28,12 @@ public class AwsNodes {
     }
     
     def filter(def expression) {
-        def newNodes = nodes.findAll { node ->
-            match(node.listTags(), expression)
-        }
-        new AwsNodes(nodes: newNodes)
+        new AwsNodes(nodes: nodes.findAll { match(it.listTags(), expression) })
     }
     
     def filterByTags(def tags) {
-        def stringTags = tags.collectEntries { k, v -> [(k as String), (v as String)] }
-        def newNodes = nodes.findAll { node ->
-            node.allTags().intersect(stringTags) == stringTags
-        }
-        new AwsNodes(nodes: newNodes)
-    }
-    
-    def each(Closure closure) {
-        nodes.each(closure)
-        this
+        def stringTags = asStringMap(tags)
+        new AwsNodes(nodes: nodes.findAll { it.allTags().intersect(stringTags) == stringTags })
     }
     
     def merge(AwsNodes current) {
@@ -64,55 +58,57 @@ public class AwsNodes {
     }
     
     private static boolean needRebuild(def candidate, def existing) {
-        
         if (candidate == null) return true
         
-        def imageHasChanged = (existing.imageId != candidate.imageId)
-        
-        if (imageHasChanged) {
-            debug "Image has changed for ${candidate.name}: existing imageId: ${existing.imageId}, current imageId: ${candidate.imageId}"
+        if (existing.imageId != candidate.imageId) {
+            debug "needRebuild ${candidate.name} - ${existing.id} / image id E: ${existing.imageId}, C: ${candidate.imageId}"
+            return true
         }
         
-        def instanceTypeHasChanged = (existing.instanceType != candidate.instanceType)
-        
-        if (instanceTypeHasChanged) {
-            debug "Instance Type has changed for ${candidate.name}: existing instanceType: ${existing.instanceType}, current instanceType: ${candidate.instanceType}"
+        if (existing.instanceType != candidate.instanceType) {
+            debug "needRebuild ${candidate.name} - ${existing.id} / instance type E: ${existing.instanceType}, C: ${candidate.instanceType}"
+            return true
         }
         
-        def subnetIdHasChanged = (existing.subnetId != candidate.subnetId)
-        
-        if (subnetIdHasChanged) {
-            debug "Subnet has changed for ${candidate.name}: existing subnetId: ${existing.subnetId}, current subnetId: ${candidate.subnetId}"
+        if (existing.subnetId != candidate.subnetId) {
+            debug "needRebuild ${candidate.name} - ${existing.id} / subnet id E: ${existing.subnetId}, C: ${candidate.subnetId}"
+            return true
         }
         
-        def keyNameHasChanged = (existing.keyName != candidate.keyName)
-        
-        if (keyNameHasChanged) {
-            debug "Key name has changed for ${candidate.name}: existing keyName: ${existing.keyName}, current keyName: ${candidate.keyName}"
+        if (existing.keyName != candidate.keyName) {
+            debug "needRebuild ${candidate.name} - ${existing.id} / keyname E: ${existing.keyName}, C: ${candidate.keyName}"
+            return true
         }
         
-        def result = (imageHasChanged || instanceTypeHasChanged || subnetIdHasChanged || keyNameHasChanged) 
-     
         if (candidate.blockDeviceMappings.size() > 0) {
-            def hasBDMChange = (existing.blockDeviceMappings != candidate.blockDeviceMappings)
-            
-            if (hasBDMChange) {
-                debug "A block device mapping has changed for instance ${existing.id}."
-                debug "Existing BDM: $existing.blockDeviceMappings"
-                debug "Current BDM:  $candidate.blockDeviceMappings"
+            if (existing.blockDeviceMappings != candidate.blockDeviceMappings) {
+                debug "needRebuild ${candidate.name} - ${existing.id} / BDM E: $existing.blockDeviceMappings, C: $candidate.blockDeviceMappings"
+                return true
             }
-            
-            return (result || hasBDMChange)
-        } else {
-            return result
         }
         
+        return false
     }
     
     private static boolean needUpdate(def candidate, def existing) {
-        def existingTags  =  existing.tags.collectEntries { k, v -> [k as String, v as String] }
-        def candidateTags = candidate.tags.collectEntries { k, v -> [k as String, v as String] }
-        ((existing.securityGroupIds as Set) != (candidate.securityGroupIds as Set)) || (existingTags != candidateTags)
+        if ((existing.securityGroupIds as Set) != (candidate.securityGroupIds as Set)) {
+            debug "needUpdate ${candidate.name} - ${existing.id} / security groups E: $existing.securityGroupIds, C: $candidate.securityGroupIds"
+            return true
+        }
+        
+        def existingTags  = asStringMap(existing.tags)
+        def candidateTags = asStringMap(candidate.tags)
+        
+        if (existingTags != candidateTags) {
+            debug "needUpdate ${candidate.name} - ${existing.id} / tags E: $existingTags, C: $candidateTags"
+            return true
+        }
+        
+        return false
+    }
+    
+    private static asStringMap(def map) {
+        map.collectEntries { k, v -> [k as String, v as String] }
     }
 }
 

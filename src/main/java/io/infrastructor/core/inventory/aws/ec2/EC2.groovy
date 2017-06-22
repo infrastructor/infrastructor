@@ -29,23 +29,29 @@ public class EC2 {
     def node(Map params, Closure closure) {
         def awsNode = new AwsNode(params)
         awsNode.with(closure)
-        awsNode.tags << tags
-        if (awsNode.username    == null) awsNode.username    = username
-        if (awsNode.keyfile     == null) awsNode.keyfile     = keyfile
-        if (awsNode.usePublicIp == null) awsNode.usePublicIp = usePublicIp
         targetState << awsNode
     }
         
     def initialize(def amazonEC2) {
         info "EC2 :: Initializing managed AWS inventory"
+
         def existing = fromEC2(amazonEC2).filterByTags(tags)
-        // apply defaults for existing nodes
         existing.each {
             it.username    = username
             it.keyfile     = keyfile
             it.usePublicIp = usePublicIp
         }
-        targetState = fromNodes(targetState).merge(existing).nodes
+        
+        def defined = fromNodes(targetState)
+        defined.each {
+            if (it.username == null)    it.username = username
+            if (it.keyfile == null)     it.keyfile = keyfile
+            if (it.usePublicIp == null) it.usePublicIp = usePublicIp
+            it.tags << tags 
+        }
+        
+        targetState = defined.merge(existing).nodes
+        
         targetState.each { debug "EC2 node added to inventory: $it" }
     }
     
