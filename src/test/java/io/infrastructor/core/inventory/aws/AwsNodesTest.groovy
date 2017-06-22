@@ -282,6 +282,80 @@ public class AwsNodesTest {
         assert removed.name == 'node_B'
     }
     
+    @Test
+    public void mergeThenSeveralNodesAlreadyExistsWithTheSameName() {
+        
+        def target = build {
+            node {
+                name = "node_A"
+                imageId = "imageX"
+            } 
+        }
+        
+        def current = build {
+            node {
+                name = "node_A"
+                imageId = 'imageY'
+            } 
+
+            node {
+                name = "node_A"
+                imageId = 'imageX'
+            } 
+        }
+
+        def result = target.merge(current)
+        
+        assert result.nodes.size() == 2
+        
+        def created = result.nodes.find { it.state == '' }
+        assert created
+        assert created.name == 'node_A'
+        assert created.imageId == 'imageX'
+        
+        def removed = result.nodes.find { it.state == 'removed' }
+        assert removed
+        assert removed.name == 'node_A'
+        assert removed.imageId == 'imageY'
+    }
+    
+    @Test
+    public void mergeThenSeveralNodesAlreadyExistsWithTheSameNameAndChangedOrder() {
+        
+        def target = build {
+            node {
+                name = "node_A"
+                imageId = "imageX"
+            } 
+        }
+        
+        def current = build {
+            node {
+                name = "node_A"
+                imageId = 'imageX'
+            } 
+
+            node {
+                name = "node_A"
+                imageId = 'imageY'
+            } 
+        }
+
+        def result = target.merge(current)
+        
+        assert result.nodes.size() == 2
+        
+        def created = result.nodes.find { it.state == '' }
+        assert created
+        assert created.name == 'node_A'
+        assert created.imageId == 'imageX'
+        
+        def removed = result.nodes.find { it.state == 'removed' }
+        assert removed
+        assert removed.name == 'node_A'
+        assert removed.imageId == 'imageY'
+    }
+    
     
     @Test
     public void mergeRebuild_imageId() {
