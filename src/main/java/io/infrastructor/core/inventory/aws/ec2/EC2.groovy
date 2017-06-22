@@ -37,7 +37,7 @@ public class EC2 {
     }
         
     def initialize(def amazonEC2) {
-        info "EC2 :: Initializing managed AWS inventory..."
+        info "EC2 :: Initializing managed AWS inventory"
         def existing = fromEC2(amazonEC2).filterByTags(tags)
         // apply defaults for existing nodes
         existing.each {
@@ -50,17 +50,17 @@ public class EC2 {
     }
     
     def createInstances(def amazonEC2) {
-        debug "EC2 :: Creating instances..."
+        debug "EC2 :: Creating instances"
         executeParallel(targetState.findAll { it.state == 'created' }, parallel) { it.create(amazonEC2) }
     }
 
     def removeInstances(def amazonEC2) {
-        debug "EC2 :: Removing instances..."
+        debug "EC2 :: Removing instances"
         executeParallel(targetState.findAll { it.state == 'removed' }, parallel) { it.remove(amazonEC2) }
     }
     
     def updateInstances(def amazonEC2) {
-        debug "EC2 :: Updating instances..."
+        debug "EC2 :: Updating instances"
         executeParallel(targetState.findAll { it.state == 'updated' }, parallel) { it.update(amazonEC2) }
     }
     
