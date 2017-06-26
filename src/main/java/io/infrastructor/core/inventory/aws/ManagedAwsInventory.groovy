@@ -6,7 +6,6 @@ import io.infrastructor.core.utils.AmazonEC2Utils
 import io.infrastructor.core.utils.AmazonRoute53Utils
 
 import static io.infrastructor.cli.ConsoleLogger.*
-import static io.infrastructor.core.processing.ActionPlanRunner.setup
 
 public class ManagedAwsInventory {
     

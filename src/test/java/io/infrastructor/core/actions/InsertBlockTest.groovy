@@ -7,7 +7,7 @@ public class InsertBlockTest extends ActionTestBase {
     @Test
     public void insertBlockAtTheBeginningOfAFile() {
         inventory.setup {
-            nodes('as:root') {
+            nodes(tags: {'as:root'}, name: 'insertBlockAtTheBeginningOfAFile') {
                 file {
                     target  = '/test.txt'
                     content = """\

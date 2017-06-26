@@ -1,7 +1,7 @@
 package io.infrastructor.core.inventory
 
 import groovy.transform.ToString
-import io.infrastructor.core.processing.ActionPlanRunner
+import io.infrastructor.core.processing.SetupExecutionContext
 
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
@@ -14,8 +14,9 @@ public class Inventory {
         nodes << validate(node) 
     }
     
-    public Inventory setup(def closure) {
-        ActionPlanRunner.setup(nodes, closure) 
+    def setup(Closure closure) {
+        SetupExecutionContext context = new SetupExecutionContext(nodes, closure)
+        context.execute()
         this
     }
 }

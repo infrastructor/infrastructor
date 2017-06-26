@@ -1,12 +1,11 @@
 package io.infrastructor.core.actions
 
 import org.junit.Test
-import io.infrastructor.core.processing.ActionProcessingException
-import io.infrastructor.core.validation.ValidationException
+import io.infrastructor.core.processing.TaskExecutionException
 
 public class WaitForPortTest extends ActionTestBase {
     
-    @Test(expected = ActionProcessingException)
+    @Test(expected = TaskExecutionException)
     public void waitForUnlistenedPort() {
         inventory.setup {
             nodes('as:root') { 
@@ -15,7 +14,7 @@ public class WaitForPortTest extends ActionTestBase {
         }
     }
     
-    @Test(expected = ValidationException)
+    @Test(expected = TaskExecutionException)
     public void waitForUnknownPort() {
         inventory.setup {
             nodes('as:root') { 

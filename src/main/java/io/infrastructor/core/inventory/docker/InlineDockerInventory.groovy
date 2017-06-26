@@ -1,7 +1,7 @@
 package io.infrastructor.core.inventory.docker
 
 import static io.infrastructor.core.validation.ValidationHelper.validate
-import io.infrastructor.core.processing2.Inventory
+import io.infrastructor.core.inventory.Inventory
 
 public class InlineDockerInventory {
     

@@ -22,6 +22,8 @@ public class DockerNode {
     def keyfile
     Map tags = [:]
     
+    def stopOnError = false
+    
     def launch() {
         if (!port) {
             port = randomPort()
@@ -56,8 +58,17 @@ public class DockerNode {
     
     public Object asType(Class clazz) {
         if (clazz == Node) {
-            return new Node([id: id, host: 'localhost', port: port, username: username, password: password, keyfile: keyfile, tags: tags])
+            return new Node(
+                id: id, 
+                host: 'localhost', 
+                port: port, 
+                username: username, 
+                password: password, 
+                keyfile: keyfile, 
+                tags: tags, 
+                stopOnError: stopOnError)
         }
+        
         return null
     }
 }

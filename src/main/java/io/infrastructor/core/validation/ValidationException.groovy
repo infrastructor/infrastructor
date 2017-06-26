@@ -3,7 +3,9 @@ package io.infrastructor.core.validation
 
 public class ValidationException extends RuntimeException {
     
-    public ValidationException(String message) {
-        super(message);
+    def result = [:]
+    
+    public ValidationException(def result) {
+        this.result = result
     }
 }
