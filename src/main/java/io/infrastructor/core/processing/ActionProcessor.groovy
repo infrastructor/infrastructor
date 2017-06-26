@@ -16,20 +16,19 @@ import io.infrastructor.core.actions.TemplateActionBuilder
 import io.infrastructor.core.actions.UserActionBuilder
 import io.infrastructor.core.actions.WaitForPortActionBuilder
 
-import static io.infrastructor.cli.ConsoleLogger.debug
-import static io.infrastructor.cli.ConsoleLogger.info
-import static io.infrastructor.cli.ConsoleLogger.error
 import static io.infrastructor.core.validation.ValidationHelper.validate
 import static io.infrastructor.core.actions.InputAction.*
-
+import static org.fusesource.jansi.Ansi.Color.YELLOW
 
 public class ActionProcessor {
     
     def node
     def builders = [:]
+    def printer
     
-    public ActionProcessor(def node) {
+    public ActionProcessor(def node, def printer) {
         this.node = node
+        this.printer = printer
         builders['directory']   = new DirectoryActionBuilder()
         builders['group']       = new GroupActionBuilder()
         builders['fetch']       = new FetchActionBuilder()
@@ -44,30 +43,42 @@ public class ActionProcessor {
         builders['waitForPort'] = new WaitForPortActionBuilder()
     }
     
-    def static setup(def node, Closure closure) {
-        closure.delegate = new ActionProcessor(node)
+    def static setup(def node, def printer, Closure closure) {
+        closure.delegate = new ActionProcessor(node, printer)
+        //printer.print("running action set on node $node")
         closure()
+        //printer.print("done running action set on node $node")
     }
     
     def methodMissing(String name, Object args) {
+        printer.print("looking for action '$name' builder")
+
         def builder = builders[name]
         if (builder != null) {
-            debug "running action '$name' on node '$node.id'"
+            printer.print("running action '$name' on node '$node.id'")
             def action = builder."$name"(*args)
             validate(action)
             
             try {
                 action.execute(node)
             } catch (CommandExecutionException ex) {
-                error "action '$name' failed on node '$node.id': $ex.result"
+                printer.print( "action '$name' failed on node '$node.id': $ex.result")
                 return ex.result
             }
             
-            debug "action $name executed succesfully on node '$node.id': result: $node.lastResult"
+            printer.print("action $name executed succesfully on node '$node.id': result: $node.lastResult")
             return node.lastResult
         } else {
-            error "unknown action '$name'"
+            printer.print("unknown action '$name'")
             throw new ActionProcessingException("Unknown action: $name")
         }
+    }
+    
+    public void info(String message) {
+        printer.print("INFO: $message")
+    }
+    
+    public void debug(String message) {
+        printer.print("DEBUG: $message", YELLOW)
     }
 }

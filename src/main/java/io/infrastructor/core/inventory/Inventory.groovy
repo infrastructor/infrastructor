@@ -1,8 +1,8 @@
 package io.infrastructor.core.inventory
 
 import groovy.transform.ToString
+import io.infrastructor.core.processing.ActionPlanRunner
 
-import static io.infrastructor.core.processing.ActionPlanRunner.setup
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
@@ -15,7 +15,7 @@ public class Inventory {
     }
     
     public Inventory setup(def closure) {
-        setup(nodes, closure) 
+        ActionPlanRunner.setup(nodes, closure) 
         this
     }
 }

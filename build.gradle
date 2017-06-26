@@ -47,7 +47,7 @@ repositories {
 }
 
 test {
-    systemProperty "LOG_LEVEL", "3"
+    systemProperty "LOG_LEVEL", "2"
     testLogging.showStandardStreams = true
     maxParallelForks = 20
     
