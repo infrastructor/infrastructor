@@ -29,12 +29,12 @@ public class AwsBlockDeviceMapping {
         AwsBlockDeviceMapping bdm = (AwsBlockDeviceMapping) obj
         
         def builder = new EqualsBuilder()
-        addIfNotNull(builder, name,                bdm.name)
-        addIfNotNull(builder, deleteOnTermination, bdm.deleteOnTermination)
-        addIfNotNull(builder, encrypted,           bdm.encrypted)
-        addIfNotNull(builder, iops,                bdm.iops)
-        addIfNotNull(builder, volumeSize,          bdm.volumeSize)
-        addIfNotNull(builder, volumeType,          bdm.volumeType)
+        appendNotNull(builder, name,                bdm.name)
+        appendNotNull(builder, deleteOnTermination, bdm.deleteOnTermination)
+        appendNotNull(builder, encrypted,           bdm.encrypted)
+        appendNotNull(builder, iops,                bdm.iops)
+        appendNotNull(builder, volumeSize,          bdm.volumeSize)
+        appendNotNull(builder, volumeType,          bdm.volumeType)
         
         return builder.isEquals()
     }
@@ -51,7 +51,7 @@ public class AwsBlockDeviceMapping {
         return builder.toHashCode()
     }
     
-    private def addIfNotNull(def builder, def fieldX, def fieldY) {
+    private def appendNotNull(def builder, def fieldX, def fieldY) {
         if (fieldX != null && fieldY != null) builder.append(fieldX, fieldY)
     }
 }
