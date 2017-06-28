@@ -1,7 +1,5 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.core.inventory.aws.managed
 
-import io.infrastructor.core.inventory.aws.ec2.EC2
-import io.infrastructor.core.inventory.aws.route53.Route53
 import io.infrastructor.core.inventory.Inventory
 import io.infrastructor.core.utils.AmazonEC2Utils
 import io.infrastructor.core.utils.AmazonRoute53Utils

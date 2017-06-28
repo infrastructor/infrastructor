@@ -1,4 +1,4 @@
-package io.infrastructor.core.inventory.aws.route53
+package io.infrastructor.core.inventory.aws.managed
 
 import static io.infrastructor.cli.ConsoleLogger.info
 import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromEC2

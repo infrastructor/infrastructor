@@ -1,4 +1,4 @@
-package io.infrastructor.core.inventory.aws.route53
+package io.infrastructor.core.inventory.aws.managed
 
 import com.amazonaws.services.route53.model.Change
 import com.amazonaws.services.route53.model.ChangeAction

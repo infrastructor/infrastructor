@@ -9,7 +9,6 @@ import io.infrastructor.cli.handlers.VersionHandler
 
 import static io.infrastructor.cli.ConsoleLogger.error
 
-
 public class Starter {
     
     def static HANDLERS = [:]

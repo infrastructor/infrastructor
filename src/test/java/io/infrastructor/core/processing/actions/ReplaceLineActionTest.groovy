@@ -1,4 +1,4 @@
-package io.infrastructor.core.actions
+package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 

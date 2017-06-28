@@ -1,4 +1,4 @@
-package io.infrastructor.core.actions
+package io.infrastructor.core.processing.actions
 
 import java.util.Arrays
 import java.util.List

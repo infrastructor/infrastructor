@@ -1,4 +1,4 @@
-package io.infrastructor.core.inventory.aws.ec2
+package io.infrastructor.core.inventory.aws.managed
 
 import io.infrastructor.core.inventory.aws.AwsNode
 

@@ -37,7 +37,7 @@ public class RunHandler extends LoggingAwareHandler {
             importCustomizer.addStaticStars("io.infrastructor.cli.ConsoleLogger")
             importCustomizer.addStaticStars("io.infrastructor.core.inventory.InlineInventory")
             importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.AwsInventory")
-            importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.ManagedAwsInventory")
+            importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory")
             importCustomizer.addStaticStars("io.infrastructor.core.inventory.docker.InlineDockerInventory")
             importCustomizer.addStaticStars("io.infrastructor.core.processing.actions.InputAction")
                 
