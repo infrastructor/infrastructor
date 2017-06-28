@@ -7,7 +7,6 @@ import io.infrastructor.core.utils.CryptoUtils
 
 import static io.infrastructor.cli.ConsoleLogger.*
 
-
 public class EncryptHandler extends LoggingAwareHandler {
     
     @Parameter(names = ["-p", "--password"], required = true, description = "Encryption password", password = true)
@@ -18,13 +17,11 @@ public class EncryptHandler extends LoggingAwareHandler {
     
     @Parameter(names = ["-m", "--mode"], validateWith = ModeValidator)
     String mode = 'FULL'
-
     
     def description() {
         "Encrypt specified files (AES + Base64)."
     }
 
-    
     def options() {
         def options = super.options() 
         options << ["--file, -f" : "A file to encrypt. This file will be replaced with an encrypted one."]
@@ -32,12 +29,10 @@ public class EncryptHandler extends LoggingAwareHandler {
         options << ["--password, -p" : "An encryption key."]
     }
     
-    
     def usage() {
         ["infrastructor encrypt -f FILE1 -f FILE2 -p SECRET -m FULL", 
          "infrastructor encrypt -f TEMPLATE1 -f TEMPLATE2 -p SECRET -m PART"]
     }
-    
     
     def execute() {
         super.execute()
@@ -45,11 +40,9 @@ public class EncryptHandler extends LoggingAwareHandler {
         encryptFiles( files?.collect { new File(it) } )  
     }
     
-    
     def encryptFiles(def files) {
         files?.each { it.isDirectory() ? encryptFiles(it.listFiles()) : encryptFile(it) }
     }
-    
     
     def encryptFile(def file) {
         def encrypted = (mode == 'FULL') ?

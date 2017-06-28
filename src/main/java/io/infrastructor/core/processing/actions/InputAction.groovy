@@ -1,16 +1,21 @@
 package io.infrastructor.core.processing.actions
 
+import org.fusesource.jansi.Ansi
+
 public class InputAction {
     
     def message = 'enter a value: '
     def secret = false
     
-    def execute() {
+    synchronized def execute() {
         def console  = System.console()
+        
+        def inputMessage = (Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).a(message).reset()).toString()
+        
         if (secret) {
-            return console.readPassword(message) 
+            return console.readPassword(inputMessage) 
         } else {
-            return console.readLine(message)
+            return console.readLine(inputMessage)
         }
     }
     
@@ -25,7 +30,6 @@ public class InputAction {
     def static input(Map params, Closure closure) {
         def action = new InputAction(params)
         action.with(closure)
-        validate(action)
         action.execute()
     }
 }

@@ -1,6 +1,6 @@
 package io.infrastructor.core.processing
 
-import io.infrastructor.core.processing.actions.DebugActionBuilder
+import io.infrastructor.core.processing.actions.LogActionBuilder
 import io.infrastructor.core.processing.actions.DirectoryActionBuilder
 import io.infrastructor.core.processing.actions.FetchActionBuilder
 import io.infrastructor.core.processing.actions.FileActionBuilder
@@ -16,65 +16,83 @@ import io.infrastructor.core.processing.actions.WaitForPortActionBuilder
 import io.infrastructor.core.utils.FilteringUtils
 import io.infrastructor.core.utils.ProgressLogger
 
+import io.infrastructor.cli.ConsoleLogger
+
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 import static org.fusesource.jansi.Ansi.Color.GREEN
+import static org.fusesource.jansi.Ansi.Color.BLUE
 import static org.fusesource.jansi.Ansi.Color.RED
 
 class TaskBuilder {
     def nodes
-    def logger = new ProgressLogger()
     
     class Task {
         def name = 'unnamed'
         def tags = { true }
         def parallel = 1
+        def logger = new ProgressLogger()
         
-        def execute(def nodes, def logger, Closure closure) {
+        def execute(def nodes, Closure closure) {
             def filtered = filter(nodes, tags)
             
             logger.setTotal(filtered.size())
             logger.status("EXECUTING")
-            logger.info(":task - $name")
+            logger.print(":task - $name", BLUE)
             
             executeParallel(filtered, parallel) { node -> 
                 try {
                     def task = closure.clone()
                     task.resolveStrategy = Closure.DELEGATE_FIRST
                     task.delegate = context(node, logger)
-                    task()
+                    executeWithLogger(logger) {
+                        task()
+                    }
                 } catch (TaskExecutionException ex) {
-                    logger.error("FAILED: $ex.message, task: $name, node: $node.id, action: $ex.action, result: $ex.result")
+                    logger.error("FAILED: $ex.message, $ex.context")
                     throw ex
                 } finally {
                     logger.increase()
                 }
             }
             
-            logger.info(":task - $name done.")
-            logger.finish("Done.")
+            logger.print(":task - $name done.", BLUE)
+            logger.finish("done.")
         }
         
         private def context(def node, def logger) {
-            def ctx = new TaskExecutionContext()
-            ctx.handlers << ['debug':       new DebugActionBuilder(logger)]
-            ctx.handlers << ['directory':   new DirectoryActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['fetch':       new FetchActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['file':        new FileActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['upload':      new FileUploadActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['group':       new GroupActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['insertBlock': new InsertBlockActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['replace':     new ReplaceActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['replaceLine': new ReplaceLineActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['shell':       new ShellActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['template':    new TemplateActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['user':        new UserActionBuilder(node: node, logger: logger)]
-            ctx.handlers << ['waitForPort': new WaitForPortActionBuilder(node: node, logger: logger)]
+            def ctx = new TaskExecutionContext(node)
+            ctx.functions << ['debug':       new LogActionBuilder(logger)]
+            ctx.functions << ['info':        new LogActionBuilder(logger)]
+            ctx.functions << ['directory':   new DirectoryActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['fetch':       new FetchActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['file':        new FileActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['upload':      new FileUploadActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['group':       new GroupActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['insertBlock': new InsertBlockActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['replace':     new ReplaceActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['replaceLine': new ReplaceLineActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['shell':       new ShellActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['template':    new TemplateActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['user':        new UserActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['waitForPort': new WaitForPortActionBuilder(node: node, logger: logger)]
             ctx
         }
         
         private def filter(def nodes, def tags) {
             tags ? nodes.findAll { FilteringUtils.match(it.listTags(), tags) } : nodes
         }
+        
+        
+        private def executeWithLogger(def logger, Closure closure) {
+            def proxy = ProxyMetaClass.getInstance(ConsoleLogger.class)
+            proxy.use {
+                ConsoleLogger.metaClass.static.info  = logger.&info
+                ConsoleLogger.metaClass.static.error = logger.&error
+                ConsoleLogger.metaClass.static.debug = logger.&debug
+                closure()
+            }
+        }
+        
     }
     
     def TaskBuilder(def nodes) {
@@ -82,11 +100,11 @@ class TaskBuilder {
     }
     
     def nodes(Map params, Closure closure) {
-        new Task(params).execute(nodes, logger, closure)
+        new Task(params).execute(nodes, closure)
     }
     
     def nodes(Closure closure) {
-        new Task().execute(nodes, logger, closure)
+        new Task().execute(nodes, closure)
     }
     
     def nodes(String tags, Closure closure) {

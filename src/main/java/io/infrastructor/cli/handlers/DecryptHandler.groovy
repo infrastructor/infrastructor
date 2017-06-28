@@ -35,21 +35,17 @@ public class DecryptHandler extends LoggingAwareHandler {
          "infrastructor decrypt -f TEMPLATE1 -f TEMPLATE2 -p SECRET -m PART"]
     }
     
-    
     def execute() {
         super.execute()
         info "${blue('starting decryption with mode ' + mode)}"
         decryptFiles(files.collect { new File(it) }) 
     }
     
-    
     def decryptFiles(def files) {
         files?.each { it.isDirectory() ? decryptFiles(it.listFiles()) : decryptFile(it) }
     }
 
-    
     def decryptFile(def file) {
-        
         try {
             def encrypted = (mode == 'FULL') ?
             CryptoUtils.decryptFullBytes(password, file.getText()) :

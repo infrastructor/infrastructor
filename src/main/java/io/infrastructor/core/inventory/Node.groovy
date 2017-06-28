@@ -7,7 +7,6 @@ import groovy.transform.ToString
 import javax.validation.constraints.NotNull
 
 import static io.infrastructor.cli.ConsoleLogger.debug
-import static io.infrastructor.cli.ConsoleLogger.info
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class Node {
@@ -40,8 +39,11 @@ public class Node {
     }
     
     def execute(Map map) {
+        
         debug "execute: $map"
+        
         lastResult = new CommandBuilder(map).execute(shell.get())
+        
         if (stopOnError && lastResult.exitcode != 0) { 
             throw new CommandExecutionException(lastResult)
         } else {

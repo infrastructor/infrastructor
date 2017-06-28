@@ -47,9 +47,9 @@ repositories {
 }
 
 test {
-    systemProperty "LOG_LEVEL", "2"
+    systemProperty "LOG_LEVEL", "3"
     testLogging.showStandardStreams = true
-    maxParallelForks = 20
+    maxParallelForks = 4
     
     useJUnit {
         // activate AWS tests
@@ -57,9 +57,8 @@ test {
             excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
         } else {
             systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
-            systemProperty "awsSecretKey", project.getProperty("awsSecretKey")
-            systemProperty "awsRegion", project.getProperty("awsRegion")
-            maxParallelForks = 1
+            systemProperty "awsSecretKey",   project.getProperty("awsSecretKey")
+            systemProperty "awsRegion",      project.getProperty("awsRegion")
         }
     }
     

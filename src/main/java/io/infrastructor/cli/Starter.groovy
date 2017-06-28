@@ -23,6 +23,14 @@ public class Starter {
     }
 
     public static void main(String [] args) {
+        
+        // get rid of any SLF4J error output messages
+        System.setErr(new PrintStream(
+                new OutputStream() {
+                    public void write(int b) {
+                    }
+                }));
+        
         if (args.length == 0) {
             HANDLERS['help'].execute()
         } else {
