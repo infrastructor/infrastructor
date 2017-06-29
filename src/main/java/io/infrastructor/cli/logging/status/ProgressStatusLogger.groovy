@@ -3,7 +3,7 @@ package io.infrastructor.cli.logging.status
 class ProgressStatusLogger {
     
     private final char filledChar   = '=';
-    private final char unfilledChar = ' ';
+    private final char unfilledChar = '-'
     private final int progressLineSize = 30;
     private String status = "";
 
@@ -18,7 +18,7 @@ class ProgressStatusLogger {
         return progress
     }
     
-    public def setStatus(def status) {
+    public def status(def status) {
         this.status = status
         listener()
     }

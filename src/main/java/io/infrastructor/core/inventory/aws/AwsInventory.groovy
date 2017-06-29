@@ -5,6 +5,7 @@ import io.infrastructor.core.inventory.Node
 
 import static io.infrastructor.cli.logging.ProgressLogger.*
 import static io.infrastructor.core.utils.AmazonEC2Utils.amazonEC2
+import io.infrastructor.cli.logging.status.TextStatusLogger
 
 public class AwsInventory {
 
@@ -15,8 +16,12 @@ public class AwsInventory {
     def usePublicIp = false
     
     public Inventory build(def awsAccessKey, def awsSecretKey, def awsRegion) {
-        def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
         
+        def statusLine = addStatusLogger(new TextStatusLogger()) 
+        statusLine.status("> initializing aws inventory")
+        
+        def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
+
         debug 'AwsInventory :: connecting to AWS to retrieve a list of EC2 instances'
         def awsNodes  = AwsNodesBuilder.fromEC2(amazonEC2).filterByTags(tags).usePublicHost(usePublicIp)
 
@@ -28,7 +33,12 @@ public class AwsInventory {
         }
         
         def inventory = new Inventory(nodes: awsNodes.nodes)
-        debug "AwsInventory :: the final AWS inventory: $inventory"
+        
+        debug "AwsInventory :: inventory is ready [${inventory.nodes.size()} node]: "
+        inventory.nodes.each { debug( "Node: ${defColor(it.name)}: ${yellow(it as String)}")}
+        
+        removeStatusLogger(statusLine)
+        
         inventory
     }
 

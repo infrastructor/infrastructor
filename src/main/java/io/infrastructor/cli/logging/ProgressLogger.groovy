@@ -16,7 +16,7 @@ class ProgressLogger {
     def static statusPrinted = 0
     def static statusLoggers = []
     
-    
+    def static enableDynamics = Boolean.parseBoolean(System.getProperty("ENABLE_DYNAMIC_LOGS", "true"))
     
     def static synchronized addStatusLogger(def logger) {
         eraseStatus()
@@ -40,19 +40,22 @@ class ProgressLogger {
     }
 
     def static synchronized eraseStatus() {
-        while(statusPrinted > 0) {
-            print(Ansi.ansi().cursorUpLine().eraseLine().reset())
-            statusPrinted--
+        if (enableDynamics) {
+            while(statusPrinted > 0) {
+                print(Ansi.ansi().cursorUpLine().eraseLine().reset())
+                statusPrinted--
+            }
         }
     }
     
     def static synchronized updateStatus() {
-        statusLoggers.each {
-            statusPrinted++
-            println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).bold().fg(DEFAULT).a(it.status()).reset())
+        if (enableDynamics) { 
+            statusLoggers.each {
+                statusPrinted++
+                println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).bold().fg(DEFAULT).a(it.status()).reset())
+            }
         }
     }
-    
 
 
     public static void debug(String message) {
@@ -72,8 +75,6 @@ class ProgressLogger {
             printLine(red(message))
         }
     }
-    
-    
     
     public static final def red(String text) {
         ansi().fg(Color.RED).a(text).reset()

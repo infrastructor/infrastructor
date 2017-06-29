@@ -14,6 +14,8 @@ import io.infrastructor.core.processing.actions.TemplateActionBuilder
 import io.infrastructor.core.processing.actions.UserActionBuilder
 import io.infrastructor.core.processing.actions.WaitForPortActionBuilder
 import io.infrastructor.core.utils.FilteringUtils
+import io.infrastructor.cli.logging.status.ProgressStatusLogger
+import io.infrastructor.cli.logging.status.TextStatusLogger
 
 import static io.infrastructor.cli.logging.ProgressLogger.*
 
@@ -21,7 +23,6 @@ import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 import static org.fusesource.jansi.Ansi.Color.GREEN
 import static org.fusesource.jansi.Ansi.Color.BLUE
 import static org.fusesource.jansi.Ansi.Color.RED
-import io.infrastructor.cli.logging.status.TextStatusLogger
 
 class TaskBuilder {
     def nodes
@@ -34,9 +35,10 @@ class TaskBuilder {
         def execute(def nodes, Closure closure) {
             def filtered = filter(nodes, tags)
             
-            info ":TASK name: $name"
+            info "${blue(':TASK ' + name)}"
             
-            def statusLine = addStatusLogger(new TextStatusLogger()) 
+            def statusLine   = addStatusLogger(new TextStatusLogger()) 
+            def progressLine = addStatusLogger(new ProgressStatusLogger(total: filtered.size(), status: 'nodes processed')) 
             
             executeParallel(filtered, parallel) { node -> 
                 try {
@@ -46,15 +48,19 @@ class TaskBuilder {
                     statusLine.status( "> Task: $name")
                     task()
                 } catch (TaskExecutionException ex) {
+                    removeStatusLogger(statusLine)
+                    removeStatusLogger(progressLine)
                     error "FAILED: $ex.message, $ex.context"
                     throw ex
                 } finally {
-                    //
+                    progressLine.increase()
                 }
             }
             
-            info ":TASK name: $name - done"
+            info "${blue(':TASK ' + name + " - done")}"
+            
             removeStatusLogger(statusLine)
+            removeStatusLogger(progressLine)
         }
         
         
