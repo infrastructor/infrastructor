@@ -16,7 +16,7 @@ public class ReplaceActionBuilder extends AbstractNodeActionBuilder {
         def action = new ReplaceAction(params)
         action.with(closure)
         validate(action)
-        action.execute(node, logger)
+        action.execute(node)
     }
 }
 

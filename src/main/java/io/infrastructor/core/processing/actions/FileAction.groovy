@@ -12,7 +12,7 @@ public class FileAction {
     def mode
     def sudo = false
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         node.writeText(target, content.stripMargin().stripIndent(), sudo)
         node.updateOwner(target, owner, sudo)
         node.updateGroup(target, group, sudo)

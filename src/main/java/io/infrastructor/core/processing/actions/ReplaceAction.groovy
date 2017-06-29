@@ -16,7 +16,7 @@ public class ReplaceAction {
     def all = false
     def sudo = false
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         def stream = new ByteArrayOutputStream()
         node.readFile(target, stream, sudo)
             

@@ -7,7 +7,7 @@ class ShellAction {
     def command
     def sudo
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         node.execute(command: command, sudo: sudo)
         node.lastResult
     }

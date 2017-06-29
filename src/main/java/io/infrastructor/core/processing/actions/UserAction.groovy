@@ -11,7 +11,7 @@ public class UserAction {
     def home
     def sudo = false
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         node.execute(
             command: "useradd${uid ? ' -u ' + uid : ''}${shell ? ' -s ' + shell : ''}${home ? ' -d ' + home  : ''} $name", 
             sudo: sudo)

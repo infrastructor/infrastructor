@@ -20,7 +20,7 @@ public class WaitForPortActionBuilder extends AbstractNodeActionBuilder {
         def action = new WaitForPortAction(params)
         action.with(closure)
         validate(action)
-        action.execute(node, logger)
+        action.execute(node)
     }
 }
 

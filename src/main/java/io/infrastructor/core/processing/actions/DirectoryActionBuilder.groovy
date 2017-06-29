@@ -16,7 +16,7 @@ public class DirectoryActionBuilder extends AbstractNodeActionBuilder {
         def action = new DirectoryAction(params)
         action.with(closure)
         validate(action)
-        action.execute(node, logger)
+        action.execute(node)
     }
 }
 

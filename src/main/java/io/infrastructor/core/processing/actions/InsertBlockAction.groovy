@@ -17,7 +17,7 @@ public class InsertBlockAction {
     private static final int START = 0
     private static final int END   = 1
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         def stream = new ByteArrayOutputStream()
         node.readFile(target, stream, sudo)
         def content = stream.toString()

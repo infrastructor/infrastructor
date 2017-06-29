@@ -15,7 +15,7 @@ public class FileUploadAction {
     def decryptionKey
     def sudo = false
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         if (decryptionKey) {
             byte [] decrypted = CryptoUtils.decryptFullBytes(decryptionKey, new File(source).text)
             node.writeFile(target, new ByteArrayInputStream(decrypted), sudo)

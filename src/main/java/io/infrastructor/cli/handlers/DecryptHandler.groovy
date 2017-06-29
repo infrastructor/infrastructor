@@ -6,7 +6,7 @@ import io.infrastructor.cli.validation.ModeValidator
 import io.infrastructor.core.utils.CryptoUtils
 import io.infrastructor.core.utils.CryptoUtilsException
 
-import static io.infrastructor.cli.ConsoleLogger.*
+import static io.infrastructor.cli.logging.ProgressLogger.*
 
 public class DecryptHandler extends LoggingAwareHandler {
     

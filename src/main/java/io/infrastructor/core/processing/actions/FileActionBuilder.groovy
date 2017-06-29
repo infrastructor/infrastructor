@@ -16,7 +16,7 @@ public class FileActionBuilder extends AbstractNodeActionBuilder {
         def action = new FileAction(params)
         action.with(closure)
         validate(action)
-        action.execute(node, logger)
+        action.execute(node)
     }
 }
 

@@ -9,7 +9,7 @@ public class GroupAction {
     def gid
     def sudo = false
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         node.execute(command: "groupadd ${gid ? '-g ' + gid : ''} $name", sudo: sudo)
         node.lastResult
     }

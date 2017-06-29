@@ -23,7 +23,7 @@ public class TemplateAction {
     def decryptionMode = PART
     def engine = new SimpleTemplateEngine()
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         def template = new File(source).text
         def content = ''
             

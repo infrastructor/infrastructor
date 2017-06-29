@@ -20,7 +20,7 @@ class ShellActionBuilder extends AbstractNodeActionBuilder {
         def action = new ShellAction(params)
         action.with(closure)
         validate(action)
-        action.execute(node, logger)
+        action.execute(node)
     }
 }
 

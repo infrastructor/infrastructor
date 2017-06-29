@@ -16,6 +16,6 @@ public class UserActionBuilder extends AbstractNodeActionBuilder {
         def action = new UserAction(params)
         action.with(closure)
         validate(action)
-        action.execute(node, logger)
+        action.execute(node)
     }
 }

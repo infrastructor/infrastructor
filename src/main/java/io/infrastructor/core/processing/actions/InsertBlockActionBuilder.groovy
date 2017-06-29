@@ -16,7 +16,7 @@ public class InsertBlockActionBuilder extends AbstractNodeActionBuilder {
         def action = new InsertBlockAction(params)
         action.with(closure)
         validate(action)
-        action.execute(node, logger)
+        action.execute(node)
     }
 }
 

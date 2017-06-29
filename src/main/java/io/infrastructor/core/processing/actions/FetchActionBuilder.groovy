@@ -16,7 +16,7 @@ public class FetchActionBuilder extends AbstractNodeActionBuilder {
         def action = new FetchAction(params)
         action.with(closure)
         validate(action)
-        action.execute(node, logger)
+        action.execute(node)
     }
 }
 

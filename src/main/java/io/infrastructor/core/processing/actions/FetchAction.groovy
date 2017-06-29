@@ -10,7 +10,7 @@ public class FetchAction {
     def target
     def sudo = false
     
-    def execute(def node, def logger) {
+    def execute(def node) {
         new FileOutputStream(target).withCloseable {
             node.readFile(source, it, sudo) 
         }

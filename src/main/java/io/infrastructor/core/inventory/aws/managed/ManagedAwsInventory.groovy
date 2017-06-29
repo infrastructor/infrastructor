@@ -4,7 +4,7 @@ import io.infrastructor.core.inventory.Inventory
 import io.infrastructor.core.utils.AmazonEC2Utils
 import io.infrastructor.core.utils.AmazonRoute53Utils
 
-import static io.infrastructor.cli.ConsoleLogger.*
+import static io.infrastructor.cli.logging.ProgressLogger.*
 
 public class ManagedAwsInventory {
     

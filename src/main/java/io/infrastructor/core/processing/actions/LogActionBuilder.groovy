@@ -1,18 +1,15 @@
 package io.infrastructor.core.processing.actions
 
+import static io.infrastructor.cli.logging.ProgressLogger.*
+
 class LogActionBuilder {
-    def logger
-    
-    def LogActionBuilder(def logger) {
-        this.logger = logger
-    }
-    
+   
     def debug(def message) {
-        logger.debug(message)
+        debug(message)
     }
     
     def info(def message) {
-        logger.info(message)
+        info(message)
     }
 }
 

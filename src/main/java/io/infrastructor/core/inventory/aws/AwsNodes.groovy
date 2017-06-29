@@ -1,6 +1,6 @@
 package io.infrastructor.core.inventory.aws
 
-import static io.infrastructor.cli.ConsoleLogger.debug
+import static io.infrastructor.cli.logging.ProgressLogger.*
 import static io.infrastructor.core.utils.FilteringUtils.match
 
 public class AwsNodes {

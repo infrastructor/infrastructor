@@ -1,0 +1,106 @@
+package io.infrastructor.cli.logging
+
+import org.fusesource.jansi.Ansi
+import org.fusesource.jansi.Ansi.Color
+
+import static io.infrastructor.cli.ApplicationProperties.logLevel
+import static org.fusesource.jansi.Ansi.ansi
+import static org.fusesource.jansi.Ansi.Color.DEFAULT
+
+class ProgressLogger {
+
+    public static final int ERROR = 1
+    public static final int INFO = 2
+    public static final int DEBUG = 3
+    
+    def static statusPrinted = 0
+    def static statusLoggers = []
+    
+    
+    
+    def static synchronized addStatusLogger(def logger) {
+        eraseStatus()
+        statusLoggers.add(0, logger)
+        logger.listener = { eraseStatus(); updateStatus() }
+        updateStatus()
+        logger
+    }
+    
+    def static synchronized removeStatusLogger(def logger) {
+        eraseStatus()
+        statusLoggers.remove(logger)
+        logger.listener = {}
+        updateStatus()
+    }
+    
+    def static synchronized printLine(def message, Ansi.Color color = DEFAULT) {
+        eraseStatus()
+        println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).fg(color).a(message).reset())
+        updateStatus()
+    }
+
+    def static synchronized eraseStatus() {
+        while(statusPrinted > 0) {
+            print(Ansi.ansi().cursorUpLine().eraseLine().reset())
+            statusPrinted--
+        }
+    }
+    
+    def static synchronized updateStatus() {
+        statusLoggers.each {
+            statusPrinted++
+            println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).bold().fg(DEFAULT).a(it.status()).reset())
+        }
+    }
+    
+
+
+    public static void debug(String message) {
+        if (DEBUG <= logLevel()) {
+            printLine(yellow(message))
+        }
+    }
+
+    public static void info(String message) {
+        if (INFO <= logLevel()) {
+            printLine(defColor(message))
+        }
+    }
+
+    public static void error(String message) {
+        if (ERROR <= logLevel()) {
+            printLine(red(message))
+        }
+    }
+    
+    
+    
+    public static final def red(String text) {
+        ansi().fg(Color.RED).a(text).reset()
+    }
+    
+    public static final def green(String text) {
+        ansi().fg(Color.GREEN).a(text).reset()
+    }
+    
+    public static final def yellow(String text) {
+        ansi().fg(Color.YELLOW).a(text).reset()
+    }
+    
+    public static final def blue(String text) {
+        ansi().fg(Color.BLUE).a(text).reset()
+    }
+    
+    public static final def magenta(String text) {
+        ansi().fg(Color.MAGENTA).a(text).reset()
+    }
+    
+    public static final def cyan(String text) {
+        ansi().fg(Color.CYAN).a(text).reset()
+    }
+    
+    public static final def defColor(String text) {
+        ansi().fg(Color.DEFAULT).a(text).reset()
+    }
+}
+

@@ -5,7 +5,7 @@ import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
 import io.infrastructor.core.utils.CryptoUtils
 
-import static io.infrastructor.cli.ConsoleLogger.*
+import static io.infrastructor.cli.logging.ProgressLogger.*
 
 public class EncryptHandler extends LoggingAwareHandler {
     

@@ -3,6 +3,8 @@ package io.infrastructor.core.processing.actions
 import io.infrastructor.core.processing.ActionProcessingException
 import javax.validation.constraints.NotNull
 
+import static io.infrastructor.cli.logging.ProgressLogger.*
+
 public class WaitForPortAction {
     
     @NotNull
@@ -10,15 +12,15 @@ public class WaitForPortAction {
     def delay = 1000
     def attempts = 3
     
-    def execute(def node, def logger) {
-        logger.info("waiting for node: $node.host:$port, id: $node.id")
+    def execute(def node) {
+       info("waiting for node: $node.host:$port, id: $node.id")
         
         for(int i = 0; i < attempts; i++) {
-            logger.debug("attempt $i, trying to connect to $node.host:$port")
+            debug("attempt $i, trying to connect to $node.host:$port")
             
             def result = attempt(node.host)
             if (result)  {
-                logger.debug("connection to $node.host:$port succeed!")
+                debug("connection to $node.host:$port succeed!")
                 return
             }
             sleep(delay)

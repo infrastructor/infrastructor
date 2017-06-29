@@ -7,7 +7,7 @@ import io.infrastructor.cli.handlers.HelpHandler
 import io.infrastructor.cli.handlers.RunHandler
 import io.infrastructor.cli.handlers.VersionHandler
 
-import static io.infrastructor.cli.ConsoleLogger.error
+import static io.infrastructor.cli.logging.ProgressLogger.*
 
 public class Starter {
     

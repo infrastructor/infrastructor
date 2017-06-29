@@ -14,14 +14,14 @@ import io.infrastructor.core.processing.actions.TemplateActionBuilder
 import io.infrastructor.core.processing.actions.UserActionBuilder
 import io.infrastructor.core.processing.actions.WaitForPortActionBuilder
 import io.infrastructor.core.utils.FilteringUtils
-import io.infrastructor.core.utils.ProgressLogger
 
-import io.infrastructor.cli.ConsoleLogger
+import static io.infrastructor.cli.logging.ProgressLogger.*
 
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 import static org.fusesource.jansi.Ansi.Color.GREEN
 import static org.fusesource.jansi.Ansi.Color.BLUE
 import static org.fusesource.jansi.Ansi.Color.RED
+import io.infrastructor.cli.logging.status.TextStatusLogger
 
 class TaskBuilder {
     def nodes
@@ -30,69 +30,56 @@ class TaskBuilder {
         def name = 'unnamed'
         def tags = { true }
         def parallel = 1
-        def logger = new ProgressLogger()
         
         def execute(def nodes, Closure closure) {
             def filtered = filter(nodes, tags)
             
-            logger.setTotal(filtered.size())
-            logger.status("EXECUTING")
-            logger.print(":task - $name", BLUE)
+            info ":TASK name: $name"
+            
+            def statusLine = addStatusLogger(new TextStatusLogger()) 
             
             executeParallel(filtered, parallel) { node -> 
                 try {
                     def task = closure.clone()
                     task.resolveStrategy = Closure.DELEGATE_FIRST
-                    task.delegate = context(node, logger)
-                    executeWithLogger(logger) {
-                        task()
-                    }
+                    task.delegate = context(node)
+                    statusLine.status( "> Task: $name")
+                    task()
                 } catch (TaskExecutionException ex) {
-                    logger.error("FAILED: $ex.message, $ex.context")
+                    error "FAILED: $ex.message, $ex.context"
                     throw ex
                 } finally {
-                    logger.increase()
+                    //
                 }
             }
             
-            logger.print(":task - $name done.", BLUE)
-            logger.finish("done.")
+            info ":TASK name: $name - done"
+            removeStatusLogger(statusLine)
         }
         
-        private def context(def node, def logger) {
+        
+        private def context(def node) {
             def ctx = new TaskExecutionContext(node)
-            ctx.functions << ['debug':       new LogActionBuilder(logger)]
-            ctx.functions << ['info':        new LogActionBuilder(logger)]
-            ctx.functions << ['directory':   new DirectoryActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['fetch':       new FetchActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['file':        new FileActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['upload':      new FileUploadActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['group':       new GroupActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['insertBlock': new InsertBlockActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['replace':     new ReplaceActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['replaceLine': new ReplaceLineActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['shell':       new ShellActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['template':    new TemplateActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['user':        new UserActionBuilder(node: node, logger: logger)]
-            ctx.functions << ['waitForPort': new WaitForPortActionBuilder(node: node, logger: logger)]
+            ctx.functions << ['debug':       new LogActionBuilder()]
+            ctx.functions << ['info':        new LogActionBuilder()]
+            ctx.functions << ['directory':   new DirectoryActionBuilder(node: node)]
+            ctx.functions << ['fetch':       new FetchActionBuilder(node: node)]
+            ctx.functions << ['file':        new FileActionBuilder(node: node)]
+            ctx.functions << ['upload':      new FileUploadActionBuilder(node: node)]
+            ctx.functions << ['group':       new GroupActionBuilder(node: node)]
+            ctx.functions << ['insertBlock': new InsertBlockActionBuilder(node: node)]
+            ctx.functions << ['replace':     new ReplaceActionBuilder(node: node)]
+            ctx.functions << ['replaceLine': new ReplaceLineActionBuilder(node: node)]
+            ctx.functions << ['shell':       new ShellActionBuilder(node: node)]
+            ctx.functions << ['template':    new TemplateActionBuilder(node: node)]
+            ctx.functions << ['user':        new UserActionBuilder(node: node)]
+            ctx.functions << ['waitForPort': new WaitForPortActionBuilder(node: node)]
             ctx
         }
         
         private def filter(def nodes, def tags) {
             tags ? nodes.findAll { FilteringUtils.match(it.listTags(), tags) } : nodes
         }
-        
-        
-        private def executeWithLogger(def logger, Closure closure) {
-            def proxy = ProxyMetaClass.getInstance(ConsoleLogger.class)
-            proxy.use {
-                ConsoleLogger.metaClass.static.info  = logger.&info
-                ConsoleLogger.metaClass.static.error = logger.&error
-                ConsoleLogger.metaClass.static.debug = logger.&debug
-                closure()
-            }
-        }
-        
     }
     
     def TaskBuilder(def nodes) {

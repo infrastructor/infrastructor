@@ -1,11 +1,10 @@
 package io.infrastructor.core.inventory.docker
 
 import groovy.transform.ToString
-import io.infrastructor.cli.ConsoleLogger
 import io.infrastructor.core.inventory.Node
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.cli.ConsoleLogger.debug
+import static io.infrastructor.cli.logging.ProgressLogger.*
 import static io.infrastructor.core.utils.NodeUtils.randomPort
 import static io.infrastructor.core.utils.FlatUUID.flatUUID
 
