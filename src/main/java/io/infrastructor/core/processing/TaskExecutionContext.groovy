@@ -3,13 +3,17 @@ package io.infrastructor.core.processing
 import io.infrastructor.core.inventory.CommandExecutionException
 import io.infrastructor.core.validation.ValidationException
 
+import static io.infrastructor.cli.logging.ProgressLogger.*
+
 class TaskExecutionContext {
     
+    def parent
+    def node
     def functions  = [:]
-    def properties = [:]
     
-    def TaskExecutionContext(def node) {
-        properties['node'] = node
+    def TaskExecutionContext(def node, def parent ) {
+        this.node = node
+        this.parent = parent
     }
     
     def methodMissing(String name, Object args) {
@@ -24,23 +28,9 @@ class TaskExecutionContext {
                 throw new TaskExecutionException("action processing error", [action: name, message: ex.message])
             }
         } else {
+            debug("function $name not found in the task execution context, looking at parent one")
+            parent.$'name'(*args)
             throw new TaskExecutionException("action not found error", [action: name, args: args])
-        }
-    }
-    
-    def propertyMissing(String name, def value) { 
-        if (properties.containsKey(name)) {
-            properties[name] = value 
-        } else {
-            throw new TaskExecutionException("property not found error", [property: name, value: value])
-        }
-    }
-    
-    def propertyMissing(String name) { 
-        if (properties.containsKey(name)) {
-            return properties[name]
-        } else {
-            throw new TaskExecutionException("property not found error", [property: name])
         }
     }
 }

@@ -1,14 +1,17 @@
 package io.infrastructor.core.processing
 
+import static io.infrastructor.cli.logging.ProgressLogger.*
+
 class ExecutionContext {
     
+    def parent 
     def handlers = [:]
     
     def methodMissing(String name, Object args) {
         if (handlers.containsKey(name)) {
             handlers[name]."$name"(*args)
         } else {
-            println "Unknown function: $name, args: $args" 
+            parent.$'name'(*args)
         }
     }
 }

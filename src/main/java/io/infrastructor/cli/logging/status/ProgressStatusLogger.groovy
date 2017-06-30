@@ -4,7 +4,7 @@ class ProgressStatusLogger {
     
     private final char filledChar   = '=';
     private final char unfilledChar = '-'
-    private final int progressLineSize = 30;
+    private final int progressLineSize = 15;
     private String status = "";
 
     def total = 0;

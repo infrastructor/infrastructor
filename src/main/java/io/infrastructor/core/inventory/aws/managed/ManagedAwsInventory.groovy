@@ -5,6 +5,8 @@ import io.infrastructor.core.utils.AmazonEC2Utils
 import io.infrastructor.core.utils.AmazonRoute53Utils
 
 import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
+import io.infrastructor.cli.logging.status.TextStatusLogger
 
 public class ManagedAwsInventory {
     
@@ -24,10 +26,14 @@ public class ManagedAwsInventory {
     }
     
     def ec2(Map params, Closure setup) {
-        def ec2 = new EC2(params)
-        ec2.with(setup)
-        ec2.initialize(amazonEC2)
-        ec2s << ec2
+        withTextStatus { status ->
+            status << "> initializing ec2 managed set"
+            def ec2 = new EC2(params)
+            ec2.with(setup)
+            ec2.initialize(amazonEC2)
+            ec2s << ec2
+            status << "> initializing ec2 managed set done"
+        }
     }
     
     def route53(Map params) {
@@ -52,11 +58,22 @@ public class ManagedAwsInventory {
     }
     
     def setup(Closure definition = {}) {
-        ec2s*.createInstances(amazonEC2)
-        ec2s*.updateInstances(amazonEC2)
-        new Inventory(nodes: getNodes()).setup(definition)
-        ec2s*.removeInstances(amazonEC2)
-        route53s*.apply(amazonEC2, amazonRoute53)
+        withTextStatus { status ->
+            status << "> creating aws instances"
+            ec2s*.createInstances(amazonEC2)
+        
+            status << "> updating aws instances"
+            ec2s*.updateInstances(amazonEC2)
+        
+            status << "> setting up aws instances"
+            new Inventory(nodes: getNodes()).setup(definition)
+        
+            status << "> removing aws instances"
+            ec2s*.removeInstances(amazonEC2)
+        
+            status << "> updating route53 records"
+            route53s*.apply(amazonEC2, amazonRoute53)
+        } 
     }
     
     def getNodes() {
@@ -69,18 +86,18 @@ public class ManagedAwsInventory {
         getNodes().each {
             def coloredState
             switch (it.state) {
-                case 'created':
-                    coloredState =   green("CREATED")
-                    break
-                case 'removed':
-                    coloredState =     red("REMOVED")
-                    break
-                case 'updated':
-                    coloredState =  yellow("UPDATED")
-                    break
-                case '':
-                    coloredState = blue('UNMODIFIED')
-                    break
+            case 'created':
+                coloredState =   green("CREATED")
+                break
+            case 'removed':
+                coloredState =     red("REMOVED")
+                break
+            case 'updated':
+                coloredState =  yellow("UPDATED")
+                break
+            case '':
+                coloredState = blue('UNMODIFIED')
+                break
             }
             printf ('%20s %28s %22s  %s\n', [coloredState, cyan(it.id ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
         } 
