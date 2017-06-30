@@ -3,7 +3,7 @@ package io.infrastructor.core.inventory.aws
 import org.junit.Test
 import org.junit.experimental.categories.Category
 
-import static io.infrastructor.core.inventory.aws.ManagedAwsInventory.managedAwsInventory
+import static io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory.managedAwsInventory
 import static io.infrastructor.core.inventory.aws.AwsInventory.awsInventory
 
 @Category(AwsCategory.class)

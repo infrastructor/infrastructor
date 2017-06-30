@@ -6,8 +6,7 @@ import com.jcabi.ssh.Shell
 import groovy.transform.ToString
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.cli.ConsoleLogger.debug
-import static io.infrastructor.cli.ConsoleLogger.info
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class Node {
@@ -24,6 +23,8 @@ public class Node {
     Map tags = [:]
     Map metadata = [:]
     
+    def stopOnError = true
+    
     protected def lastResult = [:]
     
     private def shell = new ThreadLocal<Shell>() {
@@ -38,10 +39,15 @@ public class Node {
     }
     
     def execute(Map map) {
-        debug "execute: $map"
+        
+        debug "ssh execute: $map"
+        
         lastResult = new CommandBuilder(map).execute(shell.get())
-        if (lastResult.exitcode != 0) { 
+        
+        if (stopOnError && lastResult.exitcode != 0) { 
             throw new CommandExecutionException(lastResult)
+        } else {
+            return lastResult
         }
     }
     

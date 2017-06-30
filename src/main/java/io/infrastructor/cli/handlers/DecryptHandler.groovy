@@ -6,7 +6,7 @@ import io.infrastructor.cli.validation.ModeValidator
 import io.infrastructor.core.utils.CryptoUtils
 import io.infrastructor.core.utils.CryptoUtilsException
 
-import static io.infrastructor.cli.ConsoleLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 public class DecryptHandler extends LoggingAwareHandler {
     
@@ -35,21 +35,17 @@ public class DecryptHandler extends LoggingAwareHandler {
          "infrastructor decrypt -f TEMPLATE1 -f TEMPLATE2 -p SECRET -m PART"]
     }
     
-    
     def execute() {
         super.execute()
         info "${blue('starting decryption with mode ' + mode)}"
         decryptFiles(files.collect { new File(it) }) 
     }
     
-    
     def decryptFiles(def files) {
         files?.each { it.isDirectory() ? decryptFiles(it.listFiles()) : decryptFile(it) }
     }
 
-    
     def decryptFile(def file) {
-        
         try {
             def encrypted = (mode == 'FULL') ?
             CryptoUtils.decryptFullBytes(password, file.getText()) :

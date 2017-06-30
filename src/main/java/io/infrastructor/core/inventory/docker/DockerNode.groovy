@@ -1,11 +1,10 @@
 package io.infrastructor.core.inventory.docker
 
 import groovy.transform.ToString
-import io.infrastructor.cli.ConsoleLogger
 import io.infrastructor.core.inventory.Node
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.cli.ConsoleLogger.debug
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 import static io.infrastructor.core.utils.NodeUtils.randomPort
 import static io.infrastructor.core.utils.FlatUUID.flatUUID
 
@@ -21,6 +20,8 @@ public class DockerNode {
     def password
     def keyfile
     Map tags = [:]
+    
+    def stopOnError = false
     
     def launch() {
         if (!port) {
@@ -56,8 +57,17 @@ public class DockerNode {
     
     public Object asType(Class clazz) {
         if (clazz == Node) {
-            return new Node([id: id, host: 'localhost', port: port, username: username, password: password, keyfile: keyfile, tags: tags])
+            return new Node(
+                id: id, 
+                host: 'localhost', 
+                port: port, 
+                username: username, 
+                password: password, 
+                keyfile: keyfile, 
+                tags: tags, 
+                stopOnError: stopOnError)
         }
+        
         return null
     }
 }

@@ -2,7 +2,7 @@ package io.infrastructor.cli.handlers
 
 import com.beust.jcommander.Parameter
 import io.infrastructor.cli.validation.LogLevelValidator
-import io.infrastructor.cli.ConsoleLogger
+import io.infrastructor.cli.logging.ConsoleLogger
 
 import static io.infrastructor.cli.ApplicationProperties.LOG_LEVEL
 import static java.lang.String.valueOf

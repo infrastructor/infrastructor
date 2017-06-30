@@ -7,8 +7,7 @@ import io.infrastructor.cli.handlers.HelpHandler
 import io.infrastructor.cli.handlers.RunHandler
 import io.infrastructor.cli.handlers.VersionHandler
 
-import static io.infrastructor.cli.ConsoleLogger.error
-
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 public class Starter {
     
@@ -23,6 +22,14 @@ public class Starter {
     }
 
     public static void main(String [] args) {
+        
+        // get rid of any SLF4J error output messages
+        System.setErr(new PrintStream(
+                new OutputStream() {
+                    public void write(int b) {
+                    }
+                }));
+        
         if (args.length == 0) {
             HANDLERS['help'].execute()
         } else {

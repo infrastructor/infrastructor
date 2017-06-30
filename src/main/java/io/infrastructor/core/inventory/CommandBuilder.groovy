@@ -4,8 +4,7 @@ import com.jcabi.ssh.SSH
 import com.jcabi.ssh.SSHByPassword
 import com.jcabi.ssh.Shell
 
-import static io.infrastructor.cli.ConsoleLogger.error
-import static io.infrastructor.cli.ConsoleLogger.debug
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 public class CommandBuilder {
 
