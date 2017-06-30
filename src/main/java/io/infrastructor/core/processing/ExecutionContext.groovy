@@ -1,6 +1,6 @@
 package io.infrastructor.core.processing
 
-import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 class ExecutionContext {
     

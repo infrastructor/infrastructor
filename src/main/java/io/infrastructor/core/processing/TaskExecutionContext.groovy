@@ -1,9 +1,10 @@
 package io.infrastructor.core.processing
 
 import io.infrastructor.core.inventory.CommandExecutionException
+import io.infrastructor.core.processing.actions.ActionProcessingException
 import io.infrastructor.core.validation.ValidationException
 
-import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 class TaskExecutionContext {
     

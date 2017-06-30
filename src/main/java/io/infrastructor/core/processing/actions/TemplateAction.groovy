@@ -2,7 +2,6 @@ package io.infrastructor.core.processing.actions
 
 import groovy.text.SimpleTemplateEngine
 import javax.validation.constraints.NotNull
-import io.infrastructor.core.processing.ActionProcessingException
 import io.infrastructor.core.utils.CryptoUtils
 
 public class TemplateAction {

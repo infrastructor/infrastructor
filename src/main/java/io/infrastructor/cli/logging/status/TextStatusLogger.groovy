@@ -1,6 +1,6 @@
 package io.infrastructor.cli.logging.status
 
-import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 class TextStatusLogger {
 	

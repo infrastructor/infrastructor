@@ -4,7 +4,7 @@ import groovy.transform.ToString
 import io.infrastructor.core.inventory.Node
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 import static io.infrastructor.core.utils.NodeUtils.randomPort
 import static io.infrastructor.core.utils.FlatUUID.flatUUID
 

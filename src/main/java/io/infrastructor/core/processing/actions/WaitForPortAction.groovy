@@ -1,9 +1,8 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.processing.ActionProcessingException
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 public class WaitForPortAction {
     
@@ -39,7 +38,7 @@ public class WaitForPortAction {
             return false
         } finally {
             if(socket != null) {
-                try {socket.close()} catch(Exception e) {}
+                try { socket.close() } catch(Exception e) {}
             }
         }
     }

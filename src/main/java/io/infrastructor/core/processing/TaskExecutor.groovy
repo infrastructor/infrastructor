@@ -1,6 +1,5 @@
 package io.infrastructor.core.processing
 
-import io.infrastructor.core.processing.actions.LogActionBuilder
 import io.infrastructor.core.processing.actions.DirectoryActionBuilder
 import io.infrastructor.core.processing.actions.FetchActionBuilder
 import io.infrastructor.core.processing.actions.FileActionBuilder
@@ -15,12 +14,12 @@ import io.infrastructor.core.processing.actions.UserActionBuilder
 import io.infrastructor.core.processing.actions.WaitForPortActionBuilder
 import io.infrastructor.core.utils.FilteringUtils
 
-import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.cli.logging.status.ProgressStatusLogger.withProgressStatus
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
-class TaskBuilder {
+class TaskExecutor {
     def nodes
     
     class Task {
@@ -31,8 +30,7 @@ class TaskBuilder {
         def execute(def nodes, Closure closure) {
             def filtered = filter(nodes, tags)
             
-            info "\n${blue(':task ' + name)}"
-            
+            info "${blue(':task ' + name)}"
             withTextStatus { statusLine -> 
                 withProgressStatus(filtered.size(), 'nodes processed') { progressLine ->
                     executeParallel(filtered, parallel) { node -> 
@@ -47,11 +45,9 @@ class TaskBuilder {
                         }
                     }
                 }
-                
                 info "${blue(':task ' + name + " - done")}"
             }
         }
-        
         
         private def initializeAndRun(def closure, def node) {
             def cloned = closure.clone()
@@ -77,7 +73,7 @@ class TaskBuilder {
         }
     }
     
-    def TaskBuilder(def nodes) {
+    def TaskExecutor(def nodes) {
         this.nodes = nodes
     }
     

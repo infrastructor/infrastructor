@@ -3,7 +3,7 @@ package io.infrastructor.core.inventory.aws
 import io.infrastructor.core.inventory.Inventory
 import io.infrastructor.core.inventory.Node
 
-import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 import static io.infrastructor.core.utils.AmazonEC2Utils.amazonEC2
 import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
 

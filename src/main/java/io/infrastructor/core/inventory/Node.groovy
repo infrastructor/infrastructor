@@ -6,7 +6,7 @@ import com.jcabi.ssh.Shell
 import groovy.transform.ToString
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.cli.logging.ProgressLogger.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class Node {

@@ -7,7 +7,7 @@ import static io.infrastructor.cli.ApplicationProperties.logLevel
 import static org.fusesource.jansi.Ansi.ansi
 import static org.fusesource.jansi.Ansi.Color.DEFAULT
 
-class ProgressLogger {
+class ConsoleLogger {
 
     public static final int ERROR = 1
     public static final int INFO = 2
