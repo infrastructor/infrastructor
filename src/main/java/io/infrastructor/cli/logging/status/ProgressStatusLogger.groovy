@@ -1,15 +1,16 @@
 package io.infrastructor.cli.logging.status
 
+import static io.infrastructor.cli.logging.ProgressLogger.*
+
 class ProgressStatusLogger {
     
     private final char filledChar   = '=';
     private final char unfilledChar = '-'
     private final int progressLineSize = 15;
-    private String status = "";
 
     def total = 0;
     def progress = 0;
-    
+    def status = "";
     def listener = {}
     
     public synchronized int increase() {
@@ -18,12 +19,12 @@ class ProgressStatusLogger {
         return progress
     }
     
-    public def status(def status) {
+    public def setStatus(def status) {
         this.status = status
         listener()
     }
     
-    public String status() {
+    public String statusLine() {
         int filledElements = (int) ((progressLineSize / (double) total) * progress);
 
         final StringBuilder stringBuilder = new StringBuilder("[");
@@ -39,6 +40,16 @@ class ProgressStatusLogger {
         stringBuilder.append("] ").append(progress).append(" / ").append(total).append(" ").append(status);
         
         return stringBuilder.toString();
+    }
+    
+    public static void withProgressStatus(def total, def status, Closure closure) {
+        def progress = new ProgressStatusLogger(total: total, status: status)
+        try {
+            addStatusLogger progress
+            closure(progress)
+        } finally {
+            removeStatusLogger progress
+        }
     }
 }
 

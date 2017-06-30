@@ -6,7 +6,6 @@ import io.infrastructor.core.utils.AmazonRoute53Utils
 
 import static io.infrastructor.cli.logging.ProgressLogger.*
 import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
-import io.infrastructor.cli.logging.status.TextStatusLogger
 
 public class ManagedAwsInventory {
     
@@ -26,13 +25,13 @@ public class ManagedAwsInventory {
     }
     
     def ec2(Map params, Closure setup) {
-        withTextStatus { status ->
-            status << "> initializing ec2 managed set"
+        withTextStatus { statusLine ->
+            statusLine '> initializing ec2 managed set'
             def ec2 = new EC2(params)
             ec2.with(setup)
             ec2.initialize(amazonEC2)
             ec2s << ec2
-            status << "> initializing ec2 managed set done"
+            statusLine '> initializing ec2 managed set done'
         }
     }
     
@@ -58,20 +57,20 @@ public class ManagedAwsInventory {
     }
     
     def setup(Closure definition = {}) {
-        withTextStatus { status ->
-            status << "> creating aws instances"
+        withTextStatus { statusLine ->
+            statusLine '> stage: creating aws instances'
             ec2s*.createInstances(amazonEC2)
         
-            status << "> updating aws instances"
+            statusLine '> stage: updating aws instances'
             ec2s*.updateInstances(amazonEC2)
         
-            status << "> setting up aws instances"
+            statusLine '> stage: provisioning aws instances'
             new Inventory(nodes: getNodes()).setup(definition)
         
-            status << "> removing aws instances"
+            statusLine '> stage: removing aws instances'
             ec2s*.removeInstances(amazonEC2)
         
-            status << "> updating route53 records"
+            statusLine '> stage: updating route53 records'
             route53s*.apply(amazonEC2, amazonRoute53)
         } 
     }
@@ -82,7 +81,7 @@ public class ManagedAwsInventory {
     
     def dry() {
         info "DRY: analyzing changes..."
-        printf ('%20s %28s %22s  %s\n', [defColor('STATE'), defColor('INSTANCE ID'), defColor('PRIVATE IP'), defColor('NAME')])
+        info sprintf('%20s %28s %22s  %s', [defColor('STATE'), defColor('INSTANCE ID'), defColor('PRIVATE IP'), defColor('NAME')])
         getNodes().each {
             def coloredState
             switch (it.state) {
@@ -99,7 +98,7 @@ public class ManagedAwsInventory {
                 coloredState = blue('UNMODIFIED')
                 break
             }
-            printf ('%20s %28s %22s  %s\n', [coloredState, cyan(it.id ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
+            info sprintf('%20s %28s %22s  %s', [coloredState, cyan(it.id ?: ''), cyan(it.privateIp ?: ''), defColor(it.name)])
         } 
     }
 }

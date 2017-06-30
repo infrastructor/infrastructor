@@ -14,14 +14,11 @@ import io.infrastructor.core.processing.actions.TemplateActionBuilder
 import io.infrastructor.core.processing.actions.UserActionBuilder
 import io.infrastructor.core.processing.actions.WaitForPortActionBuilder
 import io.infrastructor.core.utils.FilteringUtils
-import io.infrastructor.cli.logging.status.ProgressStatusLogger
 
 import static io.infrastructor.cli.logging.ProgressLogger.*
 import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
+import static io.infrastructor.cli.logging.status.ProgressStatusLogger.withProgressStatus
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
-import static org.fusesource.jansi.Ansi.Color.GREEN
-import static org.fusesource.jansi.Ansi.Color.BLUE
-import static org.fusesource.jansi.Ansi.Color.RED
 
 class TaskBuilder {
     def nodes
@@ -34,38 +31,31 @@ class TaskBuilder {
         def execute(def nodes, Closure closure) {
             def filtered = filter(nodes, tags)
             
-            info "${blue(':TASK ' + name)}"
+            info "\n${blue(':task ' + name)}"
             
             withTextStatus { statusLine -> 
-                def progressLine = addStatusLogger(new ProgressStatusLogger(total: filtered.size(), status: 'nodes processed')) 
-            
-                executeParallel(filtered, parallel) { node -> 
-                    try {
-                        def task = initialize(closure, node)
-                        statusLine << "> Task: $name"
-                        task()
-                    } catch (TaskExecutionException ex) {
-                        removeStatusLogger(statusLine)
-                        removeStatusLogger(progressLine)
-                        error "FAILED: $ex.message, $ex.context"
-                        throw ex
-                    } finally {
-                        progressLine.increase()
+                withProgressStatus(filtered.size(), 'nodes processed') { progressLine ->
+                    executeParallel(filtered, parallel) { node -> 
+                        try {
+                            statusLine "> task: $name"
+                            initializeAndRun(closure, node)
+                        } catch (TaskExecutionException ex) {
+                            error "FAILED: $ex.message, $ex.context"
+                            throw ex
+                        } finally {
+                            progressLine.increase()
+                        }
                     }
                 }
-            
-                info "${blue(':TASK ' + name + " - done")}"
                 
-                removeStatusLogger(progressLine)
+                info "${blue(':task ' + name + " - done")}"
             }
         }
         
         
-        private def initialize(def closure, def node) {
+        private def initializeAndRun(def closure, def node) {
             def cloned = closure.clone()
             def ctx = new TaskExecutionContext(node, cloned.owner)
-            ctx.functions << ['debug':       new LogActionBuilder()]
-            ctx.functions << ['info':        new LogActionBuilder()]
             ctx.functions << ['directory':   new DirectoryActionBuilder(node: node)]
             ctx.functions << ['fetch':       new FetchActionBuilder(node: node)]
             ctx.functions << ['file':        new FileActionBuilder(node: node)]
@@ -79,7 +69,7 @@ class TaskBuilder {
             ctx.functions << ['user':        new UserActionBuilder(node: node)]
             ctx.functions << ['waitForPort': new WaitForPortActionBuilder(node: node)]
             cloned.delegate = ctx
-            cloned
+            cloned()
         }
         
         private def filter(def nodes, def tags) {

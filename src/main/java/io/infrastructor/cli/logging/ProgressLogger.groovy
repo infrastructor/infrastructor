@@ -52,11 +52,10 @@ class ProgressLogger {
         if (enableDynamics) { 
             statusLoggers.each {
                 statusPrinted++
-                println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).bold().fg(DEFAULT).a(it.status()).reset())
+                println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).bold().fg(DEFAULT).a(it.statusLine()).reset())
             }
         }
     }
-
 
     public static void debug(String message) {
         if (DEBUG <= logLevel()) {

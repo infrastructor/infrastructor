@@ -40,7 +40,7 @@ public class Node {
     
     def execute(Map map) {
         
-        debug "execute: $map"
+        debug "ssh execute: $map"
         
         lastResult = new CommandBuilder(map).execute(shell.get())
         

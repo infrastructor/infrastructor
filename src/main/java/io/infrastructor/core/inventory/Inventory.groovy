@@ -1,7 +1,8 @@
 package io.infrastructor.core.inventory
 
 import groovy.transform.ToString
-import io.infrastructor.core.processing.SetupExecutionContext
+import io.infrastructor.core.processing.ExecutionContext
+import io.infrastructor.core.processing.TaskBuilder
 
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
@@ -15,8 +16,11 @@ public class Inventory {
     }
     
     def setup(Closure closure) {
-        SetupExecutionContext context = new SetupExecutionContext(nodes, closure)
-        context.execute()
+        def cloned = closure.clone()
+        def ctx = new ExecutionContext(parent: cloned.owner)
+        ctx.handlers << ['nodes': new TaskBuilder(nodes)]
+        cloned.delegate = ctx
+        cloned()
         this
     }
 }

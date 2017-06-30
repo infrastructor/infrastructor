@@ -8,24 +8,20 @@ class TextStatusLogger {
     
     def listener = {}
     
-    public String status() {
+    public String statusLine() {
         text
     }
     
-    public void status(def text) {
+    public void setStatus(def text) {
         this.text = text
         listener()
     }
     
-    public def leftShift(def text) {
-        status(text)
-    }
-    
-    public static void withTextStatus(Closure closure) {
+    public static def withTextStatus(Closure closure) {
         def status = new TextStatusLogger()
         try {
             addStatusLogger status
-            closure(status)
+            return closure(status.&setStatus)
         } finally {
             removeStatusLogger status
         }

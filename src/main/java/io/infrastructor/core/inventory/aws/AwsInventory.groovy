@@ -5,7 +5,7 @@ import io.infrastructor.core.inventory.Node
 
 import static io.infrastructor.cli.logging.ProgressLogger.*
 import static io.infrastructor.core.utils.AmazonEC2Utils.amazonEC2
-import io.infrastructor.cli.logging.status.TextStatusLogger
+import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
 
 public class AwsInventory {
 
@@ -16,30 +16,26 @@ public class AwsInventory {
     def usePublicIp = false
     
     public Inventory build(def awsAccessKey, def awsSecretKey, def awsRegion) {
+        withTextStatus { statusLine -> 
+            statusLine "> initializing aws inventory"
         
-        def statusLine = addStatusLogger(new TextStatusLogger()) 
-        statusLine.status("> initializing aws inventory")
+            def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
+
+            debug 'AwsInventory :: connecting to AWS to retrieve a list of EC2 instances'
+            def awsNodes  = AwsNodesBuilder.fromEC2(amazonEC2).filterByTags(tags).usePublicHost(usePublicIp)
+
+            debug 'AwsInventory :: updating username, keyfile and port information for all inventory nodes'
+            awsNodes.nodes.each {
+                it.username = owner.username
+                it.keyfile  = owner.keyfile
+                it.port     = owner.port
+            }
         
-        def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
+            debug "AwsInventory :: inventory is ready [${awsNodes.nodes.size()} node]: "
+            awsNodes.nodes.each { debug( "Node: ${defColor(it.name)}: ${yellow(it as String)}")}
 
-        debug 'AwsInventory :: connecting to AWS to retrieve a list of EC2 instances'
-        def awsNodes  = AwsNodesBuilder.fromEC2(amazonEC2).filterByTags(tags).usePublicHost(usePublicIp)
-
-        debug 'AwsInventory :: updating username, keyfile and port information for all inventory nodes'
-        awsNodes.nodes.each {
-            it.username = owner.username
-            it.keyfile  = owner.keyfile
-            it.port     = owner.port
+            return new Inventory(nodes: awsNodes.nodes)
         }
-        
-        def inventory = new Inventory(nodes: awsNodes.nodes)
-        
-        debug "AwsInventory :: inventory is ready [${inventory.nodes.size()} node]: "
-        inventory.nodes.each { debug( "Node: ${defColor(it.name)}: ${yellow(it as String)}")}
-        
-        removeStatusLogger(statusLine)
-        
-        inventory
     }
 
     public static Inventory awsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, Closure definition) {
