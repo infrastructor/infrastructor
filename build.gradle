@@ -48,7 +48,7 @@ repositories {
 }
 
 test {
-    systemProperty "LOG_LEVEL", "3"
+    systemProperty "LOG_LEVEL", "2"
     systemProperty "ENABLE_DYNAMIC_LOGS", "false"
     
     testLogging.showStandardStreams = true

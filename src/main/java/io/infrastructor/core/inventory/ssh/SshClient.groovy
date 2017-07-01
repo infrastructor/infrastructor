@@ -32,6 +32,14 @@ class SshClient {
         if (!isConnected()) {
             JSch jsch = new JSch()
             JSch.setConfig("StrictHostKeyChecking", "no")
+            JSch.setLogger(new com.jcraft.jsch.Logger() {
+                    @Override
+                    public boolean isEnabled(int level) { return true; }
+
+                    @Override
+                    public void log(int level, String message) { debug "JSch :: $message" }
+                });
+    
             if (keyfile) jsch.addIdentity(keyfile)
         
             session = jsch.getSession(username, host, port)
