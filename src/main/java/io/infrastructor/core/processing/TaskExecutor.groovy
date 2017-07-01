@@ -34,7 +34,6 @@ class TaskExecutor {
             withTextStatus { statusLine -> 
                 withProgressStatus(filtered.size(), 'nodes processed') { progressLine ->
                     try {
-                        filtered*.connect()
                         executeParallel(filtered, parallel) { node -> 
                             try {
                                 statusLine "> task: $name"

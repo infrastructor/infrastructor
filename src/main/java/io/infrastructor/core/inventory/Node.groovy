@@ -31,29 +31,37 @@ public class Node {
     private def client
     
     def connect() {
-        if (client != null) { client.disconnect() }
-        client = sshClient {
-            host = owner.host
-            port = owner.port
-            username = owner.username
-            password = owner.password
-            keyfile = owner.keyfile
+        if (isDisconnected()) {
+            
+            client = sshClient {
+                host = owner.host
+                port = owner.port
+                username = owner.username
+                password = owner.password
+                keyfile = owner.keyfile
+            }
+        
+            debug "Node($host:$port) :: connecting"
+            
+            retry(3, 1000) { client.connect() }
+            
+            if (isDisconnected()) { throw new RuntimeException("unable to connect to node $this") }
         }
-        debug "Node($host:$port) :: connecting"
-        
-        retry(3, 1000) { client.connect() }
-        
-        if (!client.isConnected()) { throw new RuntimeException("unable to connect to node $this") }
     }
     
     def disconnect() {
         debug "Node($host:$port) :: disconnecting"
-        client.disconnect()
+        if (client != null) { client.disconnect() }
+    }
+    
+    def isDisconnected() {
+        client == null || !client.isConnected()
     }
     
     def execute(Map map) {
-        
         debug "ssh execute: $map"
+        
+        if (isDisconnected()) { connect() }
         
         lastResult = client.execute(map)
         
