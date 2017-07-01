@@ -1,0 +1,117 @@
+package io.infrastructor.core.inventory.ssh
+
+import com.jcraft.jsch.ChannelExec
+import com.jcraft.jsch.JSch
+import com.jcraft.jsch.Session
+import groovy.transform.ToString
+
+import static io.infrastructor.cli.logging.ConsoleLogger.*
+
+@ToString(includePackage = false, includeNames = true, ignoreNulls = true)
+class SshClient {
+    
+    private def port = 22
+    private def host
+    private def username
+    private def password
+    private def keyfile
+    
+    private Session session
+    
+    public static SshClient sshClient(Closure definition) {
+        SshClient sshClient = new SshClient()
+        sshClient.with(definition)
+        sshClient
+    }
+    
+    def isConnected() {
+        session != null && session.isConnected()
+    }
+    
+    private def connect() {
+        if (!isConnected()) {
+            JSch jsch = new JSch()
+            JSch.setConfig("StrictHostKeyChecking", "no")
+            if (keyfile) jsch.addIdentity(keyfile)
+        
+            session = jsch.getSession(username, host, port)
+            if (password) session.setPassword(password)
+            session.setServerAliveInterval(5000);
+            session.setServerAliveCountMax(1_000_000);
+            session.connect()
+            return session.isConnected()
+        }
+    } 
+    
+    def disconnect() {
+        if(session?.isConnected()) { 
+            session.disconnect() 
+            session = null
+        }
+    }
+    
+    def execute(def command) {
+        new SshCommand(command).execute()
+    }
+    
+    private def executeSsh(String command, InputStream input, OutputStream output, OutputStream error) {
+        ChannelExec channel = null
+        try {
+            channel = ChannelExec.class.cast(session.openChannel("exec"))
+            channel.setCommand(command)
+            channel.setInputStream(input)
+            channel.setOutputStream(output)
+            channel.setErrStream(error)
+            channel.connect()
+            while (!channel.isClosed()) {
+                debug "SshClient($host:$port) waiting for channel is closed"
+                Thread.sleep(55)
+                session.sendKeepAliveMsg()
+            }
+            return channel.getExitStatus()
+        } catch (Exception ex) {
+            throw new RuntimeException(ex)
+        } finally {
+            if (channel != null) {
+                channel.disconnect()
+            }
+        }
+    }
+        
+    class SshCommand {
+        def command
+        def sudo   = false
+        def output = new ByteArrayOutputStream()
+        def error  = new ByteArrayOutputStream()
+        def input  = new ByteArrayInputStream()
+        
+        public def execute() {
+            try {
+                def result = [:]
+                result.exitcode = -1 
+            
+                try { result.exitcode = executeSsh(withSudo(sudo, command), input, output, error) } 
+                catch (IOException ex) { 
+                    error "IO exception during command execution: $command"
+                    error (ex.getMessage())
+                } 
+            
+                result.output = output.toString()
+                result.error  = error.toString()
+                result.command = command
+                result.sudo = sudo
+                return result
+            } finally {
+                input.close()
+                output.close()
+                error.close()
+            }
+        }
+    
+        public def withSudo(def sudo, def command) {
+            return sudo ? "sudo $command" : command 
+        }
+    }
+    
+}
+

@@ -1,12 +1,13 @@
 package io.infrastructor.core.inventory
 
-import com.jcabi.ssh.SSH
-import com.jcabi.ssh.SSHByPassword
-import com.jcabi.ssh.Shell
 import groovy.transform.ToString
 import javax.validation.constraints.NotNull
+import io.infrastructor.core.inventory.ssh.SshClient
+import com.jcraft.jsch.JSchException
 
+import static io.infrastructor.core.utils.RetryUtils.retry
 import static io.infrastructor.cli.logging.ConsoleLogger.*
+import static io.infrastructor.core.inventory.ssh.SshClient.sshClient
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class Node {
@@ -27,22 +28,34 @@ public class Node {
     
     protected def lastResult = [:]
     
-    private def shell = new ThreadLocal<Shell>() {
-        @Override 
-        public Shell initialValue() {
-            if (keyfile != null) {
-                return new SSH(host, port, username, new File(keyfile).text) 
-            } else { 
-                return new SSHByPassword(host, port, username, password)
-            } 
+    private def client
+    
+    def connect() {
+        if (client != null) { client.disconnect() }
+        client = sshClient {
+            host = owner.host
+            port = owner.port
+            username = owner.username
+            password = owner.password
+            keyfile = owner.keyfile
         }
+        debug "Node($host:$port) :: connecting"
+        
+        retry(3, 1000) { client.connect() }
+        
+        if (!client.isConnected()) { throw new RuntimeException("unable to connect to node $this") }
+    }
+    
+    def disconnect() {
+        debug "Node($host:$port) :: disconnecting"
+        client.disconnect()
     }
     
     def execute(Map map) {
         
         debug "ssh execute: $map"
         
-        lastResult = new CommandBuilder(map).execute(shell.get())
+        lastResult = client.execute(map)
         
         if (stopOnError && lastResult.exitcode != 0) { 
             throw new CommandExecutionException(lastResult)

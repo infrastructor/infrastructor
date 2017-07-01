@@ -33,16 +33,21 @@ class TaskExecutor {
             info "${blue(':task ' + name)}"
             withTextStatus { statusLine -> 
                 withProgressStatus(filtered.size(), 'nodes processed') { progressLine ->
-                    executeParallel(filtered, parallel) { node -> 
-                        try {
-                            statusLine "> task: $name"
-                            initializeAndRun(closure, node)
-                        } catch (TaskExecutionException ex) {
-                            error "FAILED: $ex.message, $ex.context"
-                            throw ex
-                        } finally {
-                            progressLine.increase()
+                    try {
+                        filtered*.connect()
+                        executeParallel(filtered, parallel) { node -> 
+                            try {
+                                statusLine "> task: $name"
+                                initializeAndRun(closure, node)
+                            } catch (TaskExecutionException ex) {
+                                error "FAILED: $ex.message, $ex.context"
+                                throw ex
+                            } finally {
+                                progressLine.increase()
+                            }
                         }
+                    } finally {
+                        filtered*.disconnect()
                     }
                 }
                 info "${blue(':task ' + name + " - done")}"
