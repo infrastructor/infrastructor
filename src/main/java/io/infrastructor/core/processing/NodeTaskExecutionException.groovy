@@ -10,7 +10,7 @@ class NodeTaskExecutionException extends RuntimeException {
     }
     
     public String toString() {
-        "$ex.message, $ex.context"
+        "$message, $context"
     }
 }
 
