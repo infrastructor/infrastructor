@@ -8,7 +8,7 @@ import com.amazonaws.services.route53.model.ListResourceRecordSetsRequest
 import com.amazonaws.services.route53.model.ResourceRecord
 import com.amazonaws.services.route53.model.ResourceRecordSet
 
-public class AmazonRoute53Utils {
+class AmazonRoute53Utils {
     
     public static AmazonRoute53 amazonRoute53(def awsAccessKey, def awsSecretKey, def awsRegion) {
         AmazonRoute53ClientBuilder standard = AmazonRoute53ClientBuilder.standard().

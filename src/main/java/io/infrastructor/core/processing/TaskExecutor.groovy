@@ -30,24 +30,37 @@ class TaskExecutor {
         def execute(def nodes, Closure closure) {
             def filtered = filter(nodes, tags)
             
-            info "${blue(':task ' + name)}"
+            info "${blue(":task '${name}'")}"
+            
+            def exceptions = []
+            
             withTextStatus { statusLine -> 
                 withProgressStatus(filtered.size(), 'nodes processed') { progressLine ->
                     executeParallel(filtered, parallel) { node -> 
                         try {
                             statusLine "> task: $name"
                             initializeAndRun(closure, node)
-                        } catch (TaskExecutionException ex) {
-                            error "FAILED: $ex.message, $ex.context"
-                            throw ex
+                        } catch (NodeTaskExecutionException ex) {
+                            error "FAILED: $ex"
+                            exceptions << [node: node, exception: ex]
+                        } catch(Exception ex) {
+                            exceptions << [node: node, exception: ex]
                         } finally {
                             progressLine.increase()
                             node.disconnect()
                         }
                     }
                 }
-                info "${blue(':task ' + name + " - done")}"
             }
+            
+            // determine if we can go to the next task or we should stop the execution
+            if (!exceptions.isEmpty()) {
+                error ":task '$name' - failed on ${exceptions.size()} node|s"
+                exceptions.each { error "\n" + "node: $it.node, exception: $it.exception" }
+                throw new TaskExecutionException(this, exceptions)
+            }
+                    
+            info "${blue(":task '$name' - done")}"
         }
         
         private def initializeAndRun(def closure, def node) {

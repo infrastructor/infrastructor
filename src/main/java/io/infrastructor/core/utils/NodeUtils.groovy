@@ -1,7 +1,6 @@
 package io.infrastructor.core.utils
 
-
-public class NodeUtils {
+class NodeUtils {
     
     static int randomPort() {
         ServerSocket serverSocket = new ServerSocket(0);

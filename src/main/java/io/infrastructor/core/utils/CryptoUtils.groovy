@@ -7,8 +7,7 @@ import java.security.MessageDigest
 import java.util.Arrays
 import java.util.Base64
 
-
-public class CryptoUtils {
+class CryptoUtils {
     
     static final String ALGORITHM = "AES"
     static final def ENCODING = StandardCharsets.UTF_8

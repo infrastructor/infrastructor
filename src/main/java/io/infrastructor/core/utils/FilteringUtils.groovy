@@ -1,6 +1,6 @@
 package io.infrastructor.core.utils
 
-public class FilteringUtils {
+class FilteringUtils {
 
     def static match(def tags, def filter) {
         def proxy = ProxyMetaClass.getInstance(String.class)

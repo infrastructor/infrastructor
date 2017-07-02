@@ -3,7 +3,7 @@ package io.infrastructor.core.utils
 import java.util.concurrent.Executors
 import java.util.concurrent.ExecutionException
 
-public class ParallelUtils {
+class ParallelUtils {
 
     public static def executeParallel(def collection, def threads, def closure) {
         def executor = Executors.newFixedThreadPool(threads)

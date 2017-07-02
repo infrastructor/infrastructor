@@ -7,8 +7,7 @@ import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
 import com.amazonaws.services.ec2.model.DescribeSubnetsRequest
 import com.amazonaws.services.ec2.model.Filter
 
-
-public class AmazonEC2Utils {
+class AmazonEC2Utils {
     
     public static AmazonEC2 amazonEC2(def awsAccessKey, def awsSecretKey, def awsRegion) {
         AmazonEC2ClientBuilder standard = AmazonEC2ClientBuilder.standard()

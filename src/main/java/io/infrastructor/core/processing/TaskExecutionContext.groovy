@@ -22,16 +22,16 @@ class TaskExecutionContext {
             try {
                 functions[name]."$name"(*args)
             } catch (CommandExecutionException ex) {
-                throw new TaskExecutionException("remote command failed",   [action: name, result: ex.result])
+                throw new NodeTaskExecutionException("remote command failed",   [action: name, result: ex.result])
             } catch (ValidationException ex) {
-                throw new TaskExecutionException("action validation error", [action: name, result: ex.result])
+                throw new NodeTaskExecutionException("action validation error", [action: name, result: ex.result])
             } catch (ActionProcessingException ex) {
-                throw new TaskExecutionException("action processing error", [action: name, message: ex.message])
+                throw new NodeTaskExecutionException("action processing error", [action: name, message: ex.message])
             }
         } else {
             debug("function $name not found in the task execution context, looking at parent one")
             parent.$'name'(*args)
-            throw new TaskExecutionException("action not found error", [action: name, args: args])
+            throw new NodeTaskExecutionException("action not found error", [action: name, args: args])
         }
     }
 }

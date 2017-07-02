@@ -6,6 +6,7 @@ import io.infrastructor.cli.handlers.EncryptHandler
 import io.infrastructor.cli.handlers.HelpHandler
 import io.infrastructor.cli.handlers.RunHandler
 import io.infrastructor.cli.handlers.VersionHandler
+import io.infrastructor.core.utils.ExceptionUtils
 
 import static io.infrastructor.cli.logging.ConsoleLogger.*
 
@@ -14,11 +15,11 @@ public class Starter {
     def static HANDLERS = [:]
     
     static {
-        HANDLERS << ['run': new RunHandler()]
+        HANDLERS << ['run':     new RunHandler()]
         HANDLERS << ['encrypt': new EncryptHandler()]
         HANDLERS << ['decrypt': new DecryptHandler()]
         HANDLERS << ['version': new VersionHandler()]
-        HANDLERS << ['help': new HelpHandler(handlers: HANDLERS)]
+        HANDLERS << ['help':    new HelpHandler(handlers: HANDLERS)]
     }
 
     public static void main(String [] args) {
@@ -30,21 +31,22 @@ public class Starter {
                     }
                 }));
         
-        if (args.length == 0) {
-            HANDLERS['help'].execute()
-        } else {
-            def handler = HANDLERS[args.head()]
-            if (!handler) {
-                error "Unknown command '${args.head()}'"
+        try {
+            if (args.length == 0) {
                 HANDLERS['help'].execute()
             } else {
-                try {
+                def handler = HANDLERS[args.head()]
+                if (!handler) {
+                    error "Unknown command '${args.head()}'"
+                    HANDLERS['help'].execute()
+                } else {
                     new JCommander(handler).parse(args.tail())
                     handler.execute()
-                } catch (Exception ex) {
-                    error ex.getMessage()
                 }
             }
+        } catch (Exception ex) {
+            debug ex.getMessage()
+            debug ('stack trace:\n' + ExceptionUtils.deepSanitize(ex))
         }
     }
 }
