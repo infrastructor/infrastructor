@@ -14,7 +14,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
         try {
             
             def initialInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
-                ec2(tags: [managed: true]) {
+                ec2(tags: [managed: true], usePublicIp: true) {
                     node {
                         name = 'simple-y'
                         imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
@@ -24,7 +24,6 @@ public class AwsNodeCreationTest extends AwsTestBase {
                         securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
                         username = "ubuntu"
                         keyfile = "resources/aws/aws_infrastructor_ci"
-                        usePublicIp = true
                         blockDeviceMapping {
                             name = '/dev/sda1'
                             deleteOnTermination = true
@@ -40,7 +39,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
             assert initialInventory.nodes[0].state == 'created'
             
             def updatedInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
-                ec2(tags: [managed: true]) {
+                ec2(tags: [managed: true], usePublicIp: true) {
                     node {
                         name = 'simple-y'
                         imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
@@ -50,7 +49,6 @@ public class AwsNodeCreationTest extends AwsTestBase {
                         securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
                         username = "ubuntu"
                         keyfile = "resources/aws/aws_infrastructor_ci"
-                        usePublicIp = true
                         blockDeviceMapping {
                             name = '/dev/sda1'
                             deleteOnTermination = true

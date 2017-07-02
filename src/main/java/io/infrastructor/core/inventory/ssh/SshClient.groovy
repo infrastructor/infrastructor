@@ -2,6 +2,7 @@ package io.infrastructor.core.inventory.ssh
 
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
+import com.jcraft.jsch.Logger
 import com.jcraft.jsch.Session
 import groovy.transform.ToString
 
@@ -18,10 +19,8 @@ class SshClient {
     
     private Session session
     
-    public static SshClient sshClient(Closure definition) {
-        SshClient sshClient = new SshClient()
-        sshClient.with(definition)
-        sshClient
+    public static SshClient sshClient(Map params) {
+        new SshClient(params)
     }
     
     def isConnected() {
@@ -32,7 +31,7 @@ class SshClient {
         if (!isConnected()) {
             JSch jsch = new JSch()
             JSch.setConfig("StrictHostKeyChecking", "no")
-            JSch.setLogger(new com.jcraft.jsch.Logger() {
+            JSch.setLogger(new Logger() {
                     @Override
                     public boolean isEnabled(int level) { return true; }
 
@@ -45,17 +44,18 @@ class SshClient {
             session = jsch.getSession(username, host, port)
             if (password) session.setPassword(password)
             session.setServerAliveInterval(5000);
-            session.setServerAliveCountMax(1_000_000);
+            session.setServerAliveCountMax(1000000);
             session.connect()
             return session.isConnected()
         }
     } 
     
     def disconnect() {
-        if(session?.isConnected()) { 
+        if(isConnected()) { 
             session.disconnect() 
-            session = null
         }
+        
+        session = null
     }
     
     def execute(def command) {

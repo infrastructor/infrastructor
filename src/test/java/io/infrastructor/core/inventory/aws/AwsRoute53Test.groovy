@@ -14,7 +14,7 @@ public class AwsRoute53Test extends AwsTestBase {
     public void findAwsNodes() {
         try {
             def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
-                ec2(parallel: 2, tags: [managed: true]) {
+                ec2(parallel: 2, tags: [managed: true], usePublicIp: true) {
                     node {
                         name = 'simple-y'
                         imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
@@ -22,10 +22,8 @@ public class AwsRoute53Test extends AwsTestBase {
                         subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
                         keyName = 'aws_infrastructor_ci'
                         securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
-                        
                         username = "ubuntu"
                         keyfile = "resources/aws/aws_infrastructor_ci"
-                        usePublicIp = true
                     }
                     
                     node {
@@ -35,7 +33,6 @@ public class AwsRoute53Test extends AwsTestBase {
                         subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
                         keyName = 'aws_infrastructor_ci'
                         securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
-                    
                         username = "ubuntu"
                         keyfile = "resources/aws/aws_infrastructor_ci"
                         usePublicIp = true

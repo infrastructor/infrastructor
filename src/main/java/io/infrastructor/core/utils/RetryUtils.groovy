@@ -10,13 +10,13 @@ class RetryUtils {
                 action()
                 return
             } catch (Throwable ex) {
-                debug "Retry :: attempt failed"
+                debug "retry :: attempt failed, exception: $ex"
                 sleep(interval)
                 index--
             }
         }
         
-        throw RuntimeException("retry failed after $count attemps")
+        throw new RuntimeException("retry failed after $count attemps")
     }
 }
 

@@ -39,16 +39,14 @@ public class EC2 {
         existing.each {
             it.username    = username
             it.keyfile     = keyfile
-            it.usePublicIp = usePublicIp
-        }
+        }.usePublicHost(usePublicIp)
         
         def defined = fromNodes(targetState)
         defined.each {
-            if (it.username == null)    it.username = username
-            if (it.keyfile == null)     it.keyfile = keyfile
-            if (it.usePublicIp == null) it.usePublicIp = usePublicIp
+            if (it.username == null) it.username = username
+            if (it.keyfile  == null)  it.keyfile = keyfile
             it.tags << tags 
-        }
+        }.usePublicHost(usePublicIp)
         
         targetState = defined.merge(existing).nodes
         
@@ -57,7 +55,7 @@ public class EC2 {
     
     def createInstances(def amazonEC2) {
         debug "EC2 :: Creating instances"
-        executeParallel(targetState.findAll { it.state == 'created' }, parallel) { it.create(amazonEC2) }
+        executeParallel(targetState.findAll { it.state == 'created' }, parallel) { it.create(amazonEC2, usePublicIp) }
     }
 
     def removeInstances(def amazonEC2) {

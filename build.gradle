@@ -52,16 +52,21 @@ test {
     systemProperty "ENABLE_DYNAMIC_LOGS", "false"
     
     testLogging.showStandardStreams = true
-    maxParallelForks = 4
+    
+    if (project.hasProperty('testAws')) {
+        maxParallelForks = 1
+    } else {
+        maxParallelForks = 4
+    }
     
     useJUnit {
         // activate AWS tests
-        if (!project.hasProperty('testAws')) {
-            excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
-        } else {
+        if (project.hasProperty('testAws')) {
             systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
             systemProperty "awsSecretKey",   project.getProperty("awsSecretKey")
             systemProperty "awsRegion",      project.getProperty("awsRegion")
+        } else {
+            excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
         }
     }
     

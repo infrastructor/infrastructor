@@ -24,23 +24,14 @@ public class Node {
     Map tags = [:]
     Map metadata = [:]
     
-    def stopOnError = true
-    
+    protected def client
     protected def lastResult = [:]
-    
-    private def client
+    protected def stopOnError = true
     
     def connect() {
         if (isDisconnected()) {
-            
-            client = sshClient {
-                host = owner.host
-                port = owner.port
-                username = owner.username
-                password = owner.password
-                keyfile = owner.keyfile
-            }
-        
+            client = sshClient(host: host, port: port, username: username, password: password, keyfile: keyfile)
+
             debug "Node($host:$port) :: connecting"
             
             retry(3, 1000) { client.connect() }
