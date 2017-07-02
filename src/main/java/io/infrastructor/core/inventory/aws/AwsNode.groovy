@@ -26,7 +26,6 @@ public class AwsNode extends Node {
     def subnetId
     def keyName
     def securityGroupIds
-    def usePublicIp = false
     def privateIp
     def publicIp
     def blockDeviceMappings = [] as Set
@@ -44,10 +43,6 @@ public class AwsNode extends Node {
         def blockDeviceMapping = new AwsBlockDeviceMapping(params)
         blockDeviceMapping.with(closure)
         blockDeviceMappings << blockDeviceMapping
-    }
-    
-    def getHost() {
-        usePublicIp ? publicIp : privateIp
     }
     
     def allTags() {
@@ -68,7 +63,7 @@ public class AwsNode extends Node {
         result
     }
     
-    def create(def amazonEC2) {
+    def create(def amazonEC2, def usePublicIp = false) {
         RunInstancesRequest request = new RunInstancesRequest()
         request.setImageId(imageId)
         request.setInstanceType(instanceType)

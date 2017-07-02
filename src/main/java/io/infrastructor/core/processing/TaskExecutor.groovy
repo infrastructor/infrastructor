@@ -42,6 +42,7 @@ class TaskExecutor {
                             throw ex
                         } finally {
                             progressLine.increase()
+                            node.disconnect()
                         }
                     }
                 }

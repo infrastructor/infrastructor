@@ -29,15 +29,16 @@ processResources {
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:2.4.9"
-    compile "com.beust:jcommander:1.58"
-    compile "com.jcabi:jcabi-ssh:1.5.2"
-    compile "org.apache.bval:bval-jsr:1.1.2"
-    compile "com.amazonaws:aws-java-sdk-ec2:1.11.140"
-    compile "com.amazonaws:aws-java-sdk-route53:1.11.140"
-    compile "ch.qos.logback:logback-classic:1.2.1"
-    compile "org.fusesource.jansi:jansi:1.14"
-    compile group: 'com.jcraft', name: 'jsch', version: '0.1.54'
+    compile 'ch.qos.logback:logback-classic:1.2.1'
+    compile 'com.amazonaws:aws-java-sdk-ec2:1.11.140'
+    compile 'com.amazonaws:aws-java-sdk-route53:1.11.140'
+    compile 'com.beust:jcommander:1.58'
+    compile 'com.jcraft:jsch:0.1.54'
+    compile 'javax.validation:validation-api:1.1.0.Final'
+    compile 'org.apache.bval:bval-jsr:1.1.2'
+    compile 'org.apache.bval:bval-jsr:1.1.2'
+    compile 'org.codehaus.groovy:groovy-all:2.4.9'
+    compile 'org.fusesource.jansi:jansi:1.14'
     
     testCompile "junit:junit:4.12"
 }
@@ -51,16 +52,21 @@ test {
     systemProperty "ENABLE_DYNAMIC_LOGS", "false"
     
     testLogging.showStandardStreams = true
-    maxParallelForks = 4
+    
+    if (project.hasProperty('testAws')) {
+        maxParallelForks = 1
+    } else {
+        maxParallelForks = 4
+    }
     
     useJUnit {
         // activate AWS tests
-        if (!project.hasProperty('testAws')) {
-            excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
-        } else {
+        if (project.hasProperty('testAws')) {
             systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
             systemProperty "awsSecretKey",   project.getProperty("awsSecretKey")
             systemProperty "awsRegion",      project.getProperty("awsRegion")
+        } else {
+            excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
         }
     }
     

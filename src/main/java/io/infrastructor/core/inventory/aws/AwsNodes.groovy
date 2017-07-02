@@ -12,18 +12,8 @@ public class AwsNodes {
         this
     }
     
-    def usePublicHost() {
-        nodes.each { it.usePublicIp = true }
-        this
-    }
-    
-    def usePrivateHost() {
-        nodes.each { it.usePublicIp = false }
-        this
-    }
-    
-    def usePublicHost(def usePublic) {
-        nodes.each { it.usePublicIp = usePublic }
+    def usePublicHost(def usePublicHost) {
+        nodes.each { it.host = usePublicHost ? it.publicIp : it.privateIp }
         this
     }
     

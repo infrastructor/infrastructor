@@ -24,7 +24,6 @@ public class AwsNodesTest {
                 subnetId         = 'subnetId_A'
                 keyName          = 'keyName_A'
                 securityGroupIds = []
-                usePublicIp      = false
                 privateIp        = 'privateIp_A'
                 publicIp         = 'publicIp_A'
                 state            = ''
@@ -45,7 +44,6 @@ public class AwsNodesTest {
                 subnetId         = ''
                 keyName          = ''
                 securityGroupIds = []
-                usePublicIp      = false
                 privateIp        = ''
                 publicIp         = ''
                 state            = ''
@@ -126,13 +124,13 @@ public class AwsNodesTest {
             node {
                 id = 'id_A'
                 publicIp = 'public'
-                privateIp = 'private'
+                host = 'private'
             }
             
             node {
                 id   = 'id_B'
                 publicIp = 'public'
-                privateIp = 'private'
+                host = 'private'
             }
         }
         
@@ -140,7 +138,7 @@ public class AwsNodesTest {
         assert awsNodes.nodes.find { it.id == 'id_A' }.host == 'private'
         assert awsNodes.nodes.find { it.id == 'id_B' }.host == 'private'
         
-        def result = awsNodes.usePublicHost()
+        def result = awsNodes.usePublicHost(true)
         assert result.nodes.size() == 2
         assert result.nodes.find { it.id == 'id_A' }.host == 'public'
         assert result.nodes.find { it.id == 'id_B' }.host == 'public'
@@ -151,13 +149,13 @@ public class AwsNodesTest {
         AwsNodes awsNodes = build {
             node {
                 id = 'id_A'
-                publicIp = 'public'
+                host = 'private'
                 privateIp = 'private'
             }
             
             node {
                 id   = 'id_B'
-                publicIp = 'public'
+                host = 'private'
                 privateIp = 'private'
             }
         }
@@ -167,7 +165,7 @@ public class AwsNodesTest {
         assert awsNodes.nodes.find { it.id == 'id_B' }.host == 'private'
         
         
-        def result = awsNodes.usePrivateHost()
+        def result = awsNodes.usePublicHost(false)
         assert result.nodes.size() == 2
         assert result.nodes.find { it.id == 'id_A' }.host == 'private'
         assert result.nodes.find { it.id == 'id_B' }.host == 'private'
