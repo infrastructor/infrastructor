@@ -29,8 +29,8 @@ class TaskExecutionContext {
                 throw new NodeTaskExecutionException("action processing error", [action: name, message: ex.message])
             }
         } else {
-            debug("function $name not found in the task execution context, looking at parent one")
-            parent.$'name'(*args)
+            debug("action '$name' not found in the task execution context, looking at parent one")
+            parent."$name"(*args)
             throw new NodeTaskExecutionException("action not found error", [action: name, args: args])
         }
     }

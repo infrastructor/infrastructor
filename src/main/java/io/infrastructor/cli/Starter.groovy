@@ -6,8 +6,8 @@ import io.infrastructor.cli.handlers.EncryptHandler
 import io.infrastructor.cli.handlers.HelpHandler
 import io.infrastructor.cli.handlers.RunHandler
 import io.infrastructor.cli.handlers.VersionHandler
-import io.infrastructor.core.utils.ExceptionUtils
 
+import static io.infrastructor.core.utils.ExceptionUtils.deepSanitize
 import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 public class Starter {
@@ -45,8 +45,15 @@ public class Starter {
                 }
             }
         } catch (Exception ex) {
-            debug ex.getMessage()
-            debug ('stack trace:\n' + ExceptionUtils.deepSanitize(ex))
+            def message = ex.getMessage()?.replaceAll("\n", "\n ")
+            
+            debug " ${bold('Uncaught exception:')}"
+            debug " ${ex.class.name}: $message"
+            debug " ${bold('stack trace:')}"
+            debug (" - ${deepSanitize(ex)}".replaceAll("\n", "\n - "))
+            
+            error "application has stopped due to an error: ${bold(message)}"
+            error "please check the log output. use '-l 3' to activate debug log."
         }
     }
 }

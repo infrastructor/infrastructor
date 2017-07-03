@@ -13,6 +13,7 @@ import io.infrastructor.core.processing.actions.TemplateActionBuilder
 import io.infrastructor.core.processing.actions.UserActionBuilder
 import io.infrastructor.core.processing.actions.WaitForPortActionBuilder
 import io.infrastructor.core.utils.FilteringUtils
+import java.util.concurrent.atomic.AtomicInteger
 
 import static io.infrastructor.cli.logging.ConsoleLogger.*
 import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
@@ -32,7 +33,7 @@ class TaskExecutor {
             
             info "${blue(":task '${name}'")}"
             
-            def exceptions = []
+            AtomicInteger errorCounter = new AtomicInteger()
             
             withTextStatus { statusLine -> 
                 withProgressStatus(filtered.size(), 'nodes processed') { progressLine ->
@@ -41,10 +42,11 @@ class TaskExecutor {
                             statusLine "> task: $name"
                             initializeAndRun(closure, node)
                         } catch (NodeTaskExecutionException ex) {
-                            error "FAILED: $ex"
-                            exceptions << [node: node, exception: ex]
+                            error "FAILED - node.id: $node.id, message: $ex.message, $ex.context"
+                            errorCounter.incrementAndGet()
                         } catch(Exception ex) {
-                            exceptions << [node: node, exception: ex]
+                            error "FAILED - node.id: $node.id, message: $ex.message, class: ${ex.class.name}"
+                            errorCounter.incrementAndGet()
                         } finally {
                             progressLine.increase()
                             node.disconnect()
@@ -54,10 +56,10 @@ class TaskExecutor {
             }
             
             // determine if we can go to the next task or we should stop the execution
-            if (!exceptions.isEmpty()) {
-                error ":task '$name' - failed on ${exceptions.size()} node|s"
-                exceptions.each { error "\n" + "node: $it.node, exception: $it.exception" }
-                throw new TaskExecutionException(this, exceptions)
+            if (errorCounter.get() > 0) {
+                def message = ":task '$name' - failed on ${errorCounter.get()} node|s"
+                info "${red(message)}"
+                throw new TaskExecutionException(message)
             }
                     
             info "${blue(":task '$name' - done")}"

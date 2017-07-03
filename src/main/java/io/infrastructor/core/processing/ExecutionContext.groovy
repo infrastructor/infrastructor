@@ -11,7 +11,7 @@ class ExecutionContext {
         if (handlers.containsKey(name)) {
             handlers[name]."$name"(*args)
         } else {
-            parent.$'name'(*args)
+            parent."$name"(*args)
         }
     }
 }
