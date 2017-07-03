@@ -21,7 +21,7 @@ class ConsoleLogger {
     def static synchronized addStatusLogger(def logger) {
         eraseStatus()
         statusLoggers.add(0, logger)
-        logger.listener = { eraseStatus(); updateStatus() }
+        logger.listener = { eraseAndUpdate() }
         updateStatus()
         logger
     }
@@ -57,6 +57,11 @@ class ConsoleLogger {
         }
     }
 
+    def static synchronized eraseAndUpdate() {
+        eraseStatus(); 
+        updateStatus();
+    }
+    
     public static void debug(String message) {
         if (DEBUG <= logLevel()) {
             printLine(yellow(message))
