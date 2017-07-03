@@ -1,12 +1,8 @@
 package io.infrastructor.core.processing
 
 class TaskExecutionException extends RuntimeException {
-    
-    def context = [:]
-        
-    def TaskExecutionException(def message, def context) {
+    def TaskExecutionException(def message) {
         super(message)
-        this.context = context
     }
 }
 

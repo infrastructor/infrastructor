@@ -31,18 +31,16 @@ public class Node {
     def connect() {
         if (isDisconnected()) {
             client = sshClient(host: host, port: port, username: username, password: password, keyfile: keyfile)
-
-            debug "Node($host:$port) :: connecting"
-            
-            retry(3, 1000) { client.connect() }
-            
+            retry(5, 2000) { client.connect() }
             if (isDisconnected()) { throw new RuntimeException("unable to connect to node $this") }
         }
     }
     
     def disconnect() {
-        debug "Node($host:$port) :: disconnecting"
-        if (client != null) { client.disconnect() }
+        if (!isDisconnected()) { 
+            debug "Node($host:$port) :: disconnecting"
+            client.disconnect() 
+        }
     }
     
     def isDisconnected() {

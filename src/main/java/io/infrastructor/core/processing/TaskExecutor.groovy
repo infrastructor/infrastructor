@@ -13,6 +13,7 @@ import io.infrastructor.core.processing.actions.TemplateActionBuilder
 import io.infrastructor.core.processing.actions.UserActionBuilder
 import io.infrastructor.core.processing.actions.WaitForPortActionBuilder
 import io.infrastructor.core.utils.FilteringUtils
+import java.util.concurrent.atomic.AtomicInteger
 
 import static io.infrastructor.cli.logging.ConsoleLogger.*
 import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
@@ -30,24 +31,38 @@ class TaskExecutor {
         def execute(def nodes, Closure closure) {
             def filtered = filter(nodes, tags)
             
-            info "${blue(':task ' + name)}"
+            info "${blue(":task '${name}'")}"
+            
+            AtomicInteger errorCounter = new AtomicInteger()
+            
             withTextStatus { statusLine -> 
                 withProgressStatus(filtered.size(), 'nodes processed') { progressLine ->
                     executeParallel(filtered, parallel) { node -> 
                         try {
                             statusLine "> task: $name"
                             initializeAndRun(closure, node)
-                        } catch (TaskExecutionException ex) {
-                            error "FAILED: $ex.message, $ex.context"
-                            throw ex
+                        } catch (NodeTaskExecutionException ex) {
+                            error "FAILED - node.id: $node.id, message: $ex.message, $ex.context"
+                            errorCounter.incrementAndGet()
+                        } catch(Exception ex) {
+                            error "FAILED - node.id: $node.id, message: $ex.message, class: ${ex.class.name}"
+                            errorCounter.incrementAndGet()
                         } finally {
                             progressLine.increase()
                             node.disconnect()
                         }
                     }
                 }
-                info "${blue(':task ' + name + " - done")}"
             }
+            
+            // determine if we can go to the next task or we should stop the execution
+            if (errorCounter.get() > 0) {
+                def message = ":task '$name' - failed on ${errorCounter.get()} node|s"
+                info "${red(message)}"
+                throw new TaskExecutionException(message)
+            }
+                    
+            info "${blue(":task '$name' - done")}"
         }
         
         private def initializeAndRun(def closure, def node) {

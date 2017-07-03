@@ -32,24 +32,21 @@ public class RunHandler extends LoggingAwareHandler {
     
     def execute() {
         super.execute()
-        try {
-            ImportCustomizer importCustomizer = new ImportCustomizer()
-            importCustomizer.addStaticStars("io.infrastructor.cli.logging.ConsoleLogger")
-            importCustomizer.addStaticStars("io.infrastructor.core.utils.ConfigUtils")
-            importCustomizer.addStaticStars("io.infrastructor.core.inventory.InlineInventory")
-            importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.AwsInventory")
-            importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory")
-            importCustomizer.addStaticStars("io.infrastructor.core.inventory.docker.InlineDockerInventory")
-            importCustomizer.addStaticStars("io.infrastructor.core.processing.actions.InputAction")
+        
+        ImportCustomizer importCustomizer = new ImportCustomizer()
+        importCustomizer.addStaticStars("io.infrastructor.cli.logging.ConsoleLogger")
+        importCustomizer.addStaticStars("io.infrastructor.core.utils.ConfigUtils")
+        importCustomizer.addStaticStars("io.infrastructor.core.inventory.InlineInventory")
+        importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.AwsInventory")
+        importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory")
+        importCustomizer.addStaticStars("io.infrastructor.core.inventory.docker.InlineDockerInventory")
+        importCustomizer.addStaticStars("io.infrastructor.core.processing.actions.InputAction")
                 
-            CompilerConfiguration configuration = new CompilerConfiguration()
-            configuration.addCompilationCustomizers(importCustomizer)
+        CompilerConfiguration configuration = new CompilerConfiguration()
+        configuration.addCompilationCustomizers(importCustomizer)
                 
-            file.each { 
-                new GroovyShell(new Binding(variables), configuration).evaluate(new File(it))
-            }
-        } catch (CompilationFailedException | IOException ex) {
-            throw new RuntimeException(ex)
+        file.each { 
+            new GroovyShell(new Binding(variables), configuration).evaluate(new File(it))
         }
     }
 }

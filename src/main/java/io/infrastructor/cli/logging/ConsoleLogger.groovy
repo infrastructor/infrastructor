@@ -5,7 +5,7 @@ import org.fusesource.jansi.Ansi.Color
 
 import static io.infrastructor.cli.ApplicationProperties.logLevel
 import static org.fusesource.jansi.Ansi.ansi
-import static org.fusesource.jansi.Ansi.Color.DEFAULT
+import static org.fusesource.jansi.Ansi.Color.*
 
 class ConsoleLogger {
 
@@ -21,7 +21,7 @@ class ConsoleLogger {
     def static synchronized addStatusLogger(def logger) {
         eraseStatus()
         statusLoggers.add(0, logger)
-        logger.listener = { eraseStatus(); updateStatus() }
+        logger.listener = { eraseAndUpdate() }
         updateStatus()
         logger
     }
@@ -57,6 +57,11 @@ class ConsoleLogger {
         }
     }
 
+    def static synchronized eraseAndUpdate() {
+        eraseStatus(); 
+        updateStatus();
+    }
+    
     public static void debug(String message) {
         if (DEBUG <= logLevel()) {
             printLine(yellow(message))
@@ -76,31 +81,35 @@ class ConsoleLogger {
     }
     
     public static final def red(String text) {
-        ansi().fg(Color.RED).a(text).reset()
+        ansi().fg(RED).a(text).reset()
     }
     
     public static final def green(String text) {
-        ansi().fg(Color.GREEN).a(text).reset()
+        ansi().fg(GREEN).a(text).reset()
     }
     
     public static final def yellow(String text) {
-        ansi().fg(Color.YELLOW).a(text).reset()
+        ansi().fg(YELLOW).a(text).reset()
     }
     
     public static final def blue(String text) {
-        ansi().fg(Color.BLUE).a(text).reset()
+        ansi().fg(BLUE).a(text).reset()
     }
     
     public static final def magenta(String text) {
-        ansi().fg(Color.MAGENTA).a(text).reset()
+        ansi().fg(MAGENTA).a(text).reset()
     }
     
     public static final def cyan(String text) {
-        ansi().fg(Color.CYAN).a(text).reset()
+        ansi().fg(CYAN).a(text).reset()
     }
     
     public static final def defColor(String text) {
-        ansi().fg(Color.DEFAULT).a(text).reset()
+        ansi().fg(DEFAULT).a(text).reset()
+    }
+    
+    public static final def bold(String text) {
+        ansi().bold().a(text).reset()
     }
 }
 
