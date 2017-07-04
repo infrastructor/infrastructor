@@ -29,9 +29,9 @@ public class TemplateAction {
         if (!decryptionKey) {
             content = engine.createTemplate(template).make(bindings)
         } else if (decryptionMode == PART) {
-            content = CryptoUtils.decryptPart(decryptionKey, template, bindings)
+            content = CryptoUtils.decryptPart(decryptionKey as String, template, bindings)
         } else if (decryptionMode == FULL) {
-            def decrypted = CryptoUtils.decryptFull(decryptionKey, template)
+            def decrypted = CryptoUtils.decryptFull(decryptionKey as String, template)
             content = engine.createTemplate(decrypted).make(bindings)
         } else {
             throw new ActionProcessingException("Unable to process template using decryption mode: $decryptionMode")

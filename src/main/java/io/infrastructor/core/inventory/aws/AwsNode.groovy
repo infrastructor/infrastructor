@@ -123,7 +123,7 @@ public class AwsNode extends Node {
             request.setInstanceIds([id])
             DescribeInstancesResult result = amazonEC2.describeInstances(request)
             Instance instance = result.getReservations().get(0).getInstances().get(0)
-            debug "wait for instance '$id' state is running, current state: ${instance.getState().getCode()}"
+            debug "waiting for instance '$id' state is running, current state: ${instance.getState().getCode()}"
             if (instance.getState().getCode() == 16) { // instance is running
                 return instance
             }
