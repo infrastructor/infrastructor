@@ -2,6 +2,8 @@ package io.infrastructor.cli.handlers
 
 import io.infrastructor.cli.ApplicationProperties
 
+import static io.infrastructor.cli.logging.ConsoleLogger.*
+
 public class VersionHandler {
     
     def options() {

@@ -72,7 +72,6 @@ class SshClient {
             channel.setErrStream(error)
             channel.connect()
             while (!channel.isClosed()) {
-                debug "SshClient($host:$port) waiting for channel is closed"
                 Thread.sleep(55)
                 session.sendKeepAliveMsg()
             }
