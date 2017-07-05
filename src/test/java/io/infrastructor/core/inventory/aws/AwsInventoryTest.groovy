@@ -5,6 +5,8 @@ import org.junit.experimental.categories.Category
 
 import static io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory.managedAwsInventory
 import static io.infrastructor.core.inventory.aws.AwsInventory.awsInventory
+import static io.infrastructor.core.processing.actions.Actions.*
+import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 @Category(AwsCategory.class)
 class AwsInventoryTest extends AwsTestBase {
@@ -34,7 +36,13 @@ class AwsInventoryTest extends AwsTestBase {
                 }
             }
             
-            inventory.setup()
+            inventory.setup {
+                nodes {
+                    waitForPort port: 22, delay: 3000, attempts: 10
+                    def result = shell "ls /var"
+                    info "result: $result"
+                }
+            }
             
             assert inventory.nodes.size() == 2
             

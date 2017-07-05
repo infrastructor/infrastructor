@@ -7,6 +7,8 @@ import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameter
 import org.junit.runners.Parameterized.Parameters
 
+import static io.infrastructor.core.processing.actions.Actions.*
+
 @RunWith(Parameterized.class)
 public abstract class ActionTestBase {
 

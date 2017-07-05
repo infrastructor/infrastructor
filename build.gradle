@@ -36,10 +36,8 @@ dependencies {
     compile 'com.jcraft:jsch:0.1.54'
     compile 'javax.validation:validation-api:1.1.0.Final'
     compile 'org.apache.bval:bval-jsr:1.1.2'
-    compile 'org.apache.bval:bval-jsr:1.1.2'
     compile 'org.codehaus.groovy:groovy-all:2.4.9'
     compile 'org.fusesource.jansi:jansi:1.14'
-    
     testCompile "junit:junit:4.12"
 }
 

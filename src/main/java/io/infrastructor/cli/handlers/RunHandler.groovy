@@ -13,7 +13,7 @@ public class RunHandler extends LoggingAwareHandler {
     Map variables = [:]
 
     @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)
-    def file
+    def files
     
     def description() {
         "Run specified file."
@@ -33,6 +33,16 @@ public class RunHandler extends LoggingAwareHandler {
     def execute() {
         super.execute()
         
+        def shell = build(variables)
+        shell.setVariable('include', { shell.evaluate(new File(it as String)) })
+        
+        files.each { 
+            shell.evaluate(new File(it))
+        }
+    }
+    
+    def static build(def variables) {
+        //
         ImportCustomizer importCustomizer = new ImportCustomizer()
         importCustomizer.addStaticStars("io.infrastructor.cli.logging.ConsoleLogger")
         importCustomizer.addStaticStars("io.infrastructor.core.utils.ConfigUtils")
@@ -40,14 +50,13 @@ public class RunHandler extends LoggingAwareHandler {
         importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.AwsInventory")
         importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory")
         importCustomizer.addStaticStars("io.infrastructor.core.inventory.docker.InlineDockerInventory")
+        importCustomizer.addStaticStars("io.infrastructor.core.processing.actions.Actions")
         importCustomizer.addStaticStars("io.infrastructor.core.processing.actions.InputAction")
-                
+        //        
         CompilerConfiguration configuration = new CompilerConfiguration()
         configuration.addCompilationCustomizers(importCustomizer)
-                
-        file.each { 
-            new GroovyShell(new Binding(variables), configuration).evaluate(new File(it))
-        }
+        //        
+        new GroovyShell(new Binding(variables), configuration)
     }
 }
 
