@@ -32,11 +32,8 @@ class TaskExecutor {
                     executeParallel(filtered, parallel) { node -> 
                         try {
                             statusLine "> task: $name"
-                            ProxyMetaClass.getInstance(ActionContext.class).use {
-                                ActionContext.metaClass.'static'.node = { node }
-                                def cloned = closure.clone()
-                                cloned(node)
-                            }
+                            ActionContext.init(node)
+                            closure.clone().call(node)
                         } catch (NodeTaskExecutionException ex) {
                             error "FAILED - node.id: $node.id, message: $ex.message, $ex.context"
                             errorCounter.incrementAndGet()

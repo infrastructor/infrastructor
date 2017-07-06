@@ -1,7 +1,10 @@
 package io.infrastructor.core.inventory.docker
 
-import static io.infrastructor.core.validation.ValidationHelper.validate
 import io.infrastructor.core.inventory.Inventory
+
+import static io.infrastructor.core.validation.ValidationHelper.validate
+import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatus
+import static io.infrastructor.cli.logging.status.ProgressStatusLogger.withProgressStatus
 
 public class InlineDockerInventory {
     
@@ -28,12 +31,30 @@ public class InlineDockerInventory {
     }
     
     def setup(Closure setupClosure) {
-        def inventoryNodes = nodes.collect { it.launch() }
+        def inventoryNodes = []
+        
+        withTextStatus("launching docker nodes") { 
+            withProgressStatus(nodes.size(), 'nodes launched')  { progressLine ->
+                inventoryNodes = nodes.collect { 
+                    def node = it.launch() 
+                    progressLine.increase()
+                    node
+                }
+            }
+        }
+       
         new Inventory(nodes: inventoryNodes).setup(setupClosure)
     }
     
     def shutdown() {
-        nodes.each { it.shutdown() }
+        withTextStatus("shutting down docker nodes") {
+            withProgressStatus(nodes.size(), 'nodes terminated')  { progressLine ->
+                nodes.each { 
+                    it.shutdown()
+                    progressLine.increase()
+                }
+            }
+        }
     }
 }
 

@@ -8,30 +8,30 @@ import io.infrastructor.core.inventory.CommandExecutionException
 
 class Actions {
     
-    public static final String DIRECTORY = 'directory' 
-    public static final String FETCH = 'fetch' 
-    public static final String FILE = 'file' 
-    public static final String UPLOAD = 'upload' 
-    public static final String GROUP = 'group' 
-    public static final String INSERT_BLOCK = 'insertBlock'
-    public static final String REPLACE = 'replace' 
-    public static final String REPLACE_LINE = 'replaceLine' 
-    public static final String SHELL = 'shell' 
-    public static final String TEMPLATE = 'template' 
-    public static final String USER = 'user' 
+    public static final String DIRECTORY     = 'directory' 
+    public static final String FETCH         = 'fetch' 
+    public static final String FILE          = 'file' 
+    public static final String GROUP         = 'group' 
+    public static final String INSERT_BLOCK  = 'insertBlock'
+    public static final String REPLACE       = 'replace' 
+    public static final String REPLACE_LINE  = 'replaceLine' 
+    public static final String SHELL         = 'shell' 
+    public static final String TEMPLATE      = 'template' 
+    public static final String UPLOAD        = 'upload' 
+    public static final String USER          = 'user' 
     public static final String WAIT_FOR_PORT = 'waitForPort' 
     
     def static final actions = [
         (DIRECTORY):     DirectoryAction.class,
         (FETCH):         FetchAction.class,
         (FILE):          FileAction.class,
-        (UPLOAD):        FileUploadAction.class,
         (GROUP):         GroupAction.class,
         (INSERT_BLOCK):  InsertBlockAction.class,
         (REPLACE):       ReplaceAction.class,
         (REPLACE_LINE):  ReplaceLineAction.class,
         (SHELL):         ShellAction.class,
         (TEMPLATE):      TemplateAction.class,
+        (UPLOAD):        FileUploadAction.class,
         (USER):          UserAction.class,
         (WAIT_FOR_PORT): WaitForPortAction.class
     ]
@@ -51,6 +51,23 @@ class Actions {
         }
     }
     
+    
+    // apply
+    
+    def static apply(Map params) {
+        apply(params, {})
+    }
+    
+    def static apply(Closure closure) {
+        apply([:], closure)
+    }
+    
+    def static apply(Map params, Closure closure) {
+        def action = new ApplyAction(params)
+        action.with(closure)
+        validate(action)
+        action.execute()
+    }
     
     // directory
     
@@ -140,6 +157,7 @@ class Actions {
     def static input(Map params, Closure closure) {
         def action = new InputAction(params)
         action.with(closure)
+        validate(action)
         action.execute()
     }
     
