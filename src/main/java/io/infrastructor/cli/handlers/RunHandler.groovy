@@ -3,9 +3,8 @@ package io.infrastructor.cli.handlers
 import com.beust.jcommander.DynamicParameter
 import com.beust.jcommander.Parameter
 import io.infrastructor.cli.validation.FileValidator
-import org.codehaus.groovy.control.CompilationFailedException
-import org.codehaus.groovy.control.CompilerConfiguration
-import org.codehaus.groovy.control.customizers.ImportCustomizer
+
+import static io.infrastructor.core.utils.GroovyShellUtils.createDefaultShell
 
 public class RunHandler extends LoggingAwareHandler {
     
@@ -33,28 +32,9 @@ public class RunHandler extends LoggingAwareHandler {
     def execute() {
         super.execute()
         
-        def shell = build(variables)
-        shell.setVariable('include', { shell.evaluate(new File(it as String)) })
+        def shell = createDefaultShell(variables)
         
         files.each { shell.evaluate(new File(it)) }
-    }
-    
-    def static build(def variables) {
-        //
-        ImportCustomizer importCustomizer = new ImportCustomizer()
-        importCustomizer.addStaticStars("io.infrastructor.cli.logging.ConsoleLogger")
-        importCustomizer.addStaticStars("io.infrastructor.core.utils.ConfigUtils")
-        importCustomizer.addStaticStars("io.infrastructor.core.inventory.InlineInventory")
-        importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.AwsInventory")
-        importCustomizer.addStaticStars("io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory")
-        importCustomizer.addStaticStars("io.infrastructor.core.inventory.docker.InlineDockerInventory")
-        importCustomizer.addStaticStars("io.infrastructor.core.processing.actions.Actions")
-        importCustomizer.addStaticStars("io.infrastructor.core.processing.actions.InputAction")
-        //        
-        CompilerConfiguration configuration = new CompilerConfiguration()
-        configuration.addCompilationCustomizers(importCustomizer)
-        //        
-        new GroovyShell(new Binding(variables), configuration)
     }
 }
 
