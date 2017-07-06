@@ -4,6 +4,8 @@ import org.junit.Test
 import io.infrastructor.core.processing.TaskExecutionException
 import io.infrastructor.core.utils.FlatUUID
 
+import static io.infrastructor.core.processing.actions.Actions.*
+
 public class FetchActionTest extends ActionTestBase {
     
     @Test
@@ -70,7 +72,7 @@ public class FetchActionTest extends ActionTestBase {
             assert new File(resultFile).text == 'message'
         }
     }
-    
+        
     @Test(expected = TaskExecutionException)
     public void fetchFileWithEmptyArguments() {
         inventory.setup {

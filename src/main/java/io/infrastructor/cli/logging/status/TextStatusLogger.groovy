@@ -18,7 +18,11 @@ class TextStatusLogger {
     }
     
     public static def withTextStatus(Closure closure) {
-        def status = new TextStatusLogger()
+        withTextStatus('', closure)
+    }
+    
+    public static def withTextStatus(String initial, Closure closure) {
+        def status = new TextStatusLogger(text: initial)
         try {
             addStatusLogger status
             return closure(status.&setStatus)

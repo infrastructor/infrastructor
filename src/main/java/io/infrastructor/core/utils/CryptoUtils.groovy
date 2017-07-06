@@ -12,7 +12,6 @@ class CryptoUtils {
     static final String ALGORITHM = "AES"
     static final def ENCODING = StandardCharsets.UTF_8
 
-
     public static String encryptFullBytes(String key, byte [] data, int blockSize = 0) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
@@ -26,7 +25,6 @@ class CryptoUtils {
         }
     }
 
-
     public static byte [] decryptFullBytes(String key, String data) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
@@ -38,16 +36,13 @@ class CryptoUtils {
         }
     }
     
-    
     public static String encryptFull(String key, String data, int blockSize = 0) {
         return encryptFullBytes(key, data.getBytes(ENCODING), blockSize)
     }
     
-    
     public static String decryptFull(String key, String data) {
         new String(decryptFullBytes(key, data), ENCODING)
     }
-    
     
     public static String encryptPart(String key, String template, int blockSize = 0) {
         def bindings = [:]
@@ -59,7 +54,6 @@ class CryptoUtils {
         engine.createTemplate(template).make(bindings).toString()
     }
     
-    
     public static String decryptPart(String key, String template, def bindings = [:]) {
         bindings.decrypt = {
             field -> "${decryptFull(key, field)}"
@@ -69,19 +63,16 @@ class CryptoUtils {
         engine.createTemplate(template).make(bindings).toString()
     }
     
-    
     private static SecretKeySpec prepareKey(String key) {
         MessageDigest digest = MessageDigest.getInstance("SHA-256")
         byte[] keyBytes = digest.digest(key.getBytes(ENCODING))
         new SecretKeySpec(Arrays.copyOf(keyBytes, 16), ALGORITHM)
     }
     
-    
     private static def block(def data, size) {
         doBlock([], data, size).join('\n')
     }
 
-    
     private static def doBlock(def collection, tail, size) {
         if (size == 0) {
             collection << tail
@@ -96,6 +87,6 @@ class CryptoUtils {
             collection << tail
         }
         
-        return collection
+        collection
     }
 }

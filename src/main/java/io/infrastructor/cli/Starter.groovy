@@ -45,7 +45,7 @@ public class Starter {
                 }
             }
         } catch (Exception ex) {
-            def message = ex.getMessage()?.replaceAll("\n", "\n ")
+            def message = ex.toString()?.replaceAll("\n", "\n ")
             
             debug " ${bold('Uncaught exception:')}"
             debug " ${ex.class.name}: $message"

@@ -3,6 +3,8 @@ package io.infrastructor.core.inventory.docker
 import org.junit.Test
 import io.infrastructor.core.inventory.docker.InlineDockerInventory
 
+import static io.infrastructor.core.processing.actions.Actions.*
+
 public class InlineDockerInventoryTest {
     
     @Test

@@ -39,6 +39,22 @@ class ConsoleLogger {
         updateStatus()
     }
 
+    def static synchronized input(String message, boolean secret) {
+        def console  = System.console()
+        
+        def inputMessage = (Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).a(message).reset()).toString()
+        
+        eraseStatus()
+        
+        if (secret) {
+            return console.readPassword(inputMessage) 
+        } else {
+            return console.readLine(inputMessage)
+        }
+        
+        updateStatus()
+    }
+    
     def static synchronized eraseStatus() {
         if (enableDynamics) {
             while(statusPrinted > 0) {

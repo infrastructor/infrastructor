@@ -3,6 +3,7 @@ package io.infrastructor.core.processing
 import org.junit.Test
 
 import static io.infrastructor.core.inventory.InlineInventory.inlineInventory
+import static io.infrastructor.core.processing.actions.Actions.*
 
 public class TaskExecutorTest {
 	
@@ -15,7 +16,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy"
         }.setup {
             nodes {
-                collector << node.host
+                collector << it.host
             }
         }
         assert collector == ['testA', 'testB', 'testC'] as Set
@@ -30,7 +31,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.setup {
             nodes('id:a') {
-                collector << node.host
+                collector << it.host
             }
         }
         assert collector == ['testA'] as Set
@@ -45,7 +46,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.setup {
             nodes(tags: {'id:a' || 'id:c'}) {
-                collector << node.host
+                collector << it.host
             }
         }
         assert collector == ['testA', 'testC'] as Set
@@ -61,7 +62,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.setup {
             nodes(tags: {'id:a' || 'id:c'}, parallel: 2) {
-                collector << node.host
+                collector << it.host
                 threadIds << Thread.currentThread().id
             }
         }
@@ -93,7 +94,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.setup {
             nodes(tags: {'id:b'}) {
-                collector << node.host
+                collector << it.host
             }
         }
         assert collector.size() == 1
@@ -110,7 +111,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.setup {
             nodes(tags: { !'id:b' }) {
-                collector << node.host
+                collector << it.host
             }
         }
         assert collector.size() == 2
@@ -127,7 +128,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.setup {
             nodes(tags: { !'id:b' && !'id:a' }) {
-                collector << node.host
+                collector << it.host
             }
         }
         assert collector.size() == 1
@@ -143,7 +144,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy", tags: [a: 'tag C']
         }.setup {
             nodes(tags: { 'a:tag C' || ('a:tag B' && !'c:3' && !'a:tag A') }) {
-                collector << node.host
+                collector << it.host
             }
         }
         assert collector.size() == 1
@@ -159,7 +160,7 @@ public class TaskExecutorTest {
             node host: "testC", username: "dummy", tags: [id: 'tag C']
         }.setup {
             nodes(tags: { 'id:tag C' && 'id:tag Z' }) {
-                collector << node.host
+                collector << it.host
             }
         }
         assert collector.size() == 0

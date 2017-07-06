@@ -2,6 +2,8 @@ package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 
+import static io.infrastructor.core.processing.actions.Actions.*
+
 public class NodeConnectionTest extends ActionTestBase {
     
     @Test

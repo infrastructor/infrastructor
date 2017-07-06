@@ -13,7 +13,7 @@ public class EncryptHandler extends LoggingAwareHandler {
     String password
 
     @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)
-    def files = []
+    List<String> files
     
     @Parameter(names = ["-m", "--mode"], validateWith = ModeValidator)
     String mode = 'FULL'

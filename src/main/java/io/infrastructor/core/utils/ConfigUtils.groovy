@@ -3,6 +3,7 @@ package io.infrastructor.core.utils
 import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 class ConfigUtils {
+    
     public static def config(String filepath) {
         try {
             new ConfigSlurper().parse(new File(filepath).toURI().toURL())
