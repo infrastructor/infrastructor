@@ -8,20 +8,32 @@ import io.infrastructor.core.inventory.CommandExecutionException
 
 class Actions {
     
+    public static final String DIRECTORY = 'directory' 
+    public static final String FETCH = 'fetch' 
+    public static final String FILE = 'file' 
+    public static final String UPLOAD = 'upload' 
+    public static final String GROUP = 'group' 
+    public static final String INSERT_BLOCK = 'insertBlock'
+    public static final String REPLACE = 'replace' 
+    public static final String REPLACE_LINE = 'replaceLine' 
+    public static final String SHELL = 'shell' 
+    public static final String TEMPLATE = 'template' 
+    public static final String USER = 'user' 
+    public static final String WAIT_FOR_PORT = 'waitForPort' 
+    
     def static final actions = [
-        'directory': DirectoryAction.class,
-        'fetch': FetchAction.class,
-        'file': FileAction.class,
-        'upload': FileUploadAction.class,
-        'group': GroupAction.class,
-        'input': InputAction.class,
-        'insertBlock': InsertBlockAction.class,
-        'replace': ReplaceAction.class,
-        'replaceLine': ReplaceLineAction.class,
-        'shell': ShellAction.class,
-        'template': TemplateAction.class,
-        'user': UserAction.class,
-        'waitForPort': WaitForPortAction.class
+        (DIRECTORY):     DirectoryAction.class,
+        (FETCH):         FetchAction.class,
+        (FILE):          FileAction.class,
+        (UPLOAD):        FileUploadAction.class,
+        (GROUP):         GroupAction.class,
+        (INSERT_BLOCK):  InsertBlockAction.class,
+        (REPLACE):       ReplaceAction.class,
+        (REPLACE_LINE):  ReplaceLineAction.class,
+        (SHELL):         ShellAction.class,
+        (TEMPLATE):      TemplateAction.class,
+        (USER):          UserAction.class,
+        (WAIT_FOR_PORT): WaitForPortAction.class
     ]
     
     def static execute(String name, Map params, Closure closure) {
@@ -39,164 +51,205 @@ class Actions {
         }
     }
     
+    
+    // directory
+    
     def static directory(Map params) {
-        execute('directory', params, {})
+        directory(params, {})
     }
     
     def static directory(Closure closure) {
-        execute('directory', [:], closure)
+        directory([:], closure)
     }
     
     def static directory(Map params, Closure closure) {
-        execute('directory', params, closure)
+        execute(DIRECTORY, params, closure)
     }
     
+    
+    // fetch
+    
     def static fetch(Map params) {
-        execute('fetch', params, {})
+        fetch(params, {})
     }
     
     def static fetch(Closure closure) {
-        execute('fetch', [:], closure)
+        fetch([:], closure)
     }
     
     def static fetch(Map params, Closure closure) {
-        execute('fetch', params, closure)
+        execute(FETCH, params, closure)
     }
     
+    
+    // file
+    
     def static file(Map params) {
-        execute('file', params, {})
+        file(params, {})
     }
     
     def static file(Closure closure) {
-        execute('file', [:], closure)
+        file([:], closure)
     }
     
     def static file(Map params, Closure closure) {
-        execute('file', params, closure)
+        execute(FILE, params, closure)
     }
     
+    
+    // upload
+    
     def static upload(Map params) {
-        execute('upload', params, {})
+        upload(params, {})
     }
     
     def static upload(Closure closure) {
-        execute('upload', [:], closure)
+        upload([:], closure)
     }
     
     def static upload(Map params, Closure closure) {
-        execute('upload', params, closure)
+        execute(UPLOAD, params, closure)
     }
     
+    
+    // group
+    
     def static group(Map params) {
-        execute('group', params, {})
+        group(params, {})
     }
     
     def static group(Closure closure) {
-        execute('group', [:], closure)
+        group([:], closure)
     }
     
     def static group(Map params, Closure closure) {
-        execute('group', params, closure)
+        execute(GROUP, params, closure)
     }
     
+    
+    // input
+    
     def static input(Map params) {
-        execute('input', params, {})
+        input(params, {})
     }
     
     def static input(Closure closure) {
-        execute('input', [:], closure)
+        input([:], closure)
     }
     
     def static input(Map params, Closure closure) {
-        execute('input', params, closure)
+        def action = new InputAction(params)
+        action.with(closure)
+        action.execute()
     }
     
+    
+    // insertBlock
+    
     def static insertBlock(Map params) {
-        execute('insertBlock', params, {})
+        insertBlock(params, {})
     }
     
     def static insertBlock(Closure closure) {
-        execute('insertBlock', [:], closure)
+        insertBlock([:], closure)
     }
     
     def static insertBlock(Map params, Closure closure) {
-        execute('insertBlock', params, closure)
+        execute(INSERT_BLOCK, params, closure)
     }
     
+    
+    // replace
+    
     def static replace(Map params) {
-        execute('replace', params, {})
+        replace(params, {})
     }
     
     def static replace(Closure closure) {
-        execute('replace', [:], closure)
+        replace([:], closure)
     }
     
     def static replace(Map params, Closure closure) {
-        execute('replace', params, closure)
+        execute(REPLACE, params, closure)
     }
 
+    
+    // replaceLine
+    
     def static replaceLine(Map params) {
-        execute('replaceLine', params, {})
+        replaceLine(params, {})
     }
     
     def static replaceLine(Closure closure) {
-        execute('replaceLine', [:], closure)
+        replaceLine([:], closure)
     }
     
     def static replaceLine(Map params, Closure closure) {
-        execute('replaceLine', params, closure)
+        execute(REPLACE_LINE, params, closure)
     }
     
+    
+    // shell
+    
     def static shell(String command) {
-        execute('shell', [command: command], {})
+        shell([command: command], {})
     }
     
     def static shell(Map params) {
-        execute('shell', params, {})
+        shell(params, {})
     }
      
     def static shell(Closure closure) {
-        execute('shell', [:], closure)
+        shell([:], closure)
     }
     
     def static shell(Map params, Closure closure) {
-        execute('shell', params, closure)
+        execute(SHELL, params, closure)
     }
     
+    
+    // template
+    
     def static template(Map params) {
-        execute('template', params, {})
+        template(params, {})
     }
     
     def static template(Closure closure) {
-        execute('template', [:], closure)
+        template([:], closure)
     }
     
     def static template(Map params, Closure closure) {
-        execute('template', params, closure)
+        execute(TEMPLATE, params, closure)
     }
    
+    
+    // user
+    
     def static user(Map params) {
-        execute('user', params, {})
+        user(params, {})
     }
     
     def static user(Closure closure) {
-        execute('user', [:], closure)
+        user([:], closure)
     }
     
     def static user(Map params, Closure closure) {
-        execute('user', params, closure)
+        execute(USER, params, closure)
     }
     
+    
+    // waitForPort
+    
     def static waitForPort(Map params) {
-        execute('waitForPort', params, {})
+        waitForPort(params, {})
     }
     
     def static waitForPort(Closure closure) {
-        execute('waitForPort', [:], closure)
+        waitForPort([:], closure)
     }
     
     def static waitForPort(Map params, Closure closure) {
-        execute('waitForPort', params, closure)
+        execute(WAIT_FOR_PORT, params, closure)
     }
 }
 
