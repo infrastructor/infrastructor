@@ -1,6 +1,6 @@
 package io.infrastructor.core.processing.actions
 
-import org.fusesource.jansi.Ansi
+import static io.infrastructor.cli.logging.ConsoleLogger.input
 
 public class InputAction {
     
@@ -8,14 +8,6 @@ public class InputAction {
     def secret = false
     
     def synchronized execute() {
-        def console  = System.console()
-        
-        def inputMessage = (Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).a(message).reset()).toString()
-        
-        if (secret) {
-            return console.readPassword(inputMessage) 
-        } else {
-            return console.readLine(inputMessage)
-        }
+        input(message, secret) 
     }
 }
