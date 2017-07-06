@@ -9,7 +9,6 @@ import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 public class EncryptHandler extends LoggingAwareHandler {
     
-    @Parameter(names = ["-p", "--password"], required = true, description = "Encryption password", password = true)
     String password
 
     @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)
@@ -26,7 +25,6 @@ public class EncryptHandler extends LoggingAwareHandler {
         def options = super.options() 
         options << ["--file, -f" : "A file to encrypt. This file will be replaced with an encrypted one."]
         options << ["--mode, -m" : "Encryption mode: FULL or PART. Full mode to encrypt entire file. Part mode to substitute 'encrypt' placeholders only."]
-        options << ["--password, -p" : "An encryption key."]
     }
     
     def usage() {
@@ -36,6 +34,9 @@ public class EncryptHandler extends LoggingAwareHandler {
     
     def execute() {
         super.execute()
+        
+        if (!password) { password = input('Encryption password: ', true) }
+        
         info "${blue('starting encryption with mode ' + mode)}"
         encryptFiles( files?.collect { new File(it) } )  
     }

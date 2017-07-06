@@ -10,9 +10,8 @@ import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 public class DecryptHandler extends LoggingAwareHandler {
     
-    @Parameter(names = ["-p", "--password"], required = true, description = "Decryption password", password = true)
     String password
-
+    
     @Parameter(names = ["-f", "--file"], validateWith = FileValidator)
     List<String> files = []
     
@@ -27,7 +26,6 @@ public class DecryptHandler extends LoggingAwareHandler {
         def options = super.options() 
         options << ["--file, -f" : "A file to decrypt. This file will be replaced with a decrypted one."]
         options << ["--mode, -m" : "Decryption mode: FULL or PART. Full mode to decrypt entire file. Part mode to substitute 'decrypt' placeholders only."]
-        options << ["--password, -p" : "A decryption key."]
     }
 
     def usage() {
@@ -37,6 +35,9 @@ public class DecryptHandler extends LoggingAwareHandler {
     
     def execute() {
         super.execute()
+        
+        if (!password) { password = input('Decryption password: ', true) }
+        
         info "${blue('starting decryption with mode ' + mode)}"
         decryptFiles(files.collect { new File(it) }) 
     }
