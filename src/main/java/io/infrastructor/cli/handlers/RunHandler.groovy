@@ -13,7 +13,7 @@ public class RunHandler extends LoggingAwareHandler {
     Map variables = [:]
 
     @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)
-    def files
+    List<String> files
     
     def description() {
         "Run specified file."
@@ -36,9 +36,7 @@ public class RunHandler extends LoggingAwareHandler {
         def shell = build(variables)
         shell.setVariable('include', { shell.evaluate(new File(it as String)) })
         
-        files.each { 
-            shell.evaluate(new File(it))
-        }
+        files.each { shell.evaluate(new File(it)) }
     }
     
     def static build(def variables) {

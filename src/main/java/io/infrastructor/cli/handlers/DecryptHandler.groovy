@@ -14,7 +14,7 @@ public class DecryptHandler extends LoggingAwareHandler {
     String password
 
     @Parameter(names = ["-f", "--file"], validateWith = FileValidator)
-    def files = []
+    List<String> files = []
     
     @Parameter(names = ["-m", "--mode"], validateWith = ModeValidator)
     String mode = 'FULL'
