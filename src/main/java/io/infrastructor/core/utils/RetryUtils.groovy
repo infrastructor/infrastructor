@@ -3,6 +3,7 @@ package io.infrastructor.core.utils
 import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 class RetryUtils {
+    
     public static def retry(def count, def interval, def action) {
         def index = count
         def exception = new RuntimeException("retry failed after $count of attemps")

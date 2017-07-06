@@ -4,6 +4,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
 class GroovyShellUtils {
+    
     def static createDefaultShell(def bindings = [:]) {
         ImportCustomizer imports = new ImportCustomizer()
         imports.addStaticStars("io.infrastructor.cli.logging.ConsoleLogger")
