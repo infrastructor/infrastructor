@@ -47,9 +47,9 @@ class ConsoleLogger {
         eraseStatus()
         
         if (secret) {
-            return console.readPassword(inputMessage) 
+            return (console.readPassword(inputMessage) as String)
         } else {
-            return console.readLine(inputMessage)
+            return (console.readLine(inputMessage) as String)
         }
         
         updateStatus()
