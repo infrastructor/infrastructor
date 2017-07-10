@@ -10,6 +10,7 @@ import static io.infrastructor.cli.logging.status.TextStatusLogger.withTextStatu
 public class AwsInventory {
 
     def username
+    def password
     def keyfile
     def port = 22
     def tags = [:]
@@ -27,6 +28,7 @@ public class AwsInventory {
                                 usePublicHost(usePublicIp).
                                 each {
                                     it.username = owner.username
+                                    it.password = owner.password
                                     it.keyfile  = owner.keyfile
                                     it.port     = owner.port
                                 }
