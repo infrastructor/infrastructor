@@ -41,6 +41,9 @@ public class EC2 {
             it.keyfile     = keyfile
         }.usePublicHost(usePublicIp)
         
+        debug "existing nodes:"
+        existing.nodes.each { debug "node.name: $it.name, node.host: $it.host" }
+        
         def defined = fromNodes(targetState)
         defined.each {
             if (it.username == null) it.username = username
@@ -48,9 +51,13 @@ public class EC2 {
             it.tags << tags 
         }.usePublicHost(usePublicIp)
         
-        targetState = defined.merge(existing).nodes
+        debug "defined nodes:"
+        defined.nodes.each { debug "node.name: $it.name, node.host: $it.host" }
         
-        targetState.each { debug "EC2 node added to inventory: $it" }
+        targetState = defined.merge(existing).usePublicHost(usePublicIp).nodes
+        
+        debug "after merge:"
+        targetState.each { debug "node.name: $it.name, node.host: $it.host" }
     }
     
     def createInstances(def amazonEC2) {
