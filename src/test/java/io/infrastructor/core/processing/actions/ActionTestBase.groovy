@@ -1,13 +1,10 @@
 package io.infrastructor.core.processing.actions
 
-import java.util.Arrays
 import java.util.List
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameter
 import org.junit.runners.Parameterized.Parameters
-
-import static io.infrastructor.core.processing.actions.Actions.*
 
 @RunWith(Parameterized.class)
 public abstract class ActionTestBase {

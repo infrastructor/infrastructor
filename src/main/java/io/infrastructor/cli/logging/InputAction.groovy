@@ -1,4 +1,4 @@
-package io.infrastructor.core.processing.actions
+package io.infrastructor.cli.logging
 
 import static io.infrastructor.cli.logging.ConsoleLogger.input
 

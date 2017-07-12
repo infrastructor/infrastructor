@@ -5,7 +5,6 @@ import org.junit.experimental.categories.Category
 
 import static io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory.managedAwsInventory
 import static io.infrastructor.core.inventory.aws.AwsInventory.awsInventory
-import static io.infrastructor.core.processing.actions.Actions.*
 import static io.infrastructor.cli.logging.ConsoleLogger.*
 
 @Category(AwsCategory.class)

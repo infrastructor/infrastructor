@@ -2,14 +2,12 @@ package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 
-import static io.infrastructor.core.processing.actions.Actions.*
-
 public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceAllOccurrencesInFileUsingRegex() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'
                     content = """\
@@ -36,7 +34,7 @@ public class ReplaceActionTest extends ActionTestBase {
     @Test
     public void replaceFirstOccurrenceInFileUsingRegex() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 file {
                     target = '/test.txt'
                     content = """\
@@ -63,7 +61,7 @@ public class ReplaceActionTest extends ActionTestBase {
     @Test
     public void replaceBlockWithUnknownOwner() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = replace {
@@ -82,7 +80,7 @@ public class ReplaceActionTest extends ActionTestBase {
     @Test
     public void replaceBlockWithUnknownGroup() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = replace {
@@ -101,7 +99,7 @@ public class ReplaceActionTest extends ActionTestBase {
     @Test
     public void replaceBlockWithInvalidMode() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = replace {

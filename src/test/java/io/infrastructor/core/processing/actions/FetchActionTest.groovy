@@ -4,15 +4,13 @@ import org.junit.Test
 import io.infrastructor.core.processing.TaskExecutionException
 import io.infrastructor.core.utils.FlatUUID
 
-import static io.infrastructor.core.processing.actions.Actions.*
-
 public class FetchActionTest extends ActionTestBase {
     
     @Test
     public void fetchFileFromRemoteHost() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 file {
                     content = 'message'
                     target = '/test.txt'
@@ -31,7 +29,7 @@ public class FetchActionTest extends ActionTestBase {
     public void fetchFileFromRemoteHostWithoutPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 file {
                     content = 'message'
                     target = '/test.txt'
@@ -54,7 +52,7 @@ public class FetchActionTest extends ActionTestBase {
     public void fetchFileFromRemoteHostWithPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 file {
                     content = 'message'
                     target = '/test.txt'
@@ -76,7 +74,7 @@ public class FetchActionTest extends ActionTestBase {
     @Test(expected = TaskExecutionException)
     public void fetchFileWithEmptyArguments() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 fetch { }
             }
         }

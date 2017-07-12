@@ -31,6 +31,10 @@ public class InlineDockerInventory {
     }
     
     def setup(Closure setupClosure) {
+        new Inventory(nodes: launch()).setup(setupClosure)
+    }
+    
+    def launch() {
         def inventoryNodes = []
         
         withTextStatus("launching docker nodes") { 
@@ -42,10 +46,10 @@ public class InlineDockerInventory {
                 }
             }
         }
-       
-        new Inventory(nodes: inventoryNodes).setup(setupClosure)
+        
+        return inventoryNodes
     }
-    
+   
     def shutdown() {
         withTextStatus("shutting down docker nodes") {
             withProgressStatus(nodes.size(), 'nodes terminated')  { progressLine ->

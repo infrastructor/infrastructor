@@ -1,20 +1,16 @@
 package io.infrastructor.core.processing.actions
 
-import org.codehaus.groovy.control.CompilerConfiguration
-import org.codehaus.groovy.control.customizers.ImportCustomizer
-
-import static io.infrastructor.core.utils.GroovyShellUtils.createDefaultShell
+import javax.validation.constraints.NotNull
 
 class ApplyAction {
-    String file
-    def bindings = [:]
+    @NotNull
+    Closure closure
+    def params = [:]
     
-    def execute(def node) {
-        def script = new File(file)
-        if (!script.exists()) { throw new ActionProcessingException("file not found: $file") }
-        
-        def shell = createDefaultShell(bindings)
-        shell.evaluate(script)
+    def execute(def context) {
+        def clonned = closure.clone()
+        clonned.delegate = context
+        clonned(params)
     }
 }
 

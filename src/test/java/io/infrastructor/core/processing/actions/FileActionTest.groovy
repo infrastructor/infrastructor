@@ -2,14 +2,12 @@ package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 
-import static io.infrastructor.core.processing.actions.Actions.*
-
 public class FileActionTest extends ActionTestBase {
    
     @Test
     public void writeAContentToAFileOnRemoteServerWithSudo() {
         inventory.setup {
-            nodes('as:devops') { 
+            task(filter: {'as:devops'}) { 
                 // setup
                 shell sudo: true, command: "groupadd infra"
             
@@ -38,7 +36,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void writeAFileOnRemoteServerWithoutSudo() {
         inventory.setup {
-            nodes('as:devops') { 
+            task(filter: {'as:devops'}) { 
                 // execution
                 def result = file {
                     content = 'message'
@@ -55,7 +53,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void writeAFileOnRemoteServerAsRoot() {
         inventory.setup {
-            nodes('as:root') { 
+            task(filter: {'as:root'}) { 
                 // execution
                 def result = file {
                     content = 'another message'
@@ -71,7 +69,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void createFileWithUnknownOwner() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = file target: '/etc/simple', content: "simple",  owner: 'doesnotexist'
                 
@@ -84,7 +82,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void createFileWithUnknownGroup() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = file target: '/etc/simple', content: "simple", group: 'doesnotexist'
                 
@@ -97,7 +95,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void createFileWithInvalidMode() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = file target: '/etc/simple', content: "simple", mode: '8888'
                 

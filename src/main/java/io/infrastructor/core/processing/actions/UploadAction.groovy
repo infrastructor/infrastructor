@@ -3,7 +3,7 @@ package io.infrastructor.core.processing.actions
 import javax.validation.constraints.NotNull
 import io.infrastructor.core.utils.CryptoUtils
 
-public class FileUploadAction {
+public class UploadAction {
     
     @NotNull
     def target

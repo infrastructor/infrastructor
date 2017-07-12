@@ -2,14 +2,12 @@ package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 
-import static io.infrastructor.core.processing.actions.Actions.*
-
 public class FileUploadTest extends ActionTestBase {
     
     @Test
     public void uploadAFileToRemoteHost() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 user  name: 'test'
                 group name: 'testgroup'
                 
@@ -29,7 +27,7 @@ public class FileUploadTest extends ActionTestBase {
     @Test
     public void uploadAFileToRemoteHostWithoutPermissions() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 def result = upload {
                     source = 'resources/fileupload.txt'
                     target = '/fileupload.txt'
@@ -43,7 +41,7 @@ public class FileUploadTest extends ActionTestBase {
     @Test
     public void uploadAFileToRemoteHostWithSudo() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 def result = upload {
                     sudo = true
                     source = 'resources/fileupload.txt'
@@ -59,7 +57,7 @@ public class FileUploadTest extends ActionTestBase {
     @Test
     public void uploadFileWithUnknownOwner() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = upload source: 'resources/fileupload.txt', target: '/tmp/simple.txt', owner: 'doesnotexist'
                 
@@ -72,7 +70,7 @@ public class FileUploadTest extends ActionTestBase {
     @Test
     public void uploadFileWithUnknownGroup() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = upload source: 'resources/fileupload.txt', target: '/tmp/simple.txt', group: 'doesnotexist'
                 
@@ -85,7 +83,7 @@ public class FileUploadTest extends ActionTestBase {
     @Test
     public void uploadFileWithInvalidMode() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = upload source: 'resources/fileupload.txt', target: '/tmp/simple.txt', mode: '8888'
                 
@@ -99,7 +97,7 @@ public class FileUploadTest extends ActionTestBase {
     @Test
     public void decryptAndUploadFileToRemoteHost() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 def result = upload {
                     sudo = true
                     source = 'resources/encrypted_full.tmpl'

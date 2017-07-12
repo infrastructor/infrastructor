@@ -2,14 +2,12 @@ package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 
-import static io.infrastructor.core.processing.actions.Actions.*
-
 public class DirectoryActionTest extends ActionTestBase {
     
     @Test
     public void createDirectoryAsRoot() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 user  name: "testuser"
                 group name: "testgroup"
@@ -26,7 +24,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryAsDevopsWithSudo() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 // execute
                 directory sudo: true, target: '/etc/simple', owner: 'devops', group: 'devops', mode: '0600'
                 // assert
@@ -41,7 +39,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryAsDevopsWithoutSudo() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 // execute
                 def result = directory target: '/etc/simple'
                 // assert
@@ -53,7 +51,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryWithUnknownOwner() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = directory target: '/etc/simple', owner: 'doesnotexist'
                 
@@ -66,7 +64,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryWithUnknownGroup() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = directory target: '/etc/simple', group: 'doesnotexist'
                 
@@ -79,7 +77,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryWithInvalidMode() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 // execute
                 def result = directory target: '/etc/simple', mode: '8888'
                 

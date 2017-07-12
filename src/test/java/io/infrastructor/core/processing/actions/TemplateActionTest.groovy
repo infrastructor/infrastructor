@@ -2,14 +2,12 @@ package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 
-import static io.infrastructor.core.processing.actions.Actions.*
-
 public class TemplateActionTest extends ActionTestBase {
 
     @Test
     public void generateAFileOnRemoteServer() {
         inventory.setup {
-            nodes('as:root') { 
+            task(filter: {'as:root'}) { 
                 // setup
                 shell("groupadd infra")
             
@@ -39,7 +37,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithUnknownOwner() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 def result = template {
                     source = 'resources/test.tmpl'
                     target = '/tmp/test.txt'
@@ -56,7 +54,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithUnknownGroup() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 def result = template {
                     source = 'resources/test.tmpl'
                     target = '/tmp/test.txt'
@@ -73,7 +71,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithInvalidMode() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 def result = template {
                     source = 'resources/test.tmpl'
                     target = '/tmp/test.txt'
@@ -90,7 +88,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithEncryptedValues() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 template {
                     source = 'resources/encrypted_part.tmpl'
                     target = '/tmp/test.txt'
@@ -111,7 +109,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithFullyEncryptedContent() {
         inventory.setup {
-            nodes('as:devops') {
+            task(filter: {'as:devops'}) {
                 template {
                     source = 'resources/encrypted_full.tmpl'
                     target = '/tmp/test.txt'

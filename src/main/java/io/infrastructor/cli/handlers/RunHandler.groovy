@@ -4,7 +4,7 @@ import com.beust.jcommander.DynamicParameter
 import com.beust.jcommander.Parameter
 import io.infrastructor.cli.validation.FileValidator
 
-import static io.infrastructor.core.utils.GroovyShellUtils.createDefaultShell
+import static io.infrastructor.core.utils.GroovyShellUtils.groovyShell
 
 public class RunHandler extends LoggingAwareHandler {
     
@@ -31,9 +31,7 @@ public class RunHandler extends LoggingAwareHandler {
     
     def execute() {
         super.execute()
-        
-        def shell = createDefaultShell(variables)
-        
+        def shell = groovyShell(variables)
         files.each { shell.evaluate(new File(it)) }
     }
 }

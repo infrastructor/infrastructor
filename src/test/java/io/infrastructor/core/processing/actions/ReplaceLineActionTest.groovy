@@ -2,14 +2,12 @@ package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 
-import static io.infrastructor.core.processing.actions.Actions.*
-
 public class ReplaceLineActionTest extends ActionTestBase {
     
     @Test
     public void replaceLineInFile() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'
                     content = """\
@@ -38,7 +36,7 @@ public class ReplaceLineActionTest extends ActionTestBase {
     @Test
     public void replaceLineWithoutChange() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'
                     content = """\
@@ -67,7 +65,7 @@ public class ReplaceLineActionTest extends ActionTestBase {
     @Test
     public void replaceLineChangeAttributes() {
         inventory.setup {
-            nodes('as:root') {
+            task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'
                     content = "dummy content"
