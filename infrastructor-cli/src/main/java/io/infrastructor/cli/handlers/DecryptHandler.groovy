@@ -10,7 +10,7 @@ import static io.infrastructor.core.logging.ConsoleLogger.*
 
 public class DecryptHandler extends LoggingAwareHandler {
     
-    String password
+    private String password
     
     @Parameter(names = ["-f", "--file"], validateWith = FileValidator)
     List<String> files = []
