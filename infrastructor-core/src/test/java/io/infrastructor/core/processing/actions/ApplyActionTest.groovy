@@ -30,8 +30,8 @@ class ApplyActionTest extends ActionTestBase {
     public void loadActionFromExternalFileInsideNodesSection() {
         inventory.setup {
             task(filter: {'as:root'}) {
-                def closure = load 'build/resources/test/apply_action/directory.groovy'
-                apply(closure: closure, params: [target_name: '/var/simple'])
+                def directory_action_set = load 'build/resources/test/apply_action/directory.groovy'
+                apply(closure: directory_action_set, params: [target_name: '/var/simple'])
             }
         }
     }
@@ -41,7 +41,9 @@ class ApplyActionTest extends ActionTestBase {
         inventory.setup {
             task(filter: {'as:root'}) {
                 def closure = load 'build/resources/test/apply_action/missing.groovy'
-                apply(closure: closure, params: [target_name: '/var/simple'])
+                apply(closure: closure) {
+                   params = [target_name: '/var/simple'] 
+                }
             } 
         }
     }
