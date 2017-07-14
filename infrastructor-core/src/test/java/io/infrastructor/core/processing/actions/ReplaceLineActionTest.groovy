@@ -6,7 +6,7 @@ public class ReplaceLineActionTest extends ActionTestBase {
     
     @Test
     public void replaceLineInFile() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'
@@ -35,7 +35,7 @@ public class ReplaceLineActionTest extends ActionTestBase {
     
     @Test
     public void replaceLineWithoutChange() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'
@@ -64,7 +64,7 @@ public class ReplaceLineActionTest extends ActionTestBase {
     
     @Test
     public void replaceLineChangeAttributes() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'

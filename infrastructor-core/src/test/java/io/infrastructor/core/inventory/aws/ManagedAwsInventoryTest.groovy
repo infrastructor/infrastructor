@@ -25,7 +25,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
                         keyfile = "resources/aws/aws_infrastructor_ci"
                     }
                 }
-            }.setup()
+            }.provision()
                 
             assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
                 name = 'simple-y'
@@ -50,7 +50,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
                         keyfile = "resources/aws/aws_infrastructor_ci"
                     }
                 }
-            }.setup()
+            }.provision()
             
             assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
                 name = 'simple-y'
@@ -64,7 +64,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
                 ec2(tags: [managed: true]) {} 
-            }.setup()
+            }.provision()
         }
     }
 }

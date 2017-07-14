@@ -30,8 +30,8 @@ public class InlineDockerInventory {
         node([:], closure)
     }
     
-    def setup(Closure setupClosure) {
-        new Inventory(nodes: launch()).setup(setupClosure)
+    def provision(Closure setupClosure) {
+        new Inventory(nodes: launch()).provision(setupClosure)
     }
     
     def launch() {

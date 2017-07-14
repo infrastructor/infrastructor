@@ -44,7 +44,7 @@ public class AwsRoute53Test extends AwsTestBase {
                 }
             }
             
-            inventory.setup {}
+            inventory.provision {}
             
             def nodes = inventory.getNodes()
             
@@ -66,7 +66,7 @@ public class AwsRoute53Test extends AwsTestBase {
                 route53(hostedZoneId: 'Z36BEXFJC6IRSG') {
                     recordSet(type: 'A', name: 'simple.test.internal', ttl: 500, resources: {'managed:true'})
                 }
-            }.setup {}
+            }.provision {}
         }
     }
 }

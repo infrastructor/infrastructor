@@ -6,7 +6,7 @@ public class FileActionTest extends ActionTestBase {
    
     @Test
     public void writeAContentToAFileOnRemoteServerWithSudo() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) { 
                 // setup
                 shell sudo: true, command: "groupadd infra"
@@ -35,7 +35,7 @@ public class FileActionTest extends ActionTestBase {
     
     @Test
     public void writeAFileOnRemoteServerWithoutSudo() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) { 
                 // execution
                 def result = file {
@@ -52,7 +52,7 @@ public class FileActionTest extends ActionTestBase {
     
     @Test
     public void writeAFileOnRemoteServerAsRoot() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) { 
                 // execution
                 def result = file {
@@ -68,7 +68,7 @@ public class FileActionTest extends ActionTestBase {
     
     @Test
     public void createFileWithUnknownOwner() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
                 def result = file target: '/etc/simple', content: "simple",  owner: 'doesnotexist'
@@ -81,7 +81,7 @@ public class FileActionTest extends ActionTestBase {
  
     @Test
     public void createFileWithUnknownGroup() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
                 def result = file target: '/etc/simple', content: "simple", group: 'doesnotexist'
@@ -94,7 +94,7 @@ public class FileActionTest extends ActionTestBase {
     
     @Test
     public void createFileWithInvalidMode() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
                 def result = file target: '/etc/simple', content: "simple", mode: '8888'

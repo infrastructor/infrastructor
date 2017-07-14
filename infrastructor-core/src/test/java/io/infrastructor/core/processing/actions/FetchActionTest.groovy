@@ -9,7 +9,7 @@ public class FetchActionTest extends ActionTestBase {
     @Test
     public void fetchFileFromRemoteHost() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 file {
                     content = 'message'
@@ -28,7 +28,7 @@ public class FetchActionTest extends ActionTestBase {
     @Test
     public void fetchFileFromRemoteHostWithoutPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file {
                     content = 'message'
@@ -51,7 +51,7 @@ public class FetchActionTest extends ActionTestBase {
     @Test
     public void fetchFileFromRemoteHostWithPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file {
                     content = 'message'
@@ -73,7 +73,7 @@ public class FetchActionTest extends ActionTestBase {
         
     @Test(expected = TaskExecutionException)
     public void fetchFileWithEmptyArguments() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 fetch { }
             }

@@ -6,7 +6,7 @@ public class DirectoryActionTest extends ActionTestBase {
     
     @Test
     public void createDirectoryAsRoot() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
                 user  name: "testuser"
@@ -23,7 +23,7 @@ public class DirectoryActionTest extends ActionTestBase {
     
     @Test
     public void createDirectoryAsDevopsWithSudo() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 // execute
                 directory sudo: true, target: '/etc/simple', owner: 'devops', group: 'devops', mode: '0600'
@@ -38,7 +38,7 @@ public class DirectoryActionTest extends ActionTestBase {
 
     @Test
     public void createDirectoryAsDevopsWithoutSudo() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 // execute
                 def result = directory target: '/etc/simple'
@@ -50,7 +50,7 @@ public class DirectoryActionTest extends ActionTestBase {
     
     @Test
     public void createDirectoryWithUnknownOwner() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
                 def result = directory target: '/etc/simple', owner: 'doesnotexist'
@@ -63,7 +63,7 @@ public class DirectoryActionTest extends ActionTestBase {
  
     @Test
     public void createDirectoryWithUnknownGroup() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
                 def result = directory target: '/etc/simple', group: 'doesnotexist'
@@ -76,7 +76,7 @@ public class DirectoryActionTest extends ActionTestBase {
     
     @Test
     public void createDirectoryWithInvalidMode() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
                 def result = directory target: '/etc/simple', mode: '8888'

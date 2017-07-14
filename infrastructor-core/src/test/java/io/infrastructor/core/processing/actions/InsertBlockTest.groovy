@@ -6,7 +6,7 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockAtTheBeginningOfAFile() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}, name: 'insertBlockAtTheBeginningOfAFile') {
                 file {
                     target  = '/test.txt'
@@ -33,7 +33,7 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockAtTheEndingOfAFile() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'
@@ -60,7 +60,7 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockWithoutPermissions() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file {
                     sudo = true
@@ -85,7 +85,7 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockToUnexistedFileReturnError() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 def result = insertBlock {
                     target  = '/tmp/test.txt'
@@ -98,7 +98,7 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockWithUnknownOwner() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 
@@ -117,7 +117,7 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockWithUnknownGroup() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 
@@ -136,7 +136,7 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockWithInvalidMode() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 

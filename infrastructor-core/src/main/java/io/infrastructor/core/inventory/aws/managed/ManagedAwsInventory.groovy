@@ -56,7 +56,7 @@ public class ManagedAwsInventory {
         return awsInventory
     }
     
-    def setup(Closure definition = {}) {
+    def provision(Closure definition = {}) {
         withTextStatus { statusLine ->
             statusLine '> stage: creating aws instances'
             ec2s*.createInstances(amazonEC2)
@@ -65,7 +65,7 @@ public class ManagedAwsInventory {
             ec2s*.updateInstances(amazonEC2)
         
             statusLine '> stage: provisioning aws instances'
-            new Inventory(nodes: getNodes()).setup(definition)
+            new Inventory(nodes: getNodes()).provision(definition)
         
             statusLine '> stage: removing aws instances'
             ec2s*.removeInstances(amazonEC2)

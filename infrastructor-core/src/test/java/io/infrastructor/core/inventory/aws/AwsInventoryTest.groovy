@@ -35,7 +35,7 @@ class AwsInventoryTest extends AwsTestBase {
                 }
             }
             
-            inventory.setup {
+            inventory.provision {
                 nodes {
                     waitForPort port: 22, delay: 3000, attempts: 10
                     def result = shell "ls /var"
@@ -57,7 +57,7 @@ class AwsInventoryTest extends AwsTestBase {
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
                 ec2(tags: [managed: true]) {} 
-            }.setup {}
+            }.provision {}
         }
     }
 }

@@ -34,7 +34,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
                 }
             }
             
-            initialInventory.setup {}  
+            initialInventory.provision {}  
             assert initialInventory.nodes.size() == 1
             assert initialInventory.nodes[0].state == 'created'
             
@@ -59,7 +59,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
                 }
             }
             
-            updatedInventory.setup {} 
+            updatedInventory.provision {} 
             assert updatedInventory.nodes.size() == 2
             assert updatedInventory.nodes.find { it.state == 'created' }
             assert updatedInventory.nodes.find { it.state == 'removed' }
@@ -67,7 +67,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
                 ec2(tags: [managed: true]) {} 
-            }.setup {}
+            }.provision {}
         }
     }
 }

@@ -6,7 +6,7 @@ public class ShellActionTest extends ActionTestBase {
 
     @Test
     public void simpleShellAction() {
-        inventory.setup {
+        inventory.provision {
             task(name: 'simpleShellAction', filter: {'as:devops'}) {
                 def result = shell { 
                     command = "echo 'simple message!'"

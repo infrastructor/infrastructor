@@ -6,7 +6,7 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceAllOccurrencesInFileUsingRegex() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 file {
                     target  = '/test.txt'
@@ -33,7 +33,7 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceFirstOccurrenceInFileUsingRegex() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 file {
                     target = '/test.txt'
@@ -60,7 +60,7 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceBlockWithUnknownOwner() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 
@@ -79,7 +79,7 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceBlockWithUnknownGroup() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 
@@ -98,7 +98,7 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceBlockWithInvalidMode() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 file target: '/tmp/test.txt', content: "dummy"
                 

@@ -13,7 +13,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy"
             node host: "testB", username: "dummy"
             node host: "testC", username: "dummy"
-        }.setup {
+        }.provision {
             task {
                 collector << node.host
             }
@@ -28,7 +28,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
-        }.setup {
+        }.provision {
             task(filter: {'id:a'}) {
                 collector << node.host
             }
@@ -43,7 +43,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
-        }.setup {
+        }.provision {
             task(filter: {'id:a' || 'id:c'}) {
                 collector << node.host
             }
@@ -59,7 +59,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
-        }.setup {
+        }.provision {
             task(filter: {'id:a' || 'id:c'}, parallel: 2) {
                 collector << node.host
                 threadIds << Thread.currentThread().id
@@ -76,7 +76,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
-        }.setup {
+        }.provision {
             task(parallel: 3) {
                 threadIds << Thread.currentThread().id
             }
@@ -91,7 +91,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
-        }.setup {
+        }.provision {
             task(filter: {'id:b'}) {
                 collector << node.host
             }
@@ -108,7 +108,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
-        }.setup {
+        }.provision {
             task(filter: { !'id:b' }) {
                 collector << node.host
             }
@@ -125,7 +125,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
-        }.setup {
+        }.provision {
             task(filter: { !'id:b' && !'id:a' }) {
                 collector << node.host
             }
@@ -141,7 +141,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [a: 'tag A', b: '1']
             node host: "testB", username: "dummy", tags: [a: 'tag B', b: '2', c: '3']
             node host: "testC", username: "dummy", tags: [a: 'tag C']
-        }.setup {
+        }.provision {
             task(filter: { 'a:tag C' || ('a:tag B' && !'c:3' && !'a:tag A') }) {
                 collector << node.host
             }
@@ -157,7 +157,7 @@ public class TaskExecutorTest {
             node host: "testA", username: "dummy", tags: [id: 'tag A']
             node host: "testB", username: "dummy", tags: [id: 'tag B']
             node host: "testC", username: "dummy", tags: [id: 'tag C']
-        }.setup {
+        }.provision {
             task(filter: { 'id:tag C' && 'id:tag Z' }) {
                 collector << node.host
             }

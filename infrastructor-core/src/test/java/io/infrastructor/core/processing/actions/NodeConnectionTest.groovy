@@ -6,7 +6,7 @@ public class NodeConnectionTest extends ActionTestBase {
     
     @Test
     public void useSshKeyToConnectToNode() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {"sshkey"}) {
                 def result = shell("echo 'test!'")
                 assert result.output.contains('test!')
@@ -16,7 +16,7 @@ public class NodeConnectionTest extends ActionTestBase {
     
     @Test
     public void useSshPasswordToConnectToNode() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {"test"}) {
                 def result = shell("echo 'test!'")
                 assert result.output.contains('test!')

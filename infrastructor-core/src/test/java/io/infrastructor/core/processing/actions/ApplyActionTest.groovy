@@ -11,7 +11,7 @@ class ApplyActionTest extends ActionTestBase {
     public void applyActionsDefinedInExternalClosure() {
         def the_closure = { params -> shell(params.command) }
         
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 // load actions from an external file
                 apply {
@@ -28,7 +28,7 @@ class ApplyActionTest extends ActionTestBase {
     
     @Test
     public void loadActionFromExternalFileInsideNodesSection() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 def directory_action_set = load 'build/resources/test/apply_action/directory.groovy'
                 apply(closure: directory_action_set, params: [target_name: '/var/simple'])
@@ -38,7 +38,7 @@ class ApplyActionTest extends ActionTestBase {
     
     @Test(expected = Exception)
     public void loadActionFromUnxesistingFile() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) {
                 def closure = load 'build/resources/test/apply_action/missing.groovy'
                 apply(closure: closure) {

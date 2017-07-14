@@ -11,10 +11,10 @@ public class Inventory {
     def nodes = []
     
     public void leftShift(Node node) {
-        nodes << validate(node) 
+        nodes << validate(node)
     }
     
-    def setup(Closure closure) {
+    def provision(Closure closure) {
         provision(nodes, closure)
         this
     }

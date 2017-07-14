@@ -6,7 +6,7 @@ public class TemplateActionTest extends ActionTestBase {
 
     @Test
     public void generateAFileOnRemoteServer() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:root'}) { 
                 // setup
                 shell("groupadd infra")
@@ -36,7 +36,7 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithUnknownOwner() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 def result = template {
                     source = 'resources/test.tmpl'
@@ -53,7 +53,7 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithUnknownGroup() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 def result = template {
                     source = 'resources/test.tmpl'
@@ -70,7 +70,7 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithInvalidMode() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 def result = template {
                     source = 'resources/test.tmpl'
@@ -87,7 +87,7 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithEncryptedValues() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 template {
                     source = 'resources/encrypted_part.tmpl'
@@ -108,7 +108,7 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithFullyEncryptedContent() {
-        inventory.setup {
+        inventory.provision {
             task(filter: {'as:devops'}) {
                 template {
                     source = 'resources/encrypted_full.tmpl'
