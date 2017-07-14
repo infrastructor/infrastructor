@@ -20,6 +20,7 @@ cache:
   directories:
   - ~/.gradle/wrapper
   - ~/.gradle/caches
-  - ~/build
   - ~/infrastructor-cli/build
+  - ~/infrastructor-cli/.gradle/caches
   - ~/infrastructor-core/build
+  - ~/infrastructor-core/.gradle/caches
