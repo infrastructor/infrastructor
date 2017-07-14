@@ -11,7 +11,7 @@ class ModeValidationTest {
         validator.validate("", "PART")
         validator.validate("", "full")
         validator.validate("", "fuLL")
-        validator.validate("", "PART")
+        validator.validate("", "part")
         validator.validate("", "PArt")
     }
     
