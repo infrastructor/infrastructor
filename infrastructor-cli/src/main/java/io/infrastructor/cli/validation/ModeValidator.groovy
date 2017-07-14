@@ -6,7 +6,7 @@ import com.beust.jcommander.ParameterException
 public class ModeValidator implements IParameterValidator {
     @Override
     public void validate(String name, String value) throws ParameterException {
-        if (value?.toUpperCase() != 'FULL' && value?.toUpperCase() != "PART") {
+        if (!(value?.toUpperCase() in ['FULL', 'PART'])) {
             throw new ParameterException("parameter '$name' should be 'FULL' or 'PART'")
         }
     }	

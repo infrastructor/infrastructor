@@ -24,7 +24,7 @@ class ModeValidationTest {
     @Test(expected = ParameterException)
     public void passIncorrectMode_null() {
         ModeValidator validator = new ModeValidator()
-        validator.validate("", "")
+        validator.validate("", null)
     }
     
     @Test(expected = ParameterException)
