@@ -9,22 +9,22 @@ public class NodeValidationTest {
     
     @Test(expected = ValidationException)
     public void nodeMustHaveAHost() {
-        def inventory = inlineInventory {
+        inlineInventory {
             node(port: 10000, username: "root")
-        }    
+        }.provision()  
     }
     
     @Test(expected = ValidationException)
     public void portMustNotBeNull() {
-        def inventory = inlineInventory {
+        inlineInventory {
             node(host: "host", port: null, username: "root")
-        }    
+        }.provision()    
     }
     
     @Test(expected = ValidationException)
     public void usernameMustNotBeNull() {
         def inventory = inlineInventory {
             node(host: "host", port: 10000, username: null)
-        }    
+        }.provision()   
     }
 }

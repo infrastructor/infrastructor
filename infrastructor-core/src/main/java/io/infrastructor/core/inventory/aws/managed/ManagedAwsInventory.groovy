@@ -20,15 +20,11 @@ public class ManagedAwsInventory {
         this.amazonRoute53 = AmazonRoute53Utils.amazonRoute53(awsAccessKey, awsSecretKey, awsRegion)
     }
     
-    def ec2(Closure setup) {
-        ec2([:], closure)
-    }
-    
-    def ec2(Map params, Closure setup) {
+    def ec2(Map params, Closure closure) {
         withTextStatus { statusLine ->
             statusLine '> initializing ec2 managed set'
             def ec2 = new EC2(params)
-            ec2.with(setup)
+            ec2.with(closure)
             ec2.initialize(amazonEC2)
             ec2s << ec2
             statusLine '> initializing ec2 managed set done'
@@ -69,7 +65,7 @@ public class ManagedAwsInventory {
         
             statusLine '> stage: removing aws instances'
             ec2s*.removeInstances(amazonEC2)
-        
+            
             statusLine '> stage: updating route53 records'
             route53s*.apply(amazonEC2, amazonRoute53)
         } 
