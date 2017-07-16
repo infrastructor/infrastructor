@@ -1,76 +1,43 @@
-import org.apache.tools.ant.filters.*
+apply plugin: 'base'
 
-apply plugin: "groovy"
-apply plugin: 'application'
+allprojects {
+    group = 'io.infrastructor'
+    version = '0.0.1'
+    
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
 
-sourceCompatibility = "1.8"
-mainClassName = "io.infrastructor.cli.Starter"
-[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
-
-sourceSets {
-    main {
-        groovy {
-            srcDirs = ['src/main/java']
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'maven'
+    
+    sourceCompatibility = '1.8'
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+    
+    sourceSets {
+        main {
+            groovy {
+                srcDirs = ['src/main/java']
+            }
+        }
+        test {
+            groovy {
+                srcDirs = ['src/test/java']
+            }
         }
     }
+    
     test {
-        groovy {
-            srcDirs = ['src/test/java']
-        }
-    }
-}
-
-processResources {
-    filter ReplaceTokens, tokens: [
-        "application.version" : '0.0.1',
-        "build.date"          : new Date().format("dd-MM-yyyy HH:mm"),
-        "build.revision"      : "git rev-parse HEAD".execute().text 
-    ]
-}
-
-dependencies {
-    compile 'ch.qos.logback:logback-classic:1.2.1'
-    compile 'com.amazonaws:aws-java-sdk-ec2:1.11.140'
-    compile 'com.amazonaws:aws-java-sdk-route53:1.11.140'
-    compile 'com.beust:jcommander:1.58'
-    compile 'com.jcraft:jsch:0.1.54'
-    compile 'javax.validation:validation-api:1.1.0.Final'
-    compile 'org.apache.bval:bval-jsr:1.1.2'
-    compile 'org.codehaus.groovy:groovy-all:2.4.9'
-    compile 'org.fusesource.jansi:jansi:1.14'
-    testCompile "junit:junit:4.12"
-}
-
-repositories {
-    mavenCentral()
-}
-
-test {
-    systemProperty "LOG_LEVEL", "2"
-    systemProperty "ENABLE_DYNAMIC_LOGS", "false"
-    
-    testLogging.showStandardStreams = true
-    
-    if (project.hasProperty('testAws')) {
-        maxParallelForks = 1
-    } else {
-        maxParallelForks = 4
+        systemProperty "LOG_LEVEL", "2"
+        systemProperty "ENABLE_DYNAMIC_LOGS", "false"
+        testLogging.showStandardStreams = true
     }
     
-    useJUnit {
-        // activate AWS tests
-        if (project.hasProperty('testAws')) {
-            systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
-            systemProperty "awsSecretKey",   project.getProperty("awsSecretKey")
-            systemProperty "awsRegion",      project.getProperty("awsRegion")
-        } else {
-            excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
-        }
+    dependencies {
+        testCompile "junit:junit:4.12"
     }
-    
-}
-
-task unpack(type: Copy) {
-    from zipTree(file("${buildDir}/distributions/infrastructor.zip"))
-    into file("${buildDir}/distributions/")
 }

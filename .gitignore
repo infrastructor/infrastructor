@@ -2,3 +2,10 @@
 /build/
 /.nb-gradle/
 /gradle.properties
+/infrastructor-core/.gradle/
+/infrastructor-core/.nb-gradle/
+/infrastructor-core/build/
+/infrastructor-cli/.gradle/
+/infrastructor-cli/.nb-gradle/
+/infrastructor-cli/build/
+/infrastructor-core/infrastructor-cli/.nb-gradle/
