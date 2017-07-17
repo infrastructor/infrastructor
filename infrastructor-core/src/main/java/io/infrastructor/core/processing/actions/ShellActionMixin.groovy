@@ -1,7 +1,5 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.processing.NodeContext
-
 class ShellActionMixin {
     def static shell(NodeContext context, String command) {
         shell(context, [command: command])

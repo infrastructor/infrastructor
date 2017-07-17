@@ -1,7 +1,5 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.processing.NodeContext
-
 class UploadActionMixin {
     def static upload(NodeContext context, Map params) {
         upload(context, params, {})

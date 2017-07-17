@@ -25,7 +25,7 @@ public class WaitForPortAction {
             sleep(delay)
         }
         
-        throw new ActionProcessingException("unable to connect to $node.host:$port, attempts: $attempts, delay: $delay")
+        throw new ActionExecutionException("unable to connect to $node.host:$port, attempts: $attempts, delay: $delay")
     }
     
     def attempt(def host) {

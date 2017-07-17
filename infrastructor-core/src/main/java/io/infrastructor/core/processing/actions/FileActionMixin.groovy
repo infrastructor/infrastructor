@@ -1,7 +1,5 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.processing.NodeContext
-
 class FileActionMixin {
     def static file(NodeContext context, Map params) {
         file(context, params, {})

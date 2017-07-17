@@ -1,8 +1,8 @@
 package io.infrastructor.core.processing.actions
 
-import org.junit.Test
-import io.infrastructor.core.processing.TaskExecutionException
+import io.infrastructor.core.processing.provisioning.TaskExecutionException
 import io.infrastructor.core.utils.FlatUUID
+import org.junit.Test
 
 public class FetchActionTest extends ActionTestBase {
     

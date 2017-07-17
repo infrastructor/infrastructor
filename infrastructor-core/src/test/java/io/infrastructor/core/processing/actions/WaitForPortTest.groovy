@@ -1,10 +1,9 @@
 package io.infrastructor.core.processing.actions
 
+import io.infrastructor.core.processing.provisioning.TaskExecutionException
 import org.junit.Test
-import io.infrastructor.core.processing.TaskExecutionException
 
 public class WaitForPortTest extends ActionTestBase {
-    
     @Test(expected = TaskExecutionException)
     public void waitForUnlistenedPort() {
         inventory.provision {

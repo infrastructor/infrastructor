@@ -34,7 +34,7 @@ public class TemplateAction {
             def decrypted = CryptoUtils.decryptFull(decryptionKey as String, template)
             content = engine.createTemplate(decrypted).make(bindings)
         } else {
-            throw new ActionProcessingException("Unable to process template using decryption mode: $decryptionMode")
+            throw new ActionExecutionException("Unable to process template using decryption mode: $decryptionMode")
         }
         
         node.writeText(target, content.toString(), sudo)

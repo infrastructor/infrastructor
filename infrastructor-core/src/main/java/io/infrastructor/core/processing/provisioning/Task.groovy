@@ -1,10 +1,8 @@
 package io.infrastructor.core.processing.provisioning
 
 import io.infrastructor.core.inventory.CommandExecutionException
-import io.infrastructor.core.processing.NodeContext
-import io.infrastructor.core.processing.NodeTaskExecutionException
-import io.infrastructor.core.processing.TaskExecutionException
-import io.infrastructor.core.processing.actions.ActionProcessingException
+import io.infrastructor.core.processing.actions.ActionExecutionException
+import io.infrastructor.core.processing.actions.NodeContext
 import io.infrastructor.core.utils.FilteringUtils
 import io.infrastructor.core.validation.ValidationException
 import java.util.concurrent.atomic.AtomicInteger
@@ -32,14 +30,12 @@ class Task {
                 executeParallel(filtered, parallel) { node -> 
                     try {
                         statusLine "> task: $name"
-                        //
                         new NodeContext(node: node).with(closure.clone())
-                        //
-                    } catch (NodeTaskExecutionException ex) {
-                        error "FAILED - node.id: $node.id, message: $ex.message, $ex.context"
+                    } catch (ActionExecutionException ex) {
+                        error "FAILED - node.id: $node.id, $ex.message"
                         errorCounter.incrementAndGet()
                     } catch(Exception ex) {
-                        error "FAILED - node.id: $node.id, message: $ex.message, class: ${ex.class.name}"
+                        error "FAILED - node.id: $node.id, message: $ex.message"
                         errorCounter.incrementAndGet()
                     } finally {
                         progressLine.increase()
