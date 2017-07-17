@@ -1,8 +1,7 @@
 package io.infrastructor.core.processing.actions
 
+import io.infrastructor.core.processing.provisioning.TaskExecutionException
 import org.junit.Test
-import io.infrastructor.core.processing.NodeTaskExecutionException
-
 import static io.infrastructor.core.utils.GroovyShellUtils.load
 
 class ApplyActionTest extends ActionTestBase {
@@ -36,7 +35,7 @@ class ApplyActionTest extends ActionTestBase {
         }
     }
     
-    @Test(expected = Exception)
+    @Test(expected = TaskExecutionException)
     public void loadActionFromUnxesistingFile() {
         inventory.provision {
             task(filter: {'as:root'}) {

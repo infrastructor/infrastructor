@@ -13,7 +13,7 @@ public class AwsRoute53Test extends AwsTestBase {
     @Test
     public void findAwsNodes() {
         try {
-            def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(parallel: 2, tags: [managed: true], usePublicIp: true) {
                     node {
                         name = 'simple-y'
@@ -51,7 +51,7 @@ public class AwsRoute53Test extends AwsTestBase {
             assert nodes
             assert nodes.size() == 2
             
-            def amazonRoute53 = AmazonRoute53Utils.amazonRoute53(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION)
+            def amazonRoute53 = AmazonRoute53Utils.amazonRoute53(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION)
             def recordSet = AmazonRoute53Utils.findDnsRecordSet(amazonRoute53, 'Z36BEXFJC6IRSG', 'simple.test.internal')
             
             assert recordSet
@@ -60,13 +60,13 @@ public class AwsRoute53Test extends AwsTestBase {
             assert recordSet.records.contains(nodes[1].privateIp) 
             
         } finally {
-            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
-                ec2(tags: [managed: true]) {} 
-                
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
+                ec2(tags: [managed: true], usePublicIp: true, username: 'ubuntu', keyfile: 'resources/aws/aws_infrastructor_ci') {} 
+
                 route53(hostedZoneId: 'Z36BEXFJC6IRSG') {
                     recordSet(type: 'A', name: 'simple.test.internal', ttl: 500, resources: {'managed:true'})
                 }
-            }.provision {}
+            }.provision()
         }
     }
 }

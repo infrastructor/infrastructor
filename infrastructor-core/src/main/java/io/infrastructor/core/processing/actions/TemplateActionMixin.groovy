@@ -1,7 +1,5 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.processing.NodeContext
-
 class TemplateActionMixin {
     def static template(NodeContext context, Map params) {
         template(context, params, {})

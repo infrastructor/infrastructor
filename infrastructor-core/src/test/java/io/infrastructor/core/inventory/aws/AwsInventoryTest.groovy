@@ -13,7 +13,7 @@ class AwsInventoryTest extends AwsTestBase {
     @Test
     public void findAwsNodes() {
         try {
-            def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(parallel: 2, tags: [managed: true], usePublicIp: true, username: "ubuntu", keyfile: "resources/aws/aws_infrastructor_ci") {
                     node {
                         name = 'simple-y'
@@ -36,7 +36,7 @@ class AwsInventoryTest extends AwsTestBase {
             }
             
             inventory.provision {
-                nodes {
+                task {
                     waitForPort port: 22, delay: 3000, attempts: 10
                     def result = shell "ls /var"
                     info "result: $result"
@@ -45,7 +45,7 @@ class AwsInventoryTest extends AwsTestBase {
             
             assert inventory.nodes.size() == 2
             
-            def readOnlyInventory = awsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            def readOnlyInventory = awsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 username = 'ubuntu'
                 keyfile  = 'resources/aws/aws_infrastructor_ci'
                 usePublicIp = true
@@ -55,9 +55,9 @@ class AwsInventoryTest extends AwsTestBase {
             assert readOnlyInventory.nodes.size() == 2
             
         } finally {
-            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
-                ec2(tags: [managed: true]) {} 
-            }.provision {}
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
+                ec2(tags: [managed: true], usePublicIp: true, username: 'ubuntu', keyfile: 'resources/aws/aws_infrastructor_ci') {} 
+            }.provision()
         }
     }
 }

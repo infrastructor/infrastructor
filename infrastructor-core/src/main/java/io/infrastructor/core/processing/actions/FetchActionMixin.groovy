@@ -1,7 +1,5 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.processing.NodeContext
-
 class FetchActionMixin {
     def static fetch(NodeContext context, Map params) {
         fetch(context, params, {})

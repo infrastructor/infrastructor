@@ -1,7 +1,5 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.processing.NodeContext
-
 class WaitForPortActionMixin {
     def static waitForPort(NodeContext context, Map params) {
         waitForPort(context, params, {})

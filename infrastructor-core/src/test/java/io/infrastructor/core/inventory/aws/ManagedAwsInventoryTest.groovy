@@ -12,7 +12,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
     @Test
     public void createInventory() {
         try {
-            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
                     node {
                         name = 'simple-y'
@@ -27,7 +27,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
                 }
             }.provision()
                 
-            assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 name = 'simple-y'
                 imageId = 'ami-3f1bd150' 
                 instanceType = 't2.micro' 
@@ -36,7 +36,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
                 securityGroupIds = ['sg-8e6fcae5']
             }
                 
-            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
                     node {
                         name = 'simple-y'
@@ -52,7 +52,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
                 }
             }.provision()
             
-            assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 name = 'simple-y'
                 imageId = 'ami-3f1bd150' 
                 instanceType = 't2.micro' 
@@ -62,8 +62,8 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
                 tags = ['managed': 'true', 'Name': 'simple-y', 'newtag': 'simple']
             }
         } finally {
-            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
-                ec2(tags: [managed: true]) {} 
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
+                ec2(tags: [managed: true], username: 'ubuntu') {} 
             }.provision()
         }
     }

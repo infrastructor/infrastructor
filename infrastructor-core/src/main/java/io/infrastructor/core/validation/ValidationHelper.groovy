@@ -15,7 +15,7 @@ public class ValidationHelper {
             validationResult.each { ConstraintViolation v ->
                 result << ["${objectToValidate.class.simpleName}" : "$v.propertyPath - $v.message"]
             }
-            throw new ValidationException(result)
+            throw new ValidationException(result as String)
         } 
         
         objectToValidate

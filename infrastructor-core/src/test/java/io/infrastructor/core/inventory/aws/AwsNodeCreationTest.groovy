@@ -13,7 +13,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
     public void rebuildNodeWhenDiskSizehasChanged() {
         try {
             
-            def initialInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            def initialInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
                     node {
                         name = 'simple-y'
@@ -38,7 +38,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
             assert initialInventory.nodes.size() == 1
             assert initialInventory.nodes[0].state == 'created'
             
-            def updatedInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) {
+            def updatedInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
                     node {
                         name = 'simple-y'
@@ -65,8 +65,8 @@ public class AwsNodeCreationTest extends AwsTestBase {
             assert updatedInventory.nodes.find { it.state == 'removed' }
             
         } finally {
-            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_REGION) { 
-                ec2(tags: [managed: true]) {} 
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
+                ec2(tags: [managed: true], usePublicIp: true, username: 'ubuntu', keyfile: 'resources/aws/aws_infrastructor_ci') {} 
             }.provision {}
         }
     }
