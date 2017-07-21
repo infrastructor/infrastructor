@@ -9,14 +9,14 @@ public class InlineDockerInventoryValidationTest {
     @Test(expected = ValidationException)
     public void validateDockerNodesImageMayNotBeNull() {
         InlineDockerInventory.inlineDockerInventory {
-            node tags: [tag: 'hostA'], username: 'root', password: 'infra', keyfile: 'resources/itest.pem' 
+            node tags: [tag: 'hostA'], username: 'root', password: 'infra', keyfile: 'build/resources/test/itest.pem' 
         }
     }
     
     @Test(expected = ValidationException)
     public void validateDockerNodesUserMayNotBeNull() {
         InlineDockerInventory.inlineDockerInventory {
-            node image: 'infrastructor/sshd', tags: [tag: 'hostA'], password: 'infra', keyfile: 'resources/itest.pem' 
+            node image: 'infrastructor/sshd', tags: [tag: 'hostA'], password: 'infra', keyfile: 'build/resources/test/itest.pem' 
         }
     }
 }

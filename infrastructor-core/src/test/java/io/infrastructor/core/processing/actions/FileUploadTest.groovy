@@ -12,7 +12,7 @@ public class FileUploadTest extends ActionTestBase {
                 group name: 'testgroup'
                 
                 upload {
-                    source = 'resources/fileupload.txt'
+                    source = 'build/resources/test/fileupload.txt'
                     target = '/fileupload.txt'
                     owner = 'test'
                     group = 'testgroup'
@@ -29,7 +29,7 @@ public class FileUploadTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:devops'}) {
                 def result = upload {
-                    source = 'resources/fileupload.txt'
+                    source = 'build/resources/test/fileupload.txt'
                     target = '/fileupload.txt'
                 }
                 
@@ -44,7 +44,7 @@ public class FileUploadTest extends ActionTestBase {
             task(filter: {'as:devops'}) {
                 def result = upload {
                     sudo = true
-                    source = 'resources/fileupload.txt'
+                    source = 'build/resources/test/fileupload.txt'
                     target = '/fileupload.txt'
                 }
                 
@@ -59,7 +59,7 @@ public class FileUploadTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
-                def result = upload source: 'resources/fileupload.txt', target: '/tmp/simple.txt', owner: 'doesnotexist'
+                def result = upload source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', owner: 'doesnotexist'
                 
                 // assert
                 assert result.exitcode != 0
@@ -72,7 +72,7 @@ public class FileUploadTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
-                def result = upload source: 'resources/fileupload.txt', target: '/tmp/simple.txt', group: 'doesnotexist'
+                def result = upload source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', group: 'doesnotexist'
                 
                 // assert
                 assert result.exitcode != 0
@@ -85,7 +85,7 @@ public class FileUploadTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:root'}) {
                 // execute
-                def result = upload source: 'resources/fileupload.txt', target: '/tmp/simple.txt', mode: '8888'
+                def result = upload source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', mode: '8888'
                 
                 // assert
                 assert result.exitcode != 0
@@ -100,7 +100,7 @@ public class FileUploadTest extends ActionTestBase {
             task(filter: {'as:devops'}) {
                 def result = upload {
                     sudo = true
-                    source = 'resources/encrypted_full.tmpl'
+                    source = 'build/resources/test/encrypted_full.tmpl'
                     target = '/fileupload.txt'
                     decryptionKey = 'secret'
                 }

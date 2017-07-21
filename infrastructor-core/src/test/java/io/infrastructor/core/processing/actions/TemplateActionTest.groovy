@@ -13,7 +13,7 @@ public class TemplateActionTest extends ActionTestBase {
             
                 // execution
                 template {
-                    source = 'resources/test.tmpl'
+                    source = 'build/resources/test/test.tmpl'
                     target = '/test.txt'
                     bindings = [message: "simple!"]
                     owner = 'devops'
@@ -39,7 +39,7 @@ public class TemplateActionTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:devops'}) {
                 def result = template {
-                    source = 'resources/test.tmpl'
+                    source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
                     bindings = [message: "simple!"]
                     owner = 'unknown'
@@ -56,7 +56,7 @@ public class TemplateActionTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:devops'}) {
                 def result = template {
-                    source = 'resources/test.tmpl'
+                    source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
                     bindings = [message: "simple!"]
                     group = 'unknown'
@@ -73,7 +73,7 @@ public class TemplateActionTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:devops'}) {
                 def result = template {
-                    source = 'resources/test.tmpl'
+                    source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
                     bindings = [message: "simple!"]
                     mode = '888'
@@ -90,7 +90,7 @@ public class TemplateActionTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:devops'}) {
                 template {
-                    source = 'resources/encrypted_part.tmpl'
+                    source = 'build/resources/test/encrypted_part.tmpl'
                     target = '/tmp/test.txt'
                     bindings = [message: "simple!"]
                     mode = '644'
@@ -111,7 +111,7 @@ public class TemplateActionTest extends ActionTestBase {
         inventory.provision {
             task(filter: {'as:devops'}) {
                 template {
-                    source = 'resources/encrypted_full.tmpl'
+                    source = 'build/resources/test/encrypted_full.tmpl'
                     target = '/tmp/test.txt'
                     bindings = [message: "simple!"]
                     mode = '644'

@@ -49,7 +49,7 @@ public class InlineDockerInventoryTest {
     @Test
     public void launchDockerNodes() {
         def inventory = InlineDockerInventory.inlineDockerInventory {
-            node image: 'infrastructor/ubuntu-sshd', username: 'root',   keyfile: 'resources/itest.pem'
+            node image: 'infrastructor/ubuntu-sshd', username: 'root',   keyfile: 'build/resources/test/itest.pem'
             node image: 'infrastructor/ubuntu-sshd', username: 'devops', password: 'devops'
         }
         

@@ -15,7 +15,7 @@ public class DockerInventoryDecorator {
 
         try {
             inventory = InlineDockerInventory.inlineDockerInventory {
-                node image: imageName, tags: ['as': 'root'],   username: 'root',   keyfile: 'resources/itest.pem'
+                node image: imageName, tags: ['as': 'root'],   username: 'root',   keyfile: 'build/resources/test/itest.pem'
                 node image: imageName, tags: ['as': 'devops'], username: 'devops', password: 'devops'
             }
             
