@@ -14,23 +14,23 @@ class AwsInventoryTest extends AwsTestBase {
     public void findAwsNodes() {
         try {
             def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
-                ec2(parallel: 2, tags: [managed: true], usePublicIp: true, username: "ubuntu", keyfile: "resources/aws/aws_infrastructor_ci") {
+                ec2(parallel: 2, tags: [managed: true], usePublicIp: true, username: cfg.USERNAME, keyfile: cfg.KEYFILE) {
                     node {
-                        name = 'simple-y'
-                        imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
-                        instanceType = 't2.micro'
-                        subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
-                        keyName = 'aws_infrastructor_ci'
-                        securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
+                        name             = 'simple-y'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
                     }
                     
                     node {
-                        name = 'simple-x'
-                        imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
-                        instanceType = 't2.micro'
-                        subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
-                        keyName = 'aws_infrastructor_ci'
-                        securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
+                        name             = 'simple-x'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
                     }
                 }
             }
@@ -46,8 +46,8 @@ class AwsInventoryTest extends AwsTestBase {
             assert inventory.nodes.size() == 2
             
             def readOnlyInventory = awsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
-                username = 'ubuntu'
-                keyfile  = 'resources/aws/aws_infrastructor_ci'
+                username    = cfg.USERNAME
+                keyfile     = cfg.KEYFILE
                 usePublicIp = true
                 tags = [managed: 'true']
             }
@@ -56,7 +56,7 @@ class AwsInventoryTest extends AwsTestBase {
             
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
-                ec2(tags: [managed: true], usePublicIp: true, username: 'ubuntu', keyfile: 'resources/aws/aws_infrastructor_ci') {} 
+                ec2(tags: [managed: true], usePublicIp: true, username: cfg.USERNAME, keyfile: cfg.KEYFILE) {} 
             }.provision()
         }
     }

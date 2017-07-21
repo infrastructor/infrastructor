@@ -6,6 +6,7 @@ import com.amazonaws.services.ec2.AmazonEC2
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
 import com.amazonaws.services.ec2.model.DescribeSubnetsRequest
 import com.amazonaws.services.ec2.model.Filter
+import io.infrastructor.core.inventory.aws.AwsNode
 
 class AmazonEC2Utils {
     
@@ -24,15 +25,15 @@ class AmazonEC2Utils {
     
     public static void assertInstanceExists(def awsAccessKey, def awsSecretKey, def awsRegion, def definition) {
         def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
-        
+    
         def reservations = amazonEC2.describeInstances().getReservations()
         def allExistingRunningInstances = reservations.collect { 
             it.getInstances().findAll { 
                 it.getState().getCode() == 16 // running
-            } 
+    }
         }.flatten()
-        
-        def expected = [:]
+    
+        def expected = new AwsNode()
         expected.with(definition)
         
         def instance = allExistingRunningInstances.find { it.tags.find { it.key == 'Name' }?.value == expected.name }

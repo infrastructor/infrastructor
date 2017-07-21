@@ -25,9 +25,9 @@ test {
     
     useJUnit {
         if (project.hasProperty('testAws')) { // activate AWS tests
-            systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
-            systemProperty "awsSecretKey",   project.getProperty("awsSecretKey")
-            systemProperty "awsRegion",      project.getProperty("awsRegion")
+            systemProperty "awsAccessKeyId",     project.getProperty("awsAccessKeyId")
+            systemProperty "awsAccessSecretKey", project.getProperty("awsAccessSecretKey")
+            systemProperty "awsRegion",          project.getProperty("awsRegion")
         } else {
             excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
         }

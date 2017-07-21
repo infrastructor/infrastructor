@@ -15,55 +15,55 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
                     node {
-                        name = 'simple-y'
-                        imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
-                        instanceType = 't2.micro'
-                        subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
-                        keyName = 'aws_infrastructor_ci'
-                        securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
-                        username = "ubuntu"
-                        keyfile = "resources/aws/aws_infrastructor_ci"
+                        name             = 'dummy-x'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = [cfg.SG_DEFAULT_SSH_ONLY]
+                        username         = cfg.USERNAME
+                        keyfile          = cfg.KEYFILE
                     }
                 }
             }.provision()
                 
             assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
-                name = 'simple-y'
-                imageId = 'ami-3f1bd150' 
-                instanceType = 't2.micro' 
-                subnetId = 'subnet-fd7b3b95'
-                keyName = 'aws_infrastructor_ci'
-                securityGroupIds = ['sg-8e6fcae5']
+                name             = 'dummy-x'
+                imageId          = cfg.IMAGE_ID 
+                instanceType     = cfg.T2_MICRO 
+                subnetId         = cfg.SUBNET_ID 
+                keyName          = cfg.KEYNAME 
+                securityGroupIds = [cfg.SG_DEFAULT_SSH_ONLY]
             }
                 
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
                     node {
-                        name = 'simple-y'
-                        imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
-                        instanceType = 't2.micro'
-                        subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
-                        keyName = 'aws_infrastructor_ci'
-                        securityGroupIds = ['sg-8e6fcae5', 'sg-922799f9'] // default-ssh-only, test-sg
+                        name             = 'dummy-x'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = [cfg.SG_DEFAULT_SSH_ONLY, cfg.SG_TEST]
+                        username         = cfg.USERNAME
+                        keyfile          = cfg.KEYFILE
                         tags = ['newtag': 'simple']
-                        username = "ubuntu"
-                        keyfile = "resources/aws/aws_infrastructor_ci"
                     }
                 }
             }.provision()
             
             assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
-                name = 'simple-y'
-                imageId = 'ami-3f1bd150' 
-                instanceType = 't2.micro' 
-                subnetId = 'subnet-fd7b3b95'
-                keyName = 'aws_infrastructor_ci'
-                securityGroupIds = ['sg-8e6fcae5', 'sg-922799f9']
-                tags = ['managed': 'true', 'Name': 'simple-y', 'newtag': 'simple']
+                name             = 'dummy-x'
+                imageId          = cfg.IMAGE_ID 
+                instanceType     = cfg.T2_MICRO 
+                subnetId         = cfg.SUBNET_ID 
+                keyName          = cfg.KEYNAME 
+                securityGroupIds = [cfg.SG_DEFAULT_SSH_ONLY, cfg.SG_TEST]
+                tags = ['managed': 'true', 'Name': 'dummy-x', 'newtag': 'simple']
             }
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
-                ec2(tags: [managed: true], username: 'ubuntu') {} 
+                ec2(tags: [managed: true], username: cfg.USERNAME, keyfile: cfg.KEYFILE) {} 
             }.provision()
         }
     }

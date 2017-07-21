@@ -16,30 +16,30 @@ public class AwsRoute53Test extends AwsTestBase {
             def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(parallel: 2, tags: [managed: true], usePublicIp: true) {
                     node {
-                        name = 'simple-y'
-                        imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
-                        instanceType = 't2.micro'
-                        subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
-                        keyName = 'aws_infrastructor_ci'
-                        securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
-                        username = "ubuntu"
-                        keyfile = "resources/aws/aws_infrastructor_ci"
+                        name             = 'dummy-x'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
+                        username         = cfg.USERNAME
+                        keyfile          = cfg.KEYFILE
                     }
                     
                     node {
-                        name = 'simple-x'
-                        imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
-                        instanceType = 't2.micro'
-                        subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
-                        keyName = 'aws_infrastructor_ci'
-                        securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
-                        username = "ubuntu"
-                        keyfile = "resources/aws/aws_infrastructor_ci"
-                        usePublicIp = true
+                        name             = 'dummy-y'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
+                        username         = cfg.USERNAME
+                        keyfile          = cfg.KEYFILE
+                        usePublicIp      = true
                     }
                 }
                 
-                route53(hostedZoneId: 'Z36BEXFJC6IRSG') {
+                route53(hostedZoneId: cfg.HOSTED_ZONE_ID) {
                     recordSet(type: 'A', name: 'simple.test.internal', ttl: 500, resources: {'managed:true'})
                 }
             }
@@ -52,7 +52,7 @@ public class AwsRoute53Test extends AwsTestBase {
             assert nodes.size() == 2
             
             def amazonRoute53 = AmazonRoute53Utils.amazonRoute53(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION)
-            def recordSet = AmazonRoute53Utils.findDnsRecordSet(amazonRoute53, 'Z36BEXFJC6IRSG', 'simple.test.internal')
+            def recordSet = AmazonRoute53Utils.findDnsRecordSet(amazonRoute53, cfg.HOSTED_ZONE_ID, 'simple.test.internal')
             
             assert recordSet
             assert recordSet.records.size() == 2
@@ -61,9 +61,9 @@ public class AwsRoute53Test extends AwsTestBase {
             
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
-                ec2(tags: [managed: true], usePublicIp: true, username: 'ubuntu', keyfile: 'resources/aws/aws_infrastructor_ci') {} 
+                ec2(tags: [managed: true], usePublicIp: true, username: cfg.USERNAME, keyfile: cfg.KEYFILE) {} 
 
-                route53(hostedZoneId: 'Z36BEXFJC6IRSG') {
+                route53(hostedZoneId: cfg.HOSTED_ZONE_ID) {
                     recordSet(type: 'A', name: 'simple.test.internal', ttl: 500, resources: {'managed:true'})
                 }
             }.provision()
