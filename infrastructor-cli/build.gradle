@@ -12,3 +12,5 @@ task unpack(type: Copy, dependsOn: 'build') {
     from zipTree(file("${buildDir}/distributions/infrastructor.zip"))
     into file("${buildDir}/distributions")
 }
+
+test.dependsOn ':infrastructor-core:test' 

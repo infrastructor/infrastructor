@@ -1,3 +1,4 @@
 rootProject.name = 'infrastructor'
 
-include 'infrastructor-core', 'infrastructor-cli'
+include 'infrastructor-core'
+include 'infrastructor-cli'
