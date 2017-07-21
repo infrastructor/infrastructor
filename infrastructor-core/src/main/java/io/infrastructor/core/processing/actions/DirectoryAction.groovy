@@ -13,10 +13,9 @@ public class DirectoryAction {
     def sudo = false
     
     def execute(def node) {
-        node.execute(command: "mkdir $target", sudo: sudo)
+        node.execute(command: "mkdir -m $mode -p $target", sudo: sudo)
         node.updateOwner(target, owner, sudo)
         node.updateGroup(target, group, sudo)
-        node.updateMode(target, mode, sudo)
         node.lastResult
     }	
 }
