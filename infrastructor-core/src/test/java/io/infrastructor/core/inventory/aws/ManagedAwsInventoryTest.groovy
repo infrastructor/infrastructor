@@ -20,7 +20,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
                         instanceType     = cfg.T2_MICRO 
                         subnetId         = cfg.SUBNET_ID 
                         keyName          = cfg.KEYNAME 
-                        securityGroupIds = [cfg.SG_DEFAULT_SSH_ONLY]
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
                         username         = cfg.USERNAME
                         keyfile          = cfg.KEYFILE
                     }
@@ -33,7 +33,7 @@ public class ManagedAwsInventoryTest extends AwsTestBase  {
                 instanceType     = cfg.T2_MICRO 
                 subnetId         = cfg.SUBNET_ID 
                 keyName          = cfg.KEYNAME 
-                securityGroupIds = [cfg.SG_DEFAULT_SSH_ONLY]
+                securityGroupIds = cfg.SECURITY_GROUP_IDS
             }
                 
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
