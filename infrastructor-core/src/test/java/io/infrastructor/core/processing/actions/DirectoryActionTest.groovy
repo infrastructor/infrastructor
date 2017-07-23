@@ -35,6 +35,37 @@ public class DirectoryActionTest extends ActionTestBase {
             }
         }
     }
+    
+    @Test
+    public void createNestedDirectories() {
+        inventory.provision {
+            task(filter: {'as:root'}) {
+                // execute
+                directory target: '/etc/simple/deep', mode: '600'
+                
+                def resultDeep = shell 'ls -ldah /etc/simple/deep'
+                // assert
+                assert resultDeep.exitcode == 0
+                assert resultDeep.output.contains('deep')
+                assert resultDeep.output.contains("root root")
+                assert resultDeep.output.contains("drw-------")
+                
+                def resultSimple = shell 'ls -ldah /etc/simple'
+                // assert
+                assert resultSimple.exitcode == 0
+                assert resultSimple.output.contains('simple')
+                assert resultSimple.output.contains("root root")
+                assert resultSimple.output.contains("drwxr-xr-x")
+                
+                def resultEtc = shell 'ls -ldah /etc'
+                // assert
+                assert resultEtc.exitcode == 0
+                assert resultEtc.output.contains('etc')
+                assert resultEtc.output.contains("root root")
+                assert resultEtc.output.contains("drwxr-xr-x")
+            }
+        }
+    }
 
     @Test
     public void createDirectoryAsDevopsWithoutSudo() {
