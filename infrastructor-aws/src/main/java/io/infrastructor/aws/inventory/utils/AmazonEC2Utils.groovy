@@ -1,4 +1,4 @@
-package io.infrastructor.core.utils
+package io.infrastructor.aws.inventory.utils
 
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.AWSStaticCredentialsProvider
@@ -6,7 +6,7 @@ import com.amazonaws.services.ec2.AmazonEC2
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
 import com.amazonaws.services.ec2.model.DescribeSubnetsRequest
 import com.amazonaws.services.ec2.model.Filter
-import io.infrastructor.core.inventory.aws.AwsNode
+import io.infrastructor.aws.inventory.AwsNode
 
 class AmazonEC2Utils {
     

@@ -1,10 +1,10 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
 import org.junit.Test
 import org.junit.experimental.categories.Category
 
-import static io.infrastructor.core.inventory.Inventory.managedAwsInventory
-import static io.infrastructor.core.inventory.Inventory.awsInventory
+import static io.infrastructor.aws.inventory.AwsInventory.awsInventory
+import static io.infrastructor.aws.inventory.ManagedAwsInventory.managedAwsInventory
 import static io.infrastructor.core.logging.ConsoleLogger.*
 
 @Category(AwsCategory.class)

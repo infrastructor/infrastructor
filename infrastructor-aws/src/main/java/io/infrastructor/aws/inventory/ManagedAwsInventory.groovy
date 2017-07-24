@@ -1,8 +1,8 @@
-package io.infrastructor.core.inventory.aws.managed
+package io.infrastructor.aws.inventory
 
 import io.infrastructor.core.inventory.Inventory
-import io.infrastructor.core.utils.AmazonEC2Utils
-import io.infrastructor.core.utils.AmazonRoute53Utils
+import io.infrastructor.aws.inventory.utils.AmazonEC2Utils
+import io.infrastructor.aws.inventory.utils.AmazonRoute53Utils
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus

@@ -2,12 +2,11 @@ package io.infrastructor.core.inventory
 
 import groovy.transform.ToString
 import javax.validation.constraints.NotNull
-import io.infrastructor.core.inventory.ssh.SshClient
 import com.jcraft.jsch.JSchException
 
 import static io.infrastructor.core.utils.RetryUtils.retry
 import static io.infrastructor.core.logging.ConsoleLogger.*
-import static io.infrastructor.core.inventory.ssh.SshClient.sshClient
+import static io.infrastructor.core.inventory.SshClient.sshClient
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class Node {
@@ -56,9 +55,9 @@ public class Node {
         
         if (stopOnError && lastResult.exitcode != 0) { 
             throw new CommandExecutionException(lastResult)
-        } else {
-            return lastResult
         }
+            
+        return lastResult
     }
     
     def readFile(def file, def stream, def sudo = false) {

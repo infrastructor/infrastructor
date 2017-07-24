@@ -1,8 +1,8 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
 import com.amazonaws.services.ec2.model.DescribeVolumesRequest
 
-import static io.infrastructor.core.inventory.aws.AwsBlockDeviceMapping.awsBlockDeviceMapping
+import static io.infrastructor.aws.inventory.AwsBlockDeviceMapping.awsBlockDeviceMapping
 
 public class AwsNodesBuilder {
     

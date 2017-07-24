@@ -1,7 +1,7 @@
-package io.infrastructor.core.inventory.aws.managed
+package io.infrastructor.aws.inventory
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
-import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromEC2
+import static io.infrastructor.aws.inventory.AwsNodesBuilder.fromEC2
 
 public class Route53 {
     

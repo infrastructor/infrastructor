@@ -24,13 +24,8 @@ public class DockerNode {
     def stopOnError = false
     
     def launch() {
-        if (!port) {
-            port = randomPort()
-        }
-        
-        if (!id) {
-            id = flatUUID()
-        }
+        port = port ?: randomPort()
+        id = id ?: flatUUID()
         
         def command = "docker run -d -p $port:22 --name $id $image"
         debug "Lanuching docker node with command: $command"
@@ -40,7 +35,7 @@ public class DockerNode {
         process.waitFor()
         
         if (process.exitValue() != 0) {
-            throw new RuntimeException("Unable to launch docker node: '$this', output: $process.text, exitvalue: $process.exitValue()")
+            throw new RuntimeException("Unable to launch docker node: '$this', output: ${process.text}, exitvalue: ${process.exitValue()}")
         }
         return this as Node
     }
@@ -50,7 +45,7 @@ public class DockerNode {
             def process = "docker rm -f $id".execute()
             process.waitFor()
             if (process.exitValue()) {
-                throw new RuntimeException("Unable to remove docker node: '$this', output: $process.text")
+                throw new RuntimeException("Unable to remove docker node: '$this', output: ${process.text}")
             }
         }
     }

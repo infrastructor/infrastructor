@@ -1,4 +1,4 @@
-package io.infrastructor.core.utils
+package io.infrastructor.aws.inventory.utils
 
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.AWSStaticCredentialsProvider

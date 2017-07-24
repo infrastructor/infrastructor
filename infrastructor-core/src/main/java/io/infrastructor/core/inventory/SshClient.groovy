@@ -1,4 +1,4 @@
-package io.infrastructor.core.inventory.ssh
+package io.infrastructor.core.inventory
 
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
@@ -54,7 +54,6 @@ class SshClient {
         if(isConnected()) { 
             session.disconnect() 
         }
-        
         session = null
     }
     
@@ -119,6 +118,5 @@ class SshClient {
             return sudo ? "sudo $command" : command 
         }
     }
-    
 }
 

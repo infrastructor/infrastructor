@@ -1,6 +1,6 @@
-package io.infrastructor.core.inventory.aws.managed
+package io.infrastructor.aws.inventory
 
-class ManagedAwsInventoryExt {
+class ManagedAwsInventoryMixin {
     def static managedAwsInventory(Script script, def awsAccessKey, def awsSecretKey, def awsRegion, def closure) {
         ManagedAwsInventory.managedAwsInventory(awsAccessKey, awsSecretKey, awsRegion, closure)
     }

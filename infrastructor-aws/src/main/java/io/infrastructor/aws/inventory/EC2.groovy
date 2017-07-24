@@ -1,10 +1,8 @@
-package io.infrastructor.core.inventory.aws.managed
-
-import io.infrastructor.core.inventory.aws.AwsNode
+package io.infrastructor.aws.inventory
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
-import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromEC2
-import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.fromNodes
+import static io.infrastructor.aws.inventory.AwsNodesBuilder.fromEC2
+import static io.infrastructor.aws.inventory.AwsNodesBuilder.fromNodes
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
 public class EC2 {
