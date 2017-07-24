@@ -45,7 +45,7 @@ public class ManagedAwsInventory {
         route53s << route53
     }
     
-    public static ManagedAwsInventory managedAwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, def closure) {
+    def static managedAwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, def closure) {
         def awsInventory = new ManagedAwsInventory(awsAccessKey, awsSecretKey, awsRegion)
         closure.delegate = awsInventory
         closure()

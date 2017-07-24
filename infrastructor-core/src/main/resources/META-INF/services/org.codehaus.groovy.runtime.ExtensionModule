@@ -1,4 +1,4 @@
-moduleName=core-actions
+moduleName=core-extension-module
 moduleVersion=0.0.1
 extensionClasses=io.infrastructor.core.processing.actions.DirectoryActionMixin, \
                  io.infrastructor.core.processing.actions.ApplyActionMixin, \
@@ -14,3 +14,6 @@ extensionClasses=io.infrastructor.core.processing.actions.DirectoryActionMixin, 
                  io.infrastructor.core.processing.actions.UserActionMixin, \
                  io.infrastructor.core.processing.actions.WaitForPortActionMixin, \
                  io.infrastructor.core.processing.provisioning.TaskMixin
+
+staticExtensionClasses=io.infrastructor.core.inventory.InlineInventoryExt, \
+                       io.infrastructor.core.inventory.docker.InlineDockerInventoryExt
