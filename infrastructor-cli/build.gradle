@@ -5,6 +5,7 @@ mainClassName = "io.infrastructor.cli.Starter"
 
 dependencies {
     compile project(':infrastructor-core')
+    compile project(':infrastructor-aws')
     compile 'com.beust:jcommander:1.58'
 }
 
@@ -13,4 +14,4 @@ task unpack(type: Copy, dependsOn: 'build') {
     into file("${buildDir}/distributions")
 }
 
-test.dependsOn ':infrastructor-core:test' 
+test.dependsOn ':infrastructor-core:test', ':infrastructor-aws:test'

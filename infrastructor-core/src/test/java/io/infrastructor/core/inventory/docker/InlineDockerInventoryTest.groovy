@@ -1,13 +1,14 @@
 package io.infrastructor.core.inventory.docker
 
 import org.junit.Test
-import io.infrastructor.core.inventory.docker.InlineDockerInventory
+
+import static io.infrastructor.core.inventory.docker.InlineDockerInventory.inlineDockerInventory
 
 public class InlineDockerInventoryTest {
     
     @Test
     public void createDockerNodes() {
-        def inventory = InlineDockerInventory.inlineDockerInventory {
+        def inventory = inlineDockerInventory {
             node id: 'hostA', image: 'infrastructor/hostA', tags: [id: 'hostA'], username: 'root',   keyfile: 'resources/key.pem', password: 'hApass'
             node id: 'hostB', image: 'infrastructor/hostB', tags: [id: 'hostB'], username: 'devops', keyfile: 'resources/key.pem'
             node id: 'hostC', image: 'infrastructor/hostC', username: 'devops', password: 'hCpass'
@@ -48,7 +49,7 @@ public class InlineDockerInventoryTest {
     
     @Test
     public void launchDockerNodes() {
-        def inventory = InlineDockerInventory.inlineDockerInventory {
+        def inventory = inlineDockerInventory {
             node image: 'infrastructor/ubuntu-sshd', username: 'root',   keyfile: 'build/resources/test/itest.pem'
             node image: 'infrastructor/ubuntu-sshd', username: 'devops', password: 'devops'
         }

@@ -1,6 +1,6 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.inventory.docker.InlineDockerInventory
+import static io.infrastructor.core.inventory.docker.InlineDockerInventory.inlineDockerInventory
 
 public class DockerInventoryDecorator {
 
@@ -14,7 +14,7 @@ public class DockerInventoryDecorator {
         def inventory
 
         try {
-            inventory = InlineDockerInventory.inlineDockerInventory {
+            inventory = inlineDockerInventory {
                 node image: imageName, tags: ['as': 'root'],   username: 'root',   keyfile: 'build/resources/test/itest.pem'
                 node image: imageName, tags: ['as': 'devops'], username: 'devops', password: 'devops'
             }

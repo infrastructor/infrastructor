@@ -3,8 +3,8 @@ package io.infrastructor.core.inventory.aws
 import org.junit.Test
 import org.junit.experimental.categories.Category
 
-import static io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory.managedAwsInventory
-import static io.infrastructor.core.inventory.aws.AwsInventory.awsInventory
+import static io.infrastructor.core.inventory.Inventory.managedAwsInventory
+import static io.infrastructor.core.inventory.Inventory.awsInventory
 import static io.infrastructor.core.logging.ConsoleLogger.*
 
 @Category(AwsCategory.class)

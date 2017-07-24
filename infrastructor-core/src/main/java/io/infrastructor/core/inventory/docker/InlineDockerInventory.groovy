@@ -10,10 +10,10 @@ public class InlineDockerInventory {
     
     def nodes = []
     
-    public static InlineDockerInventory inlineDockerInventory(Closure closure) {
-        def inventory = new InlineDockerInventory()
-        inventory.with(closure)
-        return inventory
+    def static inlineDockerInventory(Closure closure) {
+        def inlineDockerInventory = new InlineDockerInventory()
+        inlineDockerInventory.with(closure)
+        return inlineDockerInventory
     }
     
     def node(Map params, Closure closure) {

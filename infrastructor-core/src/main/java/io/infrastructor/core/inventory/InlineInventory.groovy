@@ -18,7 +18,7 @@ public class InlineInventory {
         inventory << node
     }
     
-    public static Inventory inlineInventory(Closure closure) {
+    def static inlineInventory(Closure closure) {
         def inlineInventory = new InlineInventory()
         inlineInventory.with(closure)
         inlineInventory.inventory

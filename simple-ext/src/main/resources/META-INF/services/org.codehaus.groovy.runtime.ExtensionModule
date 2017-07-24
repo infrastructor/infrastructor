@@ -1,0 +1,4 @@
+moduleName=core-actions
+moduleVersion=0.0.1
+staticExtensionClasses=com.mycompany.simple.ext.AnotherExt
+                 
