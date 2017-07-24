@@ -1,13 +1,13 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
 import org.junit.Test
 import org.junit.experimental.categories.Category
 
-import static io.infrastructor.core.utils.AmazonEC2Utils.assertInstanceExists
-import static io.infrastructor.core.inventory.Inventory.managedAwsInventory
+import static io.infrastructor.aws.inventory.ManagedAwsInventory.managedAwsInventory
+import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.assertInstanceExists
 
 @Category(AwsCategory.class)
-public class ManagedAwsInventoryTest extends AwsTestBase  {
+class ManagedAwsInventoryTest extends AwsTestBase  {
     
     @Test
     public void createInventory() {

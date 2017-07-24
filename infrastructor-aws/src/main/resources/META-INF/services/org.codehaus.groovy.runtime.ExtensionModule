@@ -1,5 +1,5 @@
 moduleName=aws-extension-module
 moduleVersion=0.0.1
-staticExtensionClasses=io.infrastructor.core.inventory.aws.managed.ManagedAwsInventoryExt, \
-                       io.infrastructor.core.inventory.aws.AwsInventoryExt
+staticExtensionClasses=io.infrastructor.aws.inventory.ManagedAwsInventoryMixin, \
+                       io.infrastructor.aws.inventory.AwsInventoryMixin
                  

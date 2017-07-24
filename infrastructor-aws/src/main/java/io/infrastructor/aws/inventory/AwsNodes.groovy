@@ -1,4 +1,4 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.utils.FilteringUtils.match

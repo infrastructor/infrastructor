@@ -1,10 +1,11 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
 import org.junit.Test
-import static io.infrastructor.core.inventory.aws.AwsNodesBuilder.build
-import static io.infrastructor.core.inventory.aws.AwsBlockDeviceMapping.awsBlockDeviceMapping
 
-public class AwsNodesTest {
+import static io.infrastructor.aws.inventory.AwsNodesBuilder.build
+import static io.infrastructor.aws.inventory.AwsBlockDeviceMapping.awsBlockDeviceMapping
+
+class AwsNodesTest {
 
     @Test
     public void createAwsNodes() {

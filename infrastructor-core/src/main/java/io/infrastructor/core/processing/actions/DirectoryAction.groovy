@@ -1,6 +1,5 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.inventory.CommandExecutionException
 import javax.validation.constraints.NotNull
 
 public class DirectoryAction {

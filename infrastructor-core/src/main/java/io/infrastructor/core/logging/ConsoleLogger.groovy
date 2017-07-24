@@ -46,18 +46,16 @@ class ConsoleLogger {
         
         eraseStatus()
         
-        if (secret) {
-            return (console.readPassword(inputMessage) as String)
-        } else {
-            return (console.readLine(inputMessage) as String)
-        }
+        def result = secret ? console.readPassword(inputMessage) : console.readLine(inputMessage)
         
         updateStatus()
+        
+        return (result as String)
     }
     
     def static synchronized eraseStatus() {
         if (enableDynamics) {
-            while(statusPrinted > 0) {
+            while (statusPrinted > 0) {
                 print(Ansi.ansi().cursorUpLine().eraseLine().reset())
                 statusPrinted--
             }

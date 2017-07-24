@@ -1,14 +1,14 @@
-package io.infrastructor.core.inventory.aws;
+package io.infrastructor.aws.inventory;
 
 import org.junit.Test
 import org.junit.experimental.categories.Category
-import io.infrastructor.core.utils.AmazonRoute53Utils
+import io.infrastructor.aws.inventory.utils.AmazonRoute53Utils
 
-import static io.infrastructor.core.inventory.Inventory.awsInventory
-import static io.infrastructor.core.inventory.Inventory.managedAwsInventory
+import static io.infrastructor.aws.inventory.AwsInventory.awsInventory
+import static io.infrastructor.aws.inventory.ManagedAwsInventory.managedAwsInventory
 
 @Category(AwsCategory.class)
-public class AwsRoute53Test extends AwsTestBase {
+class AwsRoute53Test extends AwsTestBase {
     
     @Test
     public void findAwsNodes() {

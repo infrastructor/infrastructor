@@ -1,6 +1,5 @@
 package io.infrastructor.core.processing.provisioning
 
-import io.infrastructor.core.inventory.CommandExecutionException
 import io.infrastructor.core.processing.actions.ActionExecutionException
 import io.infrastructor.core.processing.actions.NodeContext
 import io.infrastructor.core.utils.FilteringUtils

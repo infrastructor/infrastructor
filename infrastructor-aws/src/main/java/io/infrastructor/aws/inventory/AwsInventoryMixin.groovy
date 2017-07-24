@@ -1,6 +1,6 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
-class AwsInventoryExt {
+class AwsInventoryMixin {
     def static awsInventory(Script script, def awsAccessKey, def awsSecretKey, def awsRegion, Closure definition) {
         AwsInventory.awsInventory(awsAccessKey, awsSecretKey, awsRegion, definition)
     }

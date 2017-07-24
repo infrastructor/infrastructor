@@ -15,5 +15,5 @@ extensionClasses=io.infrastructor.core.processing.actions.DirectoryActionMixin, 
                  io.infrastructor.core.processing.actions.WaitForPortActionMixin, \
                  io.infrastructor.core.processing.provisioning.TaskMixin
 
-staticExtensionClasses=io.infrastructor.core.inventory.InlineInventoryExt, \
-                       io.infrastructor.core.inventory.docker.InlineDockerInventoryExt
+staticExtensionClasses=io.infrastructor.core.inventory.InlineInventoryMixin, \
+                       io.infrastructor.core.inventory.docker.InlineDockerInventoryMixin

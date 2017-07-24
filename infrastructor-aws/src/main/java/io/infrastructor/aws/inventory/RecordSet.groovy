@@ -1,4 +1,4 @@
-package io.infrastructor.core.inventory.aws.managed
+package io.infrastructor.aws.inventory
 
 import com.amazonaws.services.route53.model.Change
 import com.amazonaws.services.route53.model.ChangeAction
@@ -7,7 +7,6 @@ import com.amazonaws.services.route53.model.ChangeResourceRecordSetsRequest
 import com.amazonaws.services.route53.model.ListResourceRecordSetsRequest
 import com.amazonaws.services.route53.model.ResourceRecord
 import com.amazonaws.services.route53.model.ResourceRecordSet
-import io.infrastructor.core.inventory.aws.AwsNodes
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
 

@@ -6,7 +6,7 @@ import static io.infrastructor.core.validation.ValidationHelper.validate
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
 
-public class InlineDockerInventory {
+class InlineDockerInventory {
     
     def nodes = []
     

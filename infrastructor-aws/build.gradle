@@ -15,7 +15,7 @@ test {
             systemProperty "awsAccessSecretKey", project.getProperty("awsAccessSecretKey")
             systemProperty "awsRegion",          project.getProperty("awsRegion")
         } else {
-            excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
+            excludeCategories 'io.infrastructor.aws.inventory.AwsCategory'
         }
     }
 }

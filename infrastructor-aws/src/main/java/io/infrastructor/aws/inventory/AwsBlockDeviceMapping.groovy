@@ -1,6 +1,5 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
-import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.apache.commons.lang3.builder.HashCodeBuilder

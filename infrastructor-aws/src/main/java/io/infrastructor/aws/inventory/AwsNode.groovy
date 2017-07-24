@@ -1,4 +1,4 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
 import com.amazonaws.services.ec2.AmazonEC2
 import com.amazonaws.services.ec2.model.BlockDeviceMapping

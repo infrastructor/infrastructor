@@ -1,6 +1,6 @@
 package io.infrastructor.core.inventory.docker
 
-class InlineDockerInventoryExt {
+class InlineDockerInventoryMixin {
     def static inlineDockerInventory(Script script, Closure closure) {
         InlineDockerInventory.inlineDockerInventory(closure)
     }

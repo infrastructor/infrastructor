@@ -1,8 +1,8 @@
-package io.infrastructor.core.inventory.aws
+package io.infrastructor.aws.inventory
 
 import org.junit.Test
 
-import static io.infrastructor.core.inventory.aws.AwsBlockDeviceMapping.awsBlockDeviceMapping
+import static io.infrastructor.aws.inventory.AwsBlockDeviceMapping.awsBlockDeviceMapping
 
 public class AwsBlockDeviceMappingTest {
     
