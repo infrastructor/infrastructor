@@ -3,8 +3,8 @@ package io.infrastructor.core.inventory.aws
 import org.junit.Test
 import org.junit.experimental.categories.Category
 
-import static io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory.managedAwsInventory
-import static io.infrastructor.core.inventory.aws.AwsInventory.awsInventory
+import static io.infrastructor.core.inventory.Inventory.awsInventory
+import static io.infrastructor.core.inventory.Inventory.managedAwsInventory
 
 @Category(AwsCategory.class)
 public class AwsNodeCreationTest extends AwsTestBase {
@@ -16,14 +16,14 @@ public class AwsNodeCreationTest extends AwsTestBase {
             def initialInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
                     node {
-                        name = 'simple-y'
-                        imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
-                        instanceType = 't2.micro'
-                        subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
-                        keyName = 'aws_infrastructor_ci'
-                        securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
-                        username = "ubuntu"
-                        keyfile = "resources/aws/aws_infrastructor_ci"
+                        name             = 'dummy'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
+                        username         = cfg.USERNAME
+                        keyfile          = cfg.KEYFILE
                         blockDeviceMapping {
                             name = '/dev/sda1'
                             deleteOnTermination = true
@@ -41,14 +41,14 @@ public class AwsNodeCreationTest extends AwsTestBase {
             def updatedInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
                     node {
-                        name = 'simple-y'
-                        imageId = 'ami-3f1bd150' // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
-                        instanceType = 't2.micro'
-                        subnetId = 'subnet-fd7b3b95' // EU Centra-1, default VPC with public IPs
-                        keyName = 'aws_infrastructor_ci'
-                        securityGroupIds = ['sg-8e6fcae5'] // default-ssh-only
-                        username = "ubuntu"
-                        keyfile = "resources/aws/aws_infrastructor_ci"
+                        name             = 'dummy'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
+                        username         = cfg.USERNAME
+                        keyfile          = cfg.KEYFILE
                         blockDeviceMapping {
                             name = '/dev/sda1'
                             deleteOnTermination = true
@@ -66,7 +66,7 @@ public class AwsNodeCreationTest extends AwsTestBase {
             
         } finally {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
-                ec2(tags: [managed: true], usePublicIp: true, username: 'ubuntu', keyfile: 'resources/aws/aws_infrastructor_ci') {} 
+                ec2(tags: [managed: true], usePublicIp: true, username: cfg.USERNAME, keyfile: cfg.KEYFILE) {} 
             }.provision {}
         }
     }

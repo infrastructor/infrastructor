@@ -9,14 +9,8 @@ class GroovyShellUtils {
         ImportCustomizer imports = new ImportCustomizer()
         imports.addStaticStars("io.infrastructor.core.logging.ConsoleLogger")
         imports.addStaticStars("io.infrastructor.core.logging.ConsoleInput")
-        imports.addStaticStars("io.infrastructor.core.logging.ConsoleInput")
         imports.addStaticStars("io.infrastructor.core.utils.ConfigUtils")
         imports.addStaticStars("io.infrastructor.core.utils.GroovyShellUtils")
-        imports.addStaticStars("io.infrastructor.core.inventory.InlineInventory")
-        imports.addStaticStars("io.infrastructor.core.inventory.aws.AwsInventory")
-        imports.addStaticStars("io.infrastructor.core.inventory.aws.managed.ManagedAwsInventory")
-        imports.addStaticStars("io.infrastructor.core.inventory.docker.InlineDockerInventory")
-        //        
         CompilerConfiguration configuration = new CompilerConfiguration()
         configuration.addCompilationCustomizers(imports)
         //        

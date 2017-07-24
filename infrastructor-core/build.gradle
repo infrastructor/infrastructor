@@ -2,8 +2,6 @@ import org.apache.tools.ant.filters.*
 
 dependencies {
     compile 'ch.qos.logback:logback-classic:1.2.1'
-    compile 'com.amazonaws:aws-java-sdk-ec2:1.11.140'
-    compile 'com.amazonaws:aws-java-sdk-route53:1.11.140'
     compile 'com.jcraft:jsch:0.1.54'
     compile 'javax.validation:validation-api:1.1.0.Final'
     compile 'org.apache.bval:bval-jsr:1.1.2'
@@ -21,15 +19,5 @@ processResources {
 }
 
 test {
-    maxParallelForks = project.hasProperty('testAws') ? 1 : 4
-    
-    useJUnit {
-        if (project.hasProperty('testAws')) { // activate AWS tests
-            systemProperty "awsAccessKeyId", project.getProperty("awsAccessKeyId")
-            systemProperty "awsSecretKey",   project.getProperty("awsSecretKey")
-            systemProperty "awsRegion",      project.getProperty("awsRegion")
-        } else {
-            excludeCategories 'io.infrastructor.core.inventory.aws.AwsCategory'
-        }
-    }
+    maxParallelForks = 4
 }
