@@ -22,20 +22,32 @@ class ApplicationSettings {
         return [:]
     }
     
-    def static systemSettings() {
+    def static systemSettings(def profile) {
+        def sysSettings = [:]
         def appSettings = applicationSettings()
+        
         if (appSettings?.system?.settings) {
             def systemSettingFile = new File(appSettings?.system?.settings)
             if (systemSettingFile.exists()) {
                 debug "loading system settings from file '${appSettings?.system?.settings}'"
-                return config(systemSettingFile)
+                sysSettings = config(systemSettingFile)
+            } else {
+                debug "system settings file '${appSettings?.system?.settings}' doesn't exist"
             }
         } else if (SYSTEM_SETTINGS_FILE.exists()) {
-            debug "loading system settings from default file '$SYSTEM_SETTINGS_FILE'"
-            return config(SYSTEM_SETTINGS_FILE)
+            debug "loading system settings from default file '$SYSTEM_SETTINGS_PATH'"
+            sysSettings = config(SYSTEM_SETTINGS_FILE)
+        } else {
+            debug "no system settings file found or specified"
+            return sysSettings
         }
-        debug "system settings file '$SYSTEM_SETTINGS_FILE' doesn't exist"
-        return [:]
+        
+        if (profile && sysSettings[profile]) {
+            debug "returning profile '$profile' setting"
+            return sysSettings[profile]
+        } 
+        
+        return sysSettings
     }
 }
 

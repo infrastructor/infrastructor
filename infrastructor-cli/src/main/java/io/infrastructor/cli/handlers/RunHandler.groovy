@@ -15,6 +15,9 @@ public class RunHandler extends LoggingAwareHandler {
 
     @Parameter(names = ["-f", "--file"], required = true, validateWith = FileValidator)
     List<String> files
+
+    @Parameter(names = ["-P", "--profile"], required = false)
+    String profile
     
     def description() {
         "Run specified file."
@@ -35,8 +38,9 @@ public class RunHandler extends LoggingAwareHandler {
         super.execute()
         
         debug "Application variables: $variables"
+        debug "Application profile: $profile"
         
-        def settings = ApplicationSettings.systemSettings()
+        def settings = ApplicationSettings.systemSettings(profile)
         debug "System settings: $settings"
         
         settings << variables
