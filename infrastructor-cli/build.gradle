@@ -14,4 +14,14 @@ task unpack(type: Copy, dependsOn: 'build') {
     into file("${buildDir}/distributions")
 }
 
+distributions {
+    main {
+        contents {
+            from('conf') {
+                into "conf"
+            }
+        }
+    }
+}
+
 test.dependsOn ':infrastructor-core:test', ':infrastructor-aws:test'
