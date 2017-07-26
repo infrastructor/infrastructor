@@ -26,12 +26,14 @@ public class RunHandler extends LoggingAwareHandler {
     def options() {
         def options = super.options() 
         options << ["--file, -f" : "File to run."]
-        options << ["--variable, -v" : "Define a runtime variable."]
+        options << ["--variable, -v, -V" : "Define a runtime variable."]
+        options << ["--profile, -P"      : "Activate a settings profile."]
     }
     
     def usage() {
         ["infrastructor run -f FILE -v PROPERTY_X=VALUE_X -v PROPERTY_Y=VALUE_Y -l LOGLEVEL", 
-         "infrastructor run --file FILE -v PROPERTY_X=VALUE_X -v PROPERTY_Y=VALUE_Y --log LOGLEVEL"]
+         "infrastructor run --file FILE -v PROPERTY_X=VALUE_X -v PROPERTY_Y=VALUE_Y --log LOGLEVEL",
+         "infrastructor run --file FILE -v PROPERTY_X=VALUE_X -v PROPERTY_Y=VALUE_Y --log LOGLEVEL --profile PROFILE_NAME"]
     }
     
     def execute() {
