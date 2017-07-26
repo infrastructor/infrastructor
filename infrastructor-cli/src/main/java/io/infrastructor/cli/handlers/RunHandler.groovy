@@ -26,8 +26,8 @@ public class RunHandler extends LoggingAwareHandler {
     def options() {
         def options = super.options() 
         options << ["--file, -f" : "File to run."]
-        options << ["--variable, -v" : "Define a runtime variable."]
-        options << ["--profile, -P"  : "Activate a settings profile."]
+        options << ["--variable, -v, -V" : "Define a runtime variable."]
+        options << ["--profile, -P"      : "Activate a settings profile."]
     }
     
     def usage() {
