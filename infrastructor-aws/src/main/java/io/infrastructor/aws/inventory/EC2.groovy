@@ -5,6 +5,8 @@ import static io.infrastructor.aws.inventory.AwsNodesBuilder.fromEC2
 import static io.infrastructor.aws.inventory.AwsNodesBuilder.fromNodes
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
+import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
+
 public class EC2 {
     
     def tags = [:]
@@ -60,17 +62,35 @@ public class EC2 {
     
     def createInstances(def amazonEC2) {
         debug "EC2 :: Creating instances"
-        executeParallel(targetState.findAll { it.state == 'created' }, parallel) { it.create(amazonEC2, usePublicIp) }
+        def created = targetState.findAll { it.state == 'created' }
+        withProgressStatus(created.size(), 'nodes have been created') { progressLine ->
+            executeParallel(created, parallel) { 
+                it.create(amazonEC2, usePublicIp) 
+                progressLine.increase()
+            }
+        }
     }
 
     def removeInstances(def amazonEC2) {
         debug "EC2 :: Removing instances"
-        executeParallel(targetState.findAll { it.state == 'removed' }, parallel) { it.remove(amazonEC2) }
+        def removed = targetState.findAll { it.state == 'removed' }
+        withProgressStatus(removed.size(), 'nodes have been removed') { progressLine ->
+            executeParallel(removed, parallel) { 
+                it.remove(amazonEC2) 
+                progressLine.increase()
+            }
+        }
     }
     
     def updateInstances(def amazonEC2) {
         debug "EC2 :: Updating instances"
-        executeParallel(targetState.findAll { it.state == 'updated' }, parallel) { it.update(amazonEC2) }
+        def updated = targetState.findAll { it.state == 'updated' }
+        withProgressStatus(updated.size(), 'nodes have been updated') { progressLine ->
+            executeParallel(updated, parallel) { 
+                it.update(amazonEC2) 
+                progressLine.increase()
+            }
+        }
     }
     
     def getInventory() {
