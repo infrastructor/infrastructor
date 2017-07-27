@@ -1,6 +1,6 @@
 package io.infrastructor.core.processing.actions
 
-import io.infrastructor.core.inventory.CommandExecutionException
+import io.infrastructor.core.inventory.RemoteExecutionException
 import io.infrastructor.core.processing.actions.ActionExecutionException
 import io.infrastructor.core.validation.ValidationException
 
@@ -13,7 +13,7 @@ class NodeContext {
         try {
             validate(action)
             action.execute(node)
-        } catch (CommandExecutionException ex) {
+        } catch (RemoteExecutionException ex) {
             throw new ActionExecutionException("action: ${action.class.simpleName}, message: remote command failed, details: $ex.message")
         } catch (ValidationException ex) {
             throw new ActionExecutionException("action: ${action.class.simpleName}, message: action validation error, details: $ex.message")

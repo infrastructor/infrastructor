@@ -46,15 +46,15 @@ public class Node {
         client == null || !client.isConnected()
     }
     
-    def execute(Map map) {
-        debug "ssh execute: $map"
+    def execute(Map command) {
+        debug "ssh execute: $command"
         
         if (isDisconnected()) { connect() }
         
-        lastResult = client.execute(map)
+        lastResult = client.execute(command)
         
         if (stopOnError && lastResult.exitcode != 0) { 
-            throw new CommandExecutionException(lastResult)
+            throw new RemoteExecutionException([*:command, result: lastResult] as String)
         }
             
         return lastResult

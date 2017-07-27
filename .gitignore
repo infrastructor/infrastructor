@@ -12,3 +12,4 @@
 /.directory
 /infrastructor-aws/build/
 /simple-ext/target/
+/infrastructor-aws/.nb-gradle/
