@@ -67,4 +67,58 @@ class ManagedAwsInventoryTest extends AwsTestBase  {
             }.provision()
         }
     }
+    
+    @Test
+    public void updateTags() {
+        try {
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
+                ec2(tags: [managed: true], usePublicIp: true) {
+                    node {
+                        name             = 'dummy-x'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
+                        username         = cfg.USERNAME
+                        keyfile          = cfg.KEYFILE
+                        
+                        tags = ['simple': 1, 'test': 2]
+                    }
+                }
+            }.provision()
+            
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
+                ec2(tags: [managed: true], usePublicIp: true) {
+                    node {
+                        name             = 'dummy-x'
+                        imageId          = cfg.IMAGE_ID 
+                        instanceType     = cfg.T2_MICRO 
+                        subnetId         = cfg.SUBNET_ID 
+                        keyName          = cfg.KEYNAME 
+                        securityGroupIds = cfg.SECURITY_GROUP_IDS
+                        username         = cfg.USERNAME
+                        keyfile          = cfg.KEYFILE
+                        
+                        tags = ['simple': 1, 'another': 2]
+                    }
+                }
+            }.provision()
+            
+            assertInstanceExists(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
+                name             = 'dummy-x'
+                imageId          = cfg.IMAGE_ID 
+                instanceType     = cfg.T2_MICRO 
+                subnetId         = cfg.SUBNET_ID 
+                keyName          = cfg.KEYNAME 
+                securityGroupIds = cfg.SECURITY_GROUP_IDS
+                tags = ['simple': '1', 'another': '2', 'managed': 'true', 'Name': 'dummy-x']
+            }
+        } finally {
+            managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) { 
+                ec2(tags: [managed: true], username: cfg.USERNAME, keyfile: cfg.KEYFILE) {} 
+            }.provision()
+        }
+        
+    }
 }
