@@ -3,6 +3,7 @@ package io.infrastructor.aws.inventory
 import com.amazonaws.services.ec2.AmazonEC2
 import com.amazonaws.services.ec2.model.BlockDeviceMapping
 import com.amazonaws.services.ec2.model.CreateTagsRequest
+import com.amazonaws.services.ec2.model.DeleteTagsRequest
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest
 import com.amazonaws.services.ec2.model.DescribeInstancesResult
 import com.amazonaws.services.ec2.model.DescribeVolumesRequest
@@ -102,6 +103,17 @@ public class AwsNode extends Node {
 
     private def updateTags(def amazonEC2) {
         debug "updating tags: $tags to the instance: $id"
+        
+        DescribeInstancesResult describeInstances = amazonEC2.describeInstances(new DescribeInstancesRequest().withInstanceIds(id))
+        Instance instance = describeInstances.getReservations().get(0).getInstances().get(0)
+        
+        // remove old tags
+        DeleteTagsRequest deleteTagsRequest = new DeleteTagsRequest()
+        deleteTagsRequest.withResources(id)
+        deleteTagsRequest.setTags(instance.getTags())
+        amazonEC2.deleteTags(deleteTagsRequest)
+        
+        // create new tags
         CreateTagsRequest createTagsRequest = new CreateTagsRequest()
         createTagsRequest.withResources(id)
         tags.each { key, value -> createTagsRequest.withTags(new Tag(key as String, value as String)) }
@@ -111,10 +123,10 @@ public class AwsNode extends Node {
     
     private def updateSecurityGroupIds(def amazonEC2) {
         debug "updating security groups: $securityGroupIds to the instance: $id"
-        ModifyInstanceAttributeRequest request = new ModifyInstanceAttributeRequest();
-        request.setInstanceId(id);
-        request.setGroups(securityGroupIds);
-        amazonEC2.modifyInstanceAttribute(request);
+        ModifyInstanceAttributeRequest request = new ModifyInstanceAttributeRequest()
+        request.setInstanceId(id)
+        request.setGroups(securityGroupIds)
+        amazonEC2.modifyInstanceAttribute(request)
     }
     
     private def waitForInstanceIsRunning(def amazonEC2, int attempts, int interval) {
