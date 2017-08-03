@@ -7,7 +7,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void writeAContentToAFileOnRemoteServerWithSudo() {
         inventory.provision {
-            task(filter: {'as:devops'}) { 
+            task filter: {'as:devops'}, actions: {
                 // setup
                 shell sudo: true, command: "groupadd infra"
             
@@ -36,7 +36,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void writeAFileOnRemoteServerWithoutSudo() {
         inventory.provision {
-            task(filter: {'as:devops'}) { 
+            task filter: {'as:devops'}, actions: {
                 // execution
                 def result = file {
                     content = 'message'
@@ -53,7 +53,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void writeAFileOnRemoteServerAsRoot() {
         inventory.provision {
-            task(filter: {'as:root'}) { 
+            task filter: {'as:root'}, actions: {
                 // execution
                 def result = file {
                     content = 'another message'
@@ -69,7 +69,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void createFileWithUnknownOwner() {
         inventory.provision {
-            task(filter: {'as:root'}) {
+            task filter: {'as:root'}, actions: {
                 // execute
                 def result = file target: '/etc/simple', content: "simple",  owner: 'doesnotexist'
                 
@@ -82,7 +82,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void createFileWithUnknownGroup() {
         inventory.provision {
-            task(filter: {'as:root'}) {
+            task filter: {'as:root'}, actions: {
                 // execute
                 def result = file target: '/etc/simple', content: "simple", group: 'doesnotexist'
                 
@@ -95,7 +95,7 @@ public class FileActionTest extends ActionTestBase {
     @Test
     public void createFileWithInvalidMode() {
         inventory.provision {
-            task(filter: {'as:root'}) {
+            task filter: {'as:root'}, actions: {
                 // execute
                 def result = file target: '/etc/simple', content: "simple", mode: '8888'
                 

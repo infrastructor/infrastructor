@@ -14,7 +14,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy"
             node host: "testC", username: "dummy"
         }.provision {
-            task {
+            task actions: {
                 collector << node.host
             }
         }
@@ -29,7 +29,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
-            task(filter: {'id:a'}) {
+            task filter: {'id:a'}, actions: {
                 collector << node.host
             }
         }
@@ -44,7 +44,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
-            task(filter: {'id:a' || 'id:c'}) {
+            task filter: {'id:a' || 'id:c'}, actions: {
                 collector << node.host
             }
         }
@@ -60,7 +60,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
-            task(filter: {'id:a' || 'id:c'}, parallel: 2) {
+            task filter: {'id:a' || 'id:c'}, parallel: 2, actions: {
                 collector << node.host
                 threadIds << Thread.currentThread().id
             }
@@ -77,8 +77,26 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
-            task(parallel: 3) {
+            task parallel: 3, actions: {
                 threadIds << Thread.currentThread().id
+            }
+        }
+        assert threadIds.size() == 3
+    }
+    
+    @Test
+    public void runPlanWithParallelismNestedSyntax() {
+        def threadIds = [] as Set
+        inlineInventory {
+            node host: "testA", username: "dummy", tags: [id: 'a']
+            node host: "testB", username: "dummy", tags: [id: 'b']
+            node host: "testC", username: "dummy", tags: [id: 'c']
+        }.provision {
+            task {
+                parallel = 3
+                actions = {
+                    threadIds << Thread.currentThread().id
+                }
             }
         }
         assert threadIds.size() == 3
@@ -92,7 +110,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
-            task(filter: {'id:b'}) {
+            task filter: {'id:b'}, actions: {
                 collector << node.host
             }
         }
@@ -109,7 +127,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
-            task(filter: { !'id:b' }) {
+            task filter: { !'id:b' }, actions: {
                 collector << node.host
             }
         }
@@ -126,7 +144,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
-            task(filter: { !'id:b' && !'id:a' }) {
+            task filter: { !'id:b' && !'id:a' }, actions: {
                 collector << node.host
             }
         }
@@ -142,7 +160,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [a: 'tag B', b: '2', c: '3']
             node host: "testC", username: "dummy", tags: [a: 'tag C']
         }.provision {
-            task(filter: { 'a:tag C' || ('a:tag B' && !'c:3' && !'a:tag A') }) {
+            task filter: { 'a:tag C' || ('a:tag B' && !'c:3' && !'a:tag A') }, actions: {
                 collector << node.host
             }
         }
@@ -158,7 +176,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'tag B']
             node host: "testC", username: "dummy", tags: [id: 'tag C']
         }.provision {
-            task(filter: { 'id:tag C' && 'id:tag Z' }) {
+            task filter: { 'id:tag C' && 'id:tag Z' }, actions: {
                 collector << node.host
             }
         }

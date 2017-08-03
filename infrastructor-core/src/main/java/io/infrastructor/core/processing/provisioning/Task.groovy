@@ -2,20 +2,22 @@ package io.infrastructor.core.processing.provisioning
 
 import io.infrastructor.core.processing.actions.ActionExecutionException
 import io.infrastructor.core.processing.actions.NodeContext
-import io.infrastructor.core.utils.FilteringUtils
 import io.infrastructor.core.validation.ValidationException
+import io.infrastructor.core.utils.FilteringUtils
 import java.util.concurrent.atomic.AtomicInteger
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
+import static io.infrastructor.core.processing.ProvisioningContext.provision
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
 class Task {
     def name = 'unnamed task'
     def filter = { true }
     def parallel = 1
-    def closure = {}
+    def actions = {}
+    def onSuccess = {}
     
     def execute(def nodes) {
         def filtered = filter ? nodes.findAll { FilteringUtils.match(it.listTags(), filter) } : nodes
@@ -29,7 +31,7 @@ class Task {
                 executeParallel(filtered, parallel) { node -> 
                     try {
                         statusLine "> task: $name"
-                        new NodeContext(node: node).with(closure.clone())
+                        new NodeContext(node: node).with(actions.clone())
                     } catch (ActionExecutionException ex) {
                         error "FAILED - node.id: $node.id, $ex.message"
                         errorCounter.incrementAndGet()
@@ -49,6 +51,8 @@ class Task {
             def message = ":task '$name' - failed on ${errorCounter.get()} node|s"
             info "${red(message)}"
             throw new TaskExecutionException(message)
+        } else {
+            provision(nodes, onSuccess)
         }
                     
         info "${blue(":task '$name' - done")}"

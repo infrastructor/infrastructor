@@ -13,7 +13,7 @@ class ProvisioningContextTest {
         
         try {
             ProvisioningContext.provision(inventory.launch()) {
-                task('simple task') {
+                task name:'simple task', actions: {
                     def result = shell('ls /')
                     assert result.output.contains('etc')
                 }

@@ -18,7 +18,7 @@ class ProvisioningContext {
         } catch(ProvisioningExecutionException ex) {
             throw ex
         } catch(Exception ex) {
-            throw new ProvisioningExecutionException(ex);
+            throw new ProvisioningExecutionException(ex.getMessage());
         }
     }
 }

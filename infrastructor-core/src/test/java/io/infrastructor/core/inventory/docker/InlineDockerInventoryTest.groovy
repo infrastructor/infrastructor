@@ -56,7 +56,7 @@ public class InlineDockerInventoryTest {
         
         try {
             inventory.provision {
-                task {
+                task actions: {
                     assert shell("ls /etc").output
                 }
             }
