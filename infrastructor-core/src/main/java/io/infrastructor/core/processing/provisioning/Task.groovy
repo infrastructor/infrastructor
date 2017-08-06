@@ -18,13 +18,16 @@ class Task {
     def parallel = 1
     def actions = {}
     def onSuccess = {}
+    def onFailure = { 
+        throw new TaskExecutionException(":task '$name' - failed on ${context.failed.size()} node|s")
+    }
     
     def execute(def nodes) {
         def filtered = filter ? nodes.findAll { FilteringUtils.match(it.listTags(), filter) } : nodes
             
         info "${blue(":task '${name}'")}"
             
-        AtomicInteger errorCounter = new AtomicInteger()
+        def failedNodes = [].asSynchronized() 
             
         withTextStatus { statusLine -> 
             withProgressStatus(filtered.size(), 'nodes processed') { progressLine ->
@@ -34,10 +37,10 @@ class Task {
                         new NodeContext(node: node).with(actions.clone())
                     } catch (ActionExecutionException ex) {
                         error "FAILED - node.id: $node.id, $ex.message"
-                        errorCounter.incrementAndGet()
+                        failedNodes << node
                     } catch(Exception ex) {
                         error "FAILED - node.id: $node.id, message: $ex.message"
-                        errorCounter.incrementAndGet()
+                        failedNodes << node
                     } finally {
                         progressLine.increase()
                         node.disconnect()
@@ -47,10 +50,8 @@ class Task {
         }
             
         // determine if we can go to the next task or we should stop the execution
-        if (errorCounter.get() > 0) {
-            def message = ":task '$name' - failed on ${errorCounter.get()} node|s"
-            info "${red(message)}"
-            throw new TaskExecutionException(message)
+        if (failedNodes.size() > 0) {
+            provision(nodes, [failed: failedNodes], onFailure)
         } else {
             provision(nodes, onSuccess)
         }

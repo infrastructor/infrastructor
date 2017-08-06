@@ -118,7 +118,6 @@ public class TaskExecutorTest {
         assert collector == ['testB'] as Set
     }
         
-
     @Test
     public void runPlanWithASinlgeNegationTagInClosure() {
         def collector = [] as Set
@@ -135,7 +134,6 @@ public class TaskExecutorTest {
         assert collector == ['testA', 'testC'] as Set
     }
         
-    
     @Test
     public void runPlanWithADoubleNegationTagInClosure() {
         def collector = [] as Set
@@ -181,6 +179,40 @@ public class TaskExecutorTest {
             }
         }
         assert collector.size() == 0
+    }
+    
+    @Test
+    public void runActionsOnSuccess() {
+        def collector = []
+        inlineInventory {
+            node host: "testA", username: "dummy", tags: [id: 'tag A']
+            node host: "testB", username: "dummy", tags: [id: 'tag B']
+            node host: "testC", username: "dummy", tags: [id: 'tag C']
+        }.provision {
+            task actions: {
+                collector << node.host
+            }, onSuccess: {
+                task actions: { collector << node.host }
+            }
+        }
+        assert collector.size() == 6
+    }
+    
+    @Test
+    public void runActionsOnFailed() {
+        def collector = []
+        inlineInventory {
+            node id: 'testA', host: "testA", username: "dummy", tags: [id: 'tag A']
+            node id: 'testB', host: "testB", username: "dummy", tags: [id: 'tag B']
+            node id: 'testC', host: "testC", username: "dummy", tags: [id: 'tag C']
+        }.provision {
+            task actions: {
+                throw new RuntimeException("managed fail")
+            }, onFailure: { 
+                task actions: { collector << node.host }
+            }
+        }
+        assert collector.size() == 3
     }
 }
 
