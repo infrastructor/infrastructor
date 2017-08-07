@@ -1,2 +1,1 @@
-rootProject.name = 'infrastructor-aws'
 rootProject.projectDir = new File('..')

@@ -7,7 +7,7 @@ public class WaitForPortTest extends ActionTestBase {
     @Test(expected = TaskExecutionException)
     public void waitForUnlistenedPort() {
         inventory.provision {
-            task(filter: {'as:root'}) { 
+            task filter: {'as:root'}, actions: {
                waitForPort port: 10000
             }
         }
@@ -16,7 +16,7 @@ public class WaitForPortTest extends ActionTestBase {
     @Test(expected = TaskExecutionException)
     public void waitForUnknownPort() {
         inventory.provision {
-            task(filter: {'as:root'}) { 
+            task filter: {'as:root'}, actions: {
                waitForPort delay: 100, attempts: 10
             }
         }

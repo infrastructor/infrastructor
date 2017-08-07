@@ -7,7 +7,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void generateAFileOnRemoteServer() {
         inventory.provision {
-            task(filter: {'as:root'}) { 
+            task filter: {'as:root'}, actions: {
                 // setup
                 shell("groupadd infra")
             
@@ -37,7 +37,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithUnknownOwner() {
         inventory.provision {
-            task(filter: {'as:devops'}) {
+            task filter: {'as:devops'}, actions: {
                 def result = template {
                     source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
@@ -54,7 +54,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithUnknownGroup() {
         inventory.provision {
-            task(filter: {'as:devops'}) {
+            task filter: {'as:devops'}, actions: {
                 def result = template {
                     source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
@@ -71,7 +71,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithInvalidMode() {
         inventory.provision {
-            task(filter: {'as:devops'}) {
+            task filter: {'as:devops'}, actions: {
                 def result = template {
                     source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
@@ -88,7 +88,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithEncryptedValues() {
         inventory.provision {
-            task(filter: {'as:devops'}) {
+            task filter: {'as:devops'}, actions: {
                 template {
                     source = 'build/resources/test/encrypted_part.tmpl'
                     target = '/tmp/test.txt'
@@ -109,7 +109,7 @@ public class TemplateActionTest extends ActionTestBase {
     @Test
     public void templateWithFullyEncryptedContent() {
         inventory.provision {
-            task(filter: {'as:devops'}) {
+            task filter: {'as:devops'}, actions: {
                 template {
                     source = 'build/resources/test/encrypted_full.tmpl'
                     target = '/tmp/test.txt'

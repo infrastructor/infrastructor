@@ -7,7 +7,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryAsRoot() {
         inventory.provision {
-            task(filter: {'as:root'}) {
+            task filter: {'as:root'}, actions: {
                 // execute
                 user  name: "testuser"
                 group name: "testgroup"
@@ -24,7 +24,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryAsDevopsWithSudo() {
         inventory.provision {
-            task(filter: {'as:devops'}) {
+            task filter: {'as:devops'}, actions: {
                 // execute
                 directory sudo: true, target: '/etc/simple', owner: 'devops', group: 'devops', mode: '0600'
                 // assert
@@ -39,7 +39,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createNestedDirectories() {
         inventory.provision {
-            task(filter: {'as:root'}) {
+            task filter: {'as:root'}, actions: {
                 // execute
                 directory target: '/etc/simple/deep', mode: '600'
                 
@@ -70,7 +70,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryAsDevopsWithoutSudo() {
         inventory.provision {
-            task(filter: {'as:devops'}) {
+            task filter: {'as:devops'}, actions: {
                 // execute
                 def result = directory target: '/etc/simple'
                 // assert
@@ -82,7 +82,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryWithUnknownOwner() {
         inventory.provision {
-            task(filter: {'as:root'}) {
+            task filter: {'as:root'}, actions: {
                 // execute
                 def result = directory target: '/etc/simple', owner: 'doesnotexist'
                 
@@ -95,7 +95,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryWithUnknownGroup() {
         inventory.provision {
-            task(filter: {'as:root'}) {
+            task filter: {'as:root'}, actions: {
                 // execute
                 def result = directory target: '/etc/simple', group: 'doesnotexist'
                 
@@ -108,7 +108,7 @@ public class DirectoryActionTest extends ActionTestBase {
     @Test
     public void createDirectoryWithInvalidMode() {
         inventory.provision {
-            task(filter: {'as:root'}) {
+            task filter: {'as:root'}, actions: {
                 // execute
                 def result = directory target: '/etc/simple', mode: '8888'
                 

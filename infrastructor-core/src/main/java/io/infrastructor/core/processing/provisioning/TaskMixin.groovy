@@ -8,13 +8,13 @@ class TaskMixin {
         task(context, [:], closure)
     }
 
-    def static task(ProvisioningContext context, String name, Closure closure) {
-        task(context, [name: name], closure)
+    def static task(ProvisioningContext context, Map params) {
+        task(context, params, {})
     }
     
     def static task(ProvisioningContext context, Map params, Closure closure) {
         def task = new Task(params)
-        task.closure = closure
+        task.with(closure)
         context.execute(task)
     }
 }
