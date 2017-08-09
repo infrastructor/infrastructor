@@ -3,23 +3,19 @@ package io.infrastructor.core.utils
 import static io.infrastructor.core.logging.ConsoleLogger.*
 
 class RetryUtils {
-    
-    public static def retry(def count, def interval, def action) {
-        def index = count
-        def exception = new RuntimeException("retry failed after $count of attemps")
-        while(index > 0) {
+   def static retry(def count, def delay, def actions) {
+        def attempt = 1
+        while (attempt <= count) {
             try {
-                action()
+                actions()
                 return
-            } catch (Throwable ex) {
-                debug "retry - attempt ${count - index + 1} of $count failed due to: $ex"
-                sleep(interval)
-                index--
-                exception = ex
+            } catch (AssertionError | Exception ex) {
+                debug "retry - attempt ${attempt} of $count failed due to:\n" + "$ex"
+                if (attempt == count) throw new RuntimeException("retry failed after $attempt attempts. Last error: $ex")
+                attempt++
+                sleep(delay)
             }
         }
-        
-        throw exception
     }
 }
 
