@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutionException
 
 class ParallelUtils {
 
-    public static def executeParallel(def collection, def threads, def closure) {
+    def static executeParallel(def collection, def threads, def closure) {
         def executor = Executors.newFixedThreadPool(threads)
         
         try {
