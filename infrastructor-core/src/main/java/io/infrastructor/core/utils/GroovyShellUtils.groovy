@@ -13,6 +13,7 @@ class GroovyShellUtils {
         imports.addStaticStars("io.infrastructor.core.utils.GroovyShellUtils")
         imports.addStaticStars("io.infrastructor.core.utils.HttpUtils")
         imports.addStaticStars("io.infrastructor.core.utils.JsonUtils")
+        imports.addStaticStars("io.infrastructor.core.utils.ConnectionUtils")
         CompilerConfiguration configuration = new CompilerConfiguration()
         configuration.addCompilationCustomizers(imports)
         //        
