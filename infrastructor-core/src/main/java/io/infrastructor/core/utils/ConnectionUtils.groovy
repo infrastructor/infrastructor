@@ -2,6 +2,8 @@ package io.infrastructor.core.utils
 
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
+
+import static io.infrastructor.core.logging.ConsoleLogger.debug
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 class ConnectionUtils {
@@ -15,10 +17,13 @@ class ConnectionUtils {
         boolean isConnectable() {
             def socket = null
             try {
+                debug "ConnectionUtils :: checking connection to $host:$port ..."
                 socket = new Socket()
-                socket.connect(new InetSocketAddress(host, port), 1000);
+                socket.connect(new InetSocketAddress(host, port), 1000)
+                debug "ConnectionUtils :: checking connection to $host:$port - success"
                 return true
-            } catch (IOException e) {
+            } catch (IOException ex) {
+                debug "ConnectionUtils :: checking connection to $host:$port - failed: $ex.message"
                 return false
             } finally {
                 if (socket != null) {
