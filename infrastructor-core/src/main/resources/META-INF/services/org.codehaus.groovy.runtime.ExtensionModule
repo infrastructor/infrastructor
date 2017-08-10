@@ -8,6 +8,7 @@ extensionClasses=io.infrastructor.core.processing.actions.DirectoryActionMixin, 
                  io.infrastructor.core.processing.actions.InsertBlockActionMixin, \
                  io.infrastructor.core.processing.actions.ReplaceActionMixin, \
                  io.infrastructor.core.processing.actions.ReplaceLineActionMixin, \
+                 io.infrastructor.core.processing.actions.RetryActionMixin, \
                  io.infrastructor.core.processing.actions.ShellActionMixin, \
                  io.infrastructor.core.processing.actions.TemplateActionMixin, \
                  io.infrastructor.core.processing.actions.UploadActionMixin, \
