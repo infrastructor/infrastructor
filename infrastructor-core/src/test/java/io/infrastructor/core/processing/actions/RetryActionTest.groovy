@@ -74,7 +74,18 @@ class RetryActionTest extends ActionTestBase {
     public void retryNegativeDelay() {
         inventory.provision {
             task name: 'retry negative delay', filter: {'as:devops'}, actions: {
-                retry count: 1, delay: 0, actions: {}
+                retry count: 1, delay: -1, actions: {}
+            }
+        }
+    }
+    
+    @Test
+    public void retryWithZeroDelay() {
+        inventory.provision {
+            task name: 'retry negative delay', filter: {'as:devops'}, actions: {
+                def x = false
+                retry count: 1, delay: 0, actions: { x = true }
+                assert x
             }
         }
     }

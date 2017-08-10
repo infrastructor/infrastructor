@@ -9,8 +9,8 @@ import static io.infrastructor.core.utils.RetryUtils.retry
 class RetryAction {
     @Min(1l)
     int count = 2
-    @Min(1l)
-    int delay = 1000
+    @Min(0l)
+    int delay = 0
     @NotNull
     def actions = {}
     
