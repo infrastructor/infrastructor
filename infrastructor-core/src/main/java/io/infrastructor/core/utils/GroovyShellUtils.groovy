@@ -11,6 +11,8 @@ class GroovyShellUtils {
         imports.addStaticStars("io.infrastructor.core.logging.ConsoleInput")
         imports.addStaticStars("io.infrastructor.core.utils.ConfigUtils")
         imports.addStaticStars("io.infrastructor.core.utils.GroovyShellUtils")
+        imports.addStaticStars("io.infrastructor.core.utils.HttpUtils")
+        imports.addStaticStars("io.infrastructor.core.utils.JsonUtils")
         CompilerConfiguration configuration = new CompilerConfiguration()
         configuration.addCompilationCustomizers(imports)
         //        
