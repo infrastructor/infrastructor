@@ -117,5 +117,21 @@ public class DirectoryActionTest extends ActionTestBase {
             }
         }
     }
+    
+    @Test
+    public void createDirectoryWithEmptyMode() {
+        inventory.provision {
+            task filter: {'as:root'}, actions: {
+                assert directory(target: '/etc/simple/test1', mode: '').exitcode == 0
+                assert shell("ls -alhd /etc/simple/test1").output.contains("drwxr-xr-x")
+
+                assert directory(target: '/etc/simple/test2', mode: null).exitcode == 0
+                assert shell("ls -alhd /etc/simple/test2").output.contains("drwxr-xr-x")
+                
+                assert directory(target: '/etc/simple/test3', mode: 0).exitcode == 0
+                assert shell("ls -alhd /etc/simple/test3").output.contains("drwxr-xr-x")
+            }
+        }
+    }
 }
 

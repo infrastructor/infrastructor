@@ -3,7 +3,6 @@ package io.infrastructor.core.processing.actions
 import javax.validation.constraints.NotNull
 
 public class ReplaceAction {
-    
     @NotNull
     def target
     @NotNull
@@ -15,11 +14,11 @@ public class ReplaceAction {
     def mode
     def all = false
     def sudo = false
-    
+
     def execute(def node) {
         def stream = new ByteArrayOutputStream()
         node.readFile(target, stream, sudo)
-            
+
         def original = stream.toString()
         def updated = all ? original.replaceAll(regexp, content) : original.replaceFirst(regexp, content)
 
@@ -30,4 +29,3 @@ public class ReplaceAction {
         node.lastResult
     }
 }
-
