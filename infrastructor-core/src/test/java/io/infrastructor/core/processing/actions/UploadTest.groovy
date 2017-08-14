@@ -2,7 +2,7 @@ package io.infrastructor.core.processing.actions
 
 import org.junit.Test
 
-public class FileUploadTest extends ActionTestBase {
+public class UploadTest extends ActionTestBase {
     
     @Test
     public void uploadAFileToRemoteHost() {
@@ -20,6 +20,26 @@ public class FileUploadTest extends ActionTestBase {
                 
                 assert shell("ls -alh /fileupload.txt").output.find(/test testgroup/)
                 assert shell("cat /fileupload.txt").output.find(/simple/)
+            }
+        }
+    } 
+    
+    @Test
+    public void uploadAFileToADeepFolder() {
+        inventory.provision {
+            task filter: {'as:root'}, actions: {
+                user  name: 'test'
+                group name: 'testgroup'
+                
+                upload {
+                    source = 'build/resources/test/fileupload.txt'
+                    target = '/etc/deep/deep/unknown/folder/fileupload.txt'
+                    owner = 'test'
+                    group = 'testgroup'
+                }
+                
+                assert shell("ls -alh /etc/deep/deep/unknown/folder/fileupload.txt").output.find(/test testgroup/)
+                assert shell("cat /etc/deep/deep/unknown/folder/fileupload.txt").output.find(/simple/)
             }
         }
     } 

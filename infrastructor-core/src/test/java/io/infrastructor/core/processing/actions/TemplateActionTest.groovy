@@ -33,6 +33,24 @@ public class TemplateActionTest extends ActionTestBase {
             }
         }
     }
+
+    @Test
+    public void createADeepFolderBeforeTemplateUpload() {
+        inventory.provision {
+            task filter: {'as:devops'}, actions: {
+                // execution
+                template {
+                    source = 'build/resources/test/test.tmpl'
+                    target = '/etc/deep/deep/folder/test.txt'
+                    bindings = [message: "simple!"]
+                    sudo = true
+                }
+                
+                def result = shell("cat /etc/deep/deep/folder/test.txt")
+                assert result.output.contains("simple")
+            }
+        }
+    }
     
     @Test
     public void templateWithUnknownOwner() {

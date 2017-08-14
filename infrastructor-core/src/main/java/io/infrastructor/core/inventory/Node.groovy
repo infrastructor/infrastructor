@@ -61,7 +61,7 @@ public class Node {
     }
     
     def readFile(def file, def stream, def sudo = false) {
-        execute(command: "cat $file", output: stream, sudo: sudo)
+        execute sudo: sudo, output: stream, command: "cat $file" 
     }
     
     def writeText(def target, def content, def sudo = false) {
@@ -69,19 +69,20 @@ public class Node {
     }
     
     def writeFile(def target, def stream, def sudo = false) {
-        execute(command: "cat | " + (sudo ? "sudo tee $target" : "tee $target"), input: stream)
+        execute sudo: sudo, command: "mkdir -p \$(dirname $target)"
+        execute input: stream, command: "cat | " + (sudo ? "sudo tee $target" : "tee $target")
     }
     
     def updateOwner(def target, def owner, def sudo = false) {
-        if (owner) execute(command: "chown $owner: $target", sudo: sudo) 
+        if (owner) execute sudo: sudo, command: "chown $owner: $target"
     }
     
     def updateGroup(def target, def group, def sudo = false) {
-        if (group) execute(command: "chown :$group $target", sudo: sudo)
+        if (group) execute sudo: sudo, command: "chown :$group $target"
     }
     
     def updateMode(def target, def mode, def sudo = false) {
-        if (mode) execute(command: "chmod $mode $target", sudo: sudo)
+        if (mode) execute sudo: sudo, command: "chmod $mode $target"
     }
     
     def allTags() {
