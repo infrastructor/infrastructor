@@ -3,7 +3,6 @@ package io.infrastructor.core.processing.actions
 import javax.validation.constraints.NotNull
 
 public class FileAction {
-    
     @NotNull
     def target
     def content
@@ -11,7 +10,7 @@ public class FileAction {
     def group
     def mode
     def sudo = false
-    
+
     def execute(def node) {
         node.writeText(target, content.stripMargin().stripIndent(), sudo)
         node.updateOwner(target, owner, sudo)
@@ -20,4 +19,3 @@ public class FileAction {
         node.lastResult
     }
 }
-

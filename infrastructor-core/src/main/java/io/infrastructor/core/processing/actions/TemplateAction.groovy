@@ -5,10 +5,6 @@ import javax.validation.constraints.NotNull
 import io.infrastructor.core.utils.CryptoUtils
 
 public class TemplateAction {
-    
-    static final FULL = 'FULL'
-    static final PART = 'PART'
-    
     @NotNull
     def target
     @NotNull
@@ -21,11 +17,14 @@ public class TemplateAction {
     def decryptionKey
     def decryptionMode = PART
     def engine = new SimpleTemplateEngine()
-    
+
+    static final FULL = 'FULL'
+    static final PART = 'PART'
+
     def execute(def node) {
         def template = new File(source).text
         def content = ''
-            
+
         if (!decryptionKey) {
             content = engine.createTemplate(template).make(bindings)
         } else if (decryptionMode == PART) {
@@ -36,7 +35,7 @@ public class TemplateAction {
         } else {
             throw new ActionExecutionException("Unable to process template using decryption mode: $decryptionMode")
         }
-        
+
         node.writeText(target, content.toString(), sudo)
         node.updateOwner(target, owner, sudo)
         node.updateGroup(target, group, sudo)
