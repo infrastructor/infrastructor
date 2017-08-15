@@ -29,7 +29,13 @@ class FileInventory {
         
         def inventory = new Inventory()
         def shell = new GroovyShell(new Binding([inventory: inventory]), configuration)
-        files.each { file -> shell.evaluate(new File(file)) }
+        
+        if (files instanceof List || files instanceof Object[]) {
+            files.each { file -> shell.evaluate(new File(file)) }
+        } else {
+            shell.evaluate(new File(files))
+        }
+        
         inventory.provision(provision)
         inventory
     }

@@ -14,6 +14,12 @@ class FileInventoryTest {
     }
     
     @Test
+    void mapLikeDefinitionWithASingleFile() {
+        def inventory = fileInventory files: resource("inventory.groovy")
+        assert inventory.nodes.size() == 2
+    }
+    
+    @Test
     void mapLikeDefinition() {
         def inventory = fileInventory files: [resource("inventory.groovy")]
         assert inventory.nodes.size() == 2
