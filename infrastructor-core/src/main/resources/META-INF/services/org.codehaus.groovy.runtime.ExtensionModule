@@ -17,4 +17,5 @@ extensionClasses=io.infrastructor.core.processing.actions.DirectoryActionMixin, 
                  io.infrastructor.core.processing.provisioning.TaskMixin
 
 staticExtensionClasses=io.infrastructor.core.inventory.InlineInventoryMixin, \
+                       io.infrastructor.core.inventory.FileInventoryMixin, \
                        io.infrastructor.core.inventory.docker.InlineDockerInventoryMixin
