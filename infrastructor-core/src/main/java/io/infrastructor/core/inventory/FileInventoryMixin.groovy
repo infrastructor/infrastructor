@@ -1,10 +1,8 @@
 package io.infrastructor.core.inventory
 
-import static io.infrastructor.core.inventory.FileInventory.*
-
 class FileInventoryMixin {
     def static fileInventory(Script script, String... files) {
-        fileInventory(script, files: files)
+        fileInventory(script, [files: files])
     }
     
     def static fileInventory(Script script, Map params) {
@@ -16,7 +14,7 @@ class FileInventoryMixin {
     }
     
     def static fileInventory(Script script, Map params, Closure setup) {
-        fileInventory(params, setup)
+        FileInventory.fileInventory(params, setup)
     }
 }
 
