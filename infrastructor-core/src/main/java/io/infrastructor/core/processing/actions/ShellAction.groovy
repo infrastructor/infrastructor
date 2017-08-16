@@ -10,9 +10,14 @@ class ShellAction {
     def execute(def node) {
         if (command.contains("\n")) {
             def result = node.execute(command: "mktemp")
-            def temp = result.output
-            node.writeText(temp, command.stripIndent())
-            node.execute(command: "sh $temp", sudo: sudo)
+            try { 
+                def temp = result.output
+                node.writeText(temp, command.stripIndent())
+                node.execute(command: "sh $temp", sudo: sudo)
+                return node.lastResult
+            } finally {
+                node.execute(command: "rm $temp")
+            }
         } else {
             node.execute(command: command, sudo: sudo)
         }

@@ -16,7 +16,6 @@ public class ShellActionTest extends ActionTestBase {
         }
     }
     
-    
     @Test
     public void multilineShellAction() {
         inventory.provision {
@@ -33,7 +32,6 @@ public class ShellActionTest extends ActionTestBase {
             }
         }
     }
-    
     
     @Test
     public void multilineRestrictedShellActionWithoutSudo() {
@@ -63,6 +61,18 @@ public class ShellActionTest extends ActionTestBase {
                 }
                 
                 assert result.exitcode == 0
+            }
+        }
+    }
+    
+    @Test
+    public void multilineShellActionWithErrorScript() {
+        inventory.provision {
+            task name: 'simpleShellAction', filter: {'as:devops'}, actions: {
+                def result = shell command: """ 
+                        this script can not be executed
+                    """
+                assert result.exitcode != 0
             }
         }
     }
