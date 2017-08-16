@@ -16,7 +16,7 @@ class GroovyShellUtils {
         imports.addStaticStars("io.infrastructor.core.utils.ConnectionUtils")
         CompilerConfiguration configuration = new CompilerConfiguration()
         configuration.addCompilationCustomizers(imports)
-        //        
+        //
         return new GroovyShell(new Binding(bindings), configuration)
     }
     
