@@ -10,8 +10,11 @@ dependencies {
 }
 
 task unpack(type: Copy, dependsOn: 'build') {
-    from zipTree(file("${buildDir}/distributions/infrastructor.zip"))
+    from zipTree(file("$buildDir/distributions/infrastructor-${version}.zip"))
     into file("${buildDir}/distributions")
+    doLast {
+        file("${buildDir}/distributions/infrastructor-${version}").renameTo("${buildDir}/distributions/infrastructor")
+    }
 }
 
 distributions {

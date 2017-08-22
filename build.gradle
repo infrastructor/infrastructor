@@ -1,7 +1,18 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
+    
 apply plugin: 'base'
-
+    
 allprojects {
     group = 'io.infrastructor'
+    version '0.0.1'
+    
     repositories {
         mavenLocal()
         mavenCentral()
@@ -9,9 +20,10 @@ allprojects {
 }
 
 subprojects {
+    apply plugin: 'com.jfrog.bintray'
     apply plugin: 'java'
     apply plugin: 'groovy'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
     
     sourceCompatibility = '1.8'
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -38,4 +50,29 @@ subprojects {
     dependencies {
         testCompile "junit:junit:4.12"
     }
+    
+    publishing {
+        publications {
+            allComponents(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+    
+    if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayPass')) {
+        bintray {
+            user = property('bintrayUser') 
+            key =  property('bintrayPass') 
+            publications = ['allComponents']
+            pkg {
+                repo = 'public'
+                name = 'infrastructor'
+                userOrg = 'infrastructor'
+                version {
+                    name = '0.0.1'
+                }
+            }
+        }
+    }
+   
 }
