@@ -22,7 +22,7 @@ deploy:
       repo: infrastructor/infrastructor
       tags: true
   - provider: script
-    script: "./gradlew clean build bintrayUpload -x test -PbintrayUser=${BINTRAY_USER} PbintrayPass=${BINTRAY_PASS}"
+    script: "./gradlew clean build bintrayUpload -x test -PbintrayUser=${BINTRAY_USER} -PbintrayPass=${BINTRAY_PASS} --info"
     on:
       branch: master
     
