@@ -51,15 +51,33 @@ subprojects {
         testCompile "junit:junit:4.12"
     }
     
-    publishing {
-        publications {
-            allComponents(MavenPublication) {
-                from components.java
+    if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayPass')) {
+        
+        groovydoc {
+            source = sourceSets.main.allSource
+            classpath = configurations.compileClasspath
+        }
+
+        task sourceJar(type: Jar) {
+            from sourceSets.main.allSource
+            classifier = 'sources'
+        }
+
+        task groovydocJar(type: Jar) {
+            from groovydoc
+            classifier = 'groovydoc'
+        }
+    
+        publishing {
+            publications {
+                allComponents(MavenPublication) {
+                    from components.java
+                    artifact sourceJar
+                    artifact groovydocJar
+                }
             }
         }
-    }
     
-    if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayPass')) {
         bintray {
             user = property('bintrayUser') 
             key =  property('bintrayPass') 
@@ -74,5 +92,4 @@ subprojects {
             }
         }
     }
-   
 }
