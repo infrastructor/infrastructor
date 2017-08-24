@@ -11,7 +11,7 @@ apply plugin: 'base'
     
 allprojects {
     group = 'io.infrastructor'
-    version '0.0.1'
+    version '0.1.0'
     
     repositories {
         mavenLocal()
@@ -52,7 +52,6 @@ subprojects {
     }
     
     if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayPass')) {
-        
         groovydoc {
             source = sourceSets.main.allSource
             classpath = configurations.compileClasspath
