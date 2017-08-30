@@ -22,15 +22,15 @@ public class AwsInventory {
 
             debug 'AwsInventory :: connecting to AWS to retrieve a list of EC2 instances'
             def awsNodes = AwsNodesBuilder.
-                               fromEC2(amazonEC2).
-                               filterByTags(tags).
-                               usePublicHost(usePublicIp).
-                               each {
-                                   it.username = owner.username
-                                   it.password = owner.password
-                                   it.keyfile  = owner.keyfile
-                                   it.port     = owner.port
-                               }
+                fromEC2(amazonEC2).
+                filterByTags(tags).
+                usePublicHost(usePublicIp).
+                    each {
+                        it.username = owner.username
+                        it.password = owner.password
+                        it.keyfile  = owner.keyfile
+                        it.port     = owner.port
+                    }
                                 
             debug "AwsInventory :: inventory is ready [${awsNodes.nodes.size()} node]: "
             awsNodes.nodes.each { debug( "Node: ${defColor(it.name)}: ${yellow(it as String)}")}
@@ -45,4 +45,3 @@ public class AwsInventory {
         awsInventory.build(awsAccessKey, awsSecretKey, awsRegion)
     }
 }
-

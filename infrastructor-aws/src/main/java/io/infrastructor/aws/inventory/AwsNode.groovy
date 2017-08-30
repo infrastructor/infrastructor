@@ -106,7 +106,7 @@ public class AwsNode extends Node {
         
         DescribeInstancesResult describeInstances = amazonEC2.describeInstances(new DescribeInstancesRequest().withInstanceIds(id))
         Instance instance = describeInstances.getReservations().get(0).getInstances().get(0)
-        
+        	
         // remove old tags
         DeleteTagsRequest deleteTagsRequest = new DeleteTagsRequest()
         deleteTagsRequest.withResources(id)
