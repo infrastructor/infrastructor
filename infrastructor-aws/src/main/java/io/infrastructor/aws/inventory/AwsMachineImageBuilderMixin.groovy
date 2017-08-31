@@ -13,9 +13,7 @@ class AwsMachineImageBuilderMixin {
     }
     
     def static awsMachineImage(Script script, Map params, Closure closure) {
-        AwsMachineImageBuilder awsMachineImageBuilder = new AwsMachineImageBuilder(params)
-        awsMachineImageBuilder.with(closure)
-        validate(awsMachineImageBuilder)
+        AwsMachineImageBuilder.awsMachineImage(params, closure)
     }
 }
 

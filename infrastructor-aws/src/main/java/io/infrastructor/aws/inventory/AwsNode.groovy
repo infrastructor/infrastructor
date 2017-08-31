@@ -11,6 +11,7 @@ import com.amazonaws.services.ec2.model.EbsBlockDevice
 import com.amazonaws.services.ec2.model.Instance
 import com.amazonaws.services.ec2.model.ModifyInstanceAttributeRequest
 import com.amazonaws.services.ec2.model.RunInstancesRequest
+import com.amazonaws.services.ec2.model.StopInstancesRequest
 import com.amazonaws.services.ec2.model.Tag
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest
 import groovy.transform.ToString
@@ -92,6 +93,15 @@ public class AwsNode extends Node {
         if (id) {
             info "removing EC2: $this" 
             amazonEC2.terminateInstances(new TerminateInstancesRequest([id]))
+        }
+    }
+    
+    def stop(def amazonEC2) {
+        if (id) {
+            info "stopping EC2: $this" 
+            StopInstancesRequest stopInstancesRequest = new StopInstancesRequest()
+            stopInstancesRequest.withInstanceIds(id)
+            amazonEC2.stopInstances(stopInstancesRequest)
         }
     }
     
