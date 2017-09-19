@@ -56,5 +56,33 @@ class AwsMachineImageBuilderTest {
             }
         }
     }
+    
+    @Test(expected = ValidationException)
+    void missing_imageName() {
+        AwsMachineImageBuilder.awsMachineImage {
+            awsAccessKeyId     = '...'
+            awsAccessSecretKey = '...'
+            awsRegion          = 'eu-west-1'
+            // imageName          = "test-image"
+            usePublicIp        = true
+            node {
+                name           = 'dummy'
+            }
+        }
+    }
+    
+    @Test(expected = ValidationException)
+    void missing_usePublicIp() {
+        AwsMachineImageBuilder.awsMachineImage {
+            awsAccessKeyId     = '...'
+            awsAccessSecretKey = '...'
+            awsRegion          = 'eu-west-1'
+            // imageName          = "test-image"
+            usePublicIp        = null
+            node {
+                name           = 'dummy'
+            }
+        }
+    }
 }
 

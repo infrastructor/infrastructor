@@ -19,5 +19,3 @@ test {
         }
     }
 }
-
-test.dependsOn ':infrastructor-core:test' 
