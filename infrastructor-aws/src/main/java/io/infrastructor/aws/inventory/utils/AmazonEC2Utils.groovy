@@ -2,15 +2,24 @@ package io.infrastructor.aws.inventory.utils
 
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.retry.RetryUtils
 import com.amazonaws.services.ec2.AmazonEC2
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
+import com.amazonaws.services.ec2.model.DescribeImagesRequest
+import com.amazonaws.services.ec2.model.DescribeImagesResult
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest
+import com.amazonaws.services.ec2.model.DescribeInstancesResult
 import com.amazonaws.services.ec2.model.DescribeSubnetsRequest
 import com.amazonaws.services.ec2.model.Filter
+import com.amazonaws.services.ec2.model.Instance
 import io.infrastructor.aws.inventory.AwsNode
+
+import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.utils.RetryUtils.retry
 
 class AmazonEC2Utils {
     
-    public static AmazonEC2 amazonEC2(def awsAccessKey, def awsSecretKey, def awsRegion) {
+    def static AmazonEC2 amazonEC2(def awsAccessKey, def awsSecretKey, def awsRegion) {
         AmazonEC2ClientBuilder standard = AmazonEC2ClientBuilder.standard()
         standard.setCredentials(new AWSStaticCredentialsProvider(new AWSCredentials() {
                     @Override
@@ -23,6 +32,28 @@ class AmazonEC2Utils {
         standard.build()
     }
     
+    def static waitForInstanceState(def amazonEC2, def instanceId, int count, int delay, def state) {
+        retry(count, delay) {
+            DescribeInstancesRequest request = new DescribeInstancesRequest()
+            request.setInstanceIds([instanceId])
+            DescribeInstancesResult result = amazonEC2.describeInstances(request)
+            Instance instance = result.getReservations().get(0).getInstances().get(0)
+            debug "waiting for instance $instanceId state is $state, current state: ${instance.getState().getName()}"
+            assert instance.getState().getName() == state
+        }
+    }
+    
+    def static waitForImageState(def amazonEC2, def imageId, int count, int delay, def state) {
+        retry(count, delay) {
+            DescribeImagesRequest describeImagesRequest = new DescribeImagesRequest()
+            describeImagesRequest.withImageIds(imageId)
+            DescribeImagesResult describeImagesResult = amazonEC2.describeImages(describeImagesRequest)
+            def actual = describeImagesResult.getImages().get(0).getState()
+            debug "waiting for image $imageId is available, current state is $actual"
+            assert actual == state
+        }
+    }
+    
     public static void assertInstanceExists(def awsAccessKey, def awsSecretKey, def awsRegion, def definition) {
         def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
     
@@ -30,7 +61,7 @@ class AmazonEC2Utils {
         def allExistingRunningInstances = reservations.collect { 
             it.getInstances().findAll { 
                 it.getState().getCode() == 16 // running
-    }
+            }
         }.flatten()
     
         def expected = new AwsNode()

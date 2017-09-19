@@ -11,6 +11,7 @@ import com.amazonaws.services.ec2.model.EbsBlockDevice
 import com.amazonaws.services.ec2.model.Instance
 import com.amazonaws.services.ec2.model.ModifyInstanceAttributeRequest
 import com.amazonaws.services.ec2.model.RunInstancesRequest
+import com.amazonaws.services.ec2.model.StopInstancesRequest
 import com.amazonaws.services.ec2.model.Tag
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest
 import groovy.transform.ToString
@@ -95,6 +96,15 @@ public class AwsNode extends Node {
         }
     }
     
+    def stop(def amazonEC2) {
+        if (id) {
+            info "stopping EC2: $this" 
+            StopInstancesRequest stopInstancesRequest = new StopInstancesRequest()
+            stopInstancesRequest.withInstanceIds(id)
+            amazonEC2.stopInstances(stopInstancesRequest)
+        }
+    }
+    
     def update(def amazonEC2) {
         info "updating EC2: $this"
         updateTags(amazonEC2)
@@ -106,7 +116,7 @@ public class AwsNode extends Node {
         
         DescribeInstancesResult describeInstances = amazonEC2.describeInstances(new DescribeInstancesRequest().withInstanceIds(id))
         Instance instance = describeInstances.getReservations().get(0).getInstances().get(0)
-        
+        	
         // remove old tags
         DeleteTagsRequest deleteTagsRequest = new DeleteTagsRequest()
         deleteTagsRequest.withResources(id)

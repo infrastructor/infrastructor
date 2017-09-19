@@ -53,8 +53,8 @@ public class TaskExecutorTest {
         
     @Test
     public void runPlanWithTagedNodesAndParallelism() {
-        def collector = [] as Set
-        def threadIds = [] as Set
+        def collector = ([] as Set).asSynchronized() 
+        def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
@@ -71,7 +71,7 @@ public class TaskExecutorTest {
         
     @Test
     public void runPlanWithParallelism() {
-        def threadIds = [] as Set
+        def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
@@ -86,7 +86,7 @@ public class TaskExecutorTest {
     
     @Test
     public void runPlanWithParallelismNestedSyntax() {
-        def threadIds = [] as Set
+        def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
             node host: "testB", username: "dummy", tags: [id: 'b']
@@ -126,7 +126,7 @@ public class TaskExecutorTest {
             node host: "testB", username: "dummy", tags: [id: 'b']
             node host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
-            task filter: { !'id:b' }, actions: {
+            task filter: {!'id:b'}, actions: {
                 collector << node.host
             }
         }

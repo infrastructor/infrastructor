@@ -34,8 +34,9 @@ public class DockerNode {
         sleep(500)
         process.waitFor()
         
-        if (process.exitValue() != 0) {
-            throw new RuntimeException("Unable to launch docker node: '$this', output: ${process.text}, exitvalue: ${process.exitValue()}")
+        def exitValue = process.exitValue()
+        if (exitValue) {
+            throw new RuntimeException("Unable to launch docker node: '$this', exit value: '$exitValue', output: ${process.text}")
         }
         return this as Node
     }
@@ -44,8 +45,10 @@ public class DockerNode {
         if (id) {
             def process = "docker rm -f $id".execute()
             process.waitFor()
-            if (process.exitValue()) {
-                throw new RuntimeException("Unable to remove docker node: '$this', output: ${process.text}")
+            
+            def exitValue = process.exitValue()
+            if (exitValue) {
+                throw new RuntimeException("Unable to remove docker node: '$this', exit value: '$exitValue', output: ${process.text}")
             }
         }
     }
