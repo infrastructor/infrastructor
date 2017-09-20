@@ -2,11 +2,11 @@ package io.infrastructor.aws.inventory
 
 class AwsInventoryMixin {
     def static awsInventory(Script script, Map params) {
-        AwsInventory.awsInventory(script, params, {})
+        awsInventory(script, params, {})
     }
     
     def static awsInventory(Script script, Closure definition) {
-        AwsInventory.awsInventory(script, [:], definition)
+        awsInventory(script, [:], definition)
     }
 
     def static awsInventory(Script script, Map params, Closure definition) {
