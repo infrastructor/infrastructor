@@ -8,6 +8,9 @@ import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.amazonEC2
 
 public class AwsInventory {
 
+    def awsAccessKeyId
+    def awsAccessSecretKey
+    def awsRegion
     def username
     def password
     def keyfile
@@ -15,10 +18,10 @@ public class AwsInventory {
     def tags = [:]
     def usePublicIp = false
     
-    public Inventory build(def awsAccessKey, def awsSecretKey, def awsRegion) {
+    public Inventory build() {
         withTextStatus { statusLine -> 
             statusLine "> initializing aws inventory"
-            def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
+            def amazonEC2 = amazonEC2(awsAccessKeyId, awsAccessSecretKey, awsRegion)
 
             debug 'AwsInventory :: connecting to AWS to retrieve a list of EC2 instances'
             def awsNodes = AwsNodesBuilder.
@@ -39,9 +42,9 @@ public class AwsInventory {
         }
     }
 
-    def static awsInventory(def awsAccessKey, def awsSecretKey, def awsRegion, Closure definition) {
-        def awsInventory = new AwsInventory()
+    def static awsInventory(Map params, Closure definition) {
+        def awsInventory = new AwsInventory(params)
         awsInventory.with(definition)
-        awsInventory.build(awsAccessKey, awsSecretKey, awsRegion)
+        awsInventory.build()
     }
 }
