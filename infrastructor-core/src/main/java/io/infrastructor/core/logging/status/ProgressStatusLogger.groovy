@@ -4,17 +4,18 @@ import static io.infrastructor.core.logging.ConsoleLogger.*
 
 class ProgressStatusLogger {
     
-    private final char filledChar   = '=';
-    private final char unfilledChar = '-'
-    private final int progressLineSize = 15;
+    private final char FILLED_CHAR   = '='
+    private final char UNFILLED_CHAR = '-'
 
-    def total = 0;
-    def progress = 0;
-    def status = "";
+    private final int progressLineSize = 20
+
+    def total = 0
+    def progress = 0
+    def status = ""
     def listener = {}
     
     public synchronized int increase() {
-        progress++;
+        progress++
         listener()
         return progress
     }
@@ -25,21 +26,21 @@ class ProgressStatusLogger {
     }
     
     public String statusLine() {
-        int filledElements = (int) ((progressLineSize / (double) total) * progress);
+        int filledElements = (int) ((progressLineSize / (double) total) * progress)
 
-        final StringBuilder stringBuilder = new StringBuilder("[");
+        final StringBuilder stringBuilder = new StringBuilder("[")
 
         for (int i = 0; i < filledElements; i++) {
-            stringBuilder.append(filledChar);
+            stringBuilder.append(FILLED_CHAR)
         }
         
         for (int i = 0; i < progressLineSize - filledElements; i++) {
-            stringBuilder.append(unfilledChar);
+            stringBuilder.append(UNFILLED_CHAR)
         }
 
-        stringBuilder.append("] ").append(progress).append(" / ").append(total).append(" ").append(status);
+        stringBuilder.append("] ").append(progress).append(" / ").append(total).append(" ").append(status)
         
-        return stringBuilder.toString();
+        return stringBuilder.toString()
     }
     
     public static void withProgressStatus(def total, def status, Closure closure) {

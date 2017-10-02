@@ -42,6 +42,13 @@ class FileInventoryTest {
     }
     
     @Test
+    void passingParametersToDefinition() {
+        def COUNT = 5
+        def inventory = fileInventory files: resource("parameterized.groovy"), params: [COUNT: COUNT]
+        assert inventory.nodes.size() == COUNT
+    }
+    
+    @Test
     void multiFilesMapLikeDefinitionWithProvisioning() {
         def counter = 0 
         def inventory = fileInventory files: [
