@@ -5,6 +5,7 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer
 
 class FileInventory {
     def files = []
+    def params = [:]
     def provision = {}
    
     def static fileInventory(String... files) {
@@ -28,7 +29,8 @@ class FileInventory {
         configuration.setScriptBaseClass(FileInventoryScript.class.name)
         
         def inventory = new Inventory()
-        def shell = new GroovyShell(new Binding([inventory: inventory]), configuration)
+        params << [inventory: inventory]
+        def shell = new GroovyShell(new Binding(params), configuration)
         
         if (files instanceof List || files instanceof Object[]) {
             files.each { file -> shell.evaluate(new File(file)) }
