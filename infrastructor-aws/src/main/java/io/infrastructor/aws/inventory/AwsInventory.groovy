@@ -36,7 +36,7 @@ public class AwsInventory {
                     }
                                 
             debug "AwsInventory :: inventory is ready [${awsNodes.nodes.size()} node]: "
-            awsNodes.nodes.each { debug( "Node: ${defColor(it.name)}: ${yellow(it as String)}")}
+            awsNodes.nodes.each { debug( "Node: ${defColor(it.name)}: ${yellow(it as String)}") }
 
             return new Inventory(nodes: awsNodes.nodes)
         }

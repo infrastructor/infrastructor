@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
-import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
 import static io.infrastructor.core.logging.status.TaskProgressLogger.withTaskProgressStatus
 import static io.infrastructor.core.processing.ProvisioningContext.provision
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
@@ -32,17 +31,17 @@ class Task {
             filtered.each { status.updateStatus(it.id, 'waiting') }
             executeParallel(filtered, parallel) { node -> 
                 try {
-                    status.updateStatus(node.id, "${blue("running")}")
+                    status.updateStatus(node.getLogName(), "${blue("running")}")
                     new NodeContext(node: node).with(actions.clone())
-                    status.updateStatus(node.id, "${green("done")}")
+                    status.updateStatus(node.getLogName(), "${green("done")}")
                 } catch (ActionExecutionException ex) {
-                    error "FAILED - node.id: $node.id, $ex.message"
+                    error "FAILED - node.id: ${node.getLogName()}, $ex.message"
                     failedNodes << node
-                    status.updateStatus(node.id, "${red("falied")}")
+                    status.updateStatus(node.getLogName(), "${red("falied")}")
                 } catch(Exception ex) {
-                    error "FAILED - node.id: $node.id, message: $ex.message"
+                    error "FAILED - node.id: ${node.getLogName()}, message: $ex.message"
                     failedNodes << node
-                    status.updateStatus(node.id, "${red("falied")}")
+                    status.updateStatus(node.getLogName(), "${red("falied")}")
                 } finally {
                     status.increase()
                     node.disconnect()

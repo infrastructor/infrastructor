@@ -94,4 +94,6 @@ public class Node {
         allTags().each() { k, v -> list << ("$k:$v" as String) } 
         list
     }
+    
+    def getLogName() { id }
 }
