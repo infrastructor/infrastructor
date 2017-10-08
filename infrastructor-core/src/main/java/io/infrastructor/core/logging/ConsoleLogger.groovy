@@ -64,9 +64,11 @@ class ConsoleLogger {
     
     def static synchronized updateStatus() {
         if (enableDynamics) { 
-            statusLoggers.each {
-                statusPrinted++
-                println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).bold().fg(DEFAULT).a(it.statusLine()).reset())
+            statusLoggers.each { logger ->
+                logger.statusLine().eachLine { line ->
+                    statusPrinted++
+                    println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).bold().fg(DEFAULT).a(line).reset())
+                }
             }
         }
     }
