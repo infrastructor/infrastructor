@@ -1,7 +1,6 @@
 package io.infrastructor.core.processing
 
 import static io.infrastructor.core.validation.ValidationHelper.validate
-import io.infrastructor.core.processing.provisioning.TaskExecutionException
 
 class ProvisioningContext {
     def nodes
