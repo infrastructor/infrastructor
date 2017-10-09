@@ -9,7 +9,7 @@ install: true
 script: "./gradlew clean build"
 
 before_deploy:
-  - export RELEASE_ZIP=$(ls ./build/distributions/*.zip)
+  - export RELEASE_ZIP=$(ls ./infrastructor-cli/build/distributions/*.zip)
   
 deploy:
   - provider: releases
