@@ -1,6 +1,7 @@
 package io.infrastructor.cli
 
 import com.beust.jcommander.JCommander
+import groovy.time.TimeCategory
 import io.infrastructor.cli.handlers.DecryptHandler
 import io.infrastructor.cli.handlers.EncryptHandler
 import io.infrastructor.cli.handlers.HelpHandler
@@ -31,6 +32,8 @@ public class Starter {
                     }
                 }));
         
+        def timeStart = new Date()
+        
         try {
             if (args.length == 0) {
                 HANDLERS['help'].execute()
@@ -43,6 +46,9 @@ public class Starter {
                     new JCommander(handler).parse(args.tail())
                     handler.execute()
                 }
+                
+                def duration = TimeCategory.minus(new Date(), timeStart)
+                info "\n${green('EXECUTION COMPLETE')} in $duration"
             }
         } catch (Exception ex) {
             def message = ex.toString()?.replaceAll("\n", "\n ")
@@ -52,8 +58,11 @@ public class Starter {
             debug " ${bold('stack trace:')}"
             debug (" - ${deepSanitize(ex)}".replaceAll("\n", "\n - "))
             
-            error "application has stopped due to an error: ${bold(message)}"
-            error "please check the log output. use '-l 3' to activate debug log."
+            def duration = TimeCategory.minus(new Date(), timeStart)
+            
+            error "\n${bold('EXECUTION FAILED')} in $duration"
+            error "Application has stopped due to an error: ${bold(message)}"
+            error "Please check the log output. Use '-l 3' command line argument to activate debug logs."
         }
     }
 }

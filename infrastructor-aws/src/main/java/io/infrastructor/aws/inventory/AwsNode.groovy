@@ -168,4 +168,6 @@ public class AwsNode extends Node {
         }
         mappings
     }
+    
+    def getLogName() { name }
 }

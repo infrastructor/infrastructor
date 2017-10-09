@@ -5,7 +5,8 @@ import com.beust.jcommander.Parameter
 import io.infrastructor.cli.settings.ApplicationSettings
 import io.infrastructor.cli.validation.FileValidator
 
-import static io.infrastructor.core.logging.ConsoleLogger.debug
+import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.utils.GroovyShellUtils.groovyShell
 
 public class RunHandler extends LoggingAwareHandler {
@@ -39,17 +40,28 @@ public class RunHandler extends LoggingAwareHandler {
     def execute() {
         super.execute()
         
-        debug "Application variables: $variables"
-        debug "Application profile: $profile"
+        withTextStatus { status ->
+            status "> initializing system settings"
+            debug "Application variables: $variables"
+            debug "Application profile: $profile"
         
-        def settings = ApplicationSettings.systemSettings(profile)
-        debug "System settings: $settings"
+            def settings = ApplicationSettings.systemSettings(profile)
+            debug "System settings: $settings"
+            settings << variables
+            debug "Effective settings: $settings"
         
-        settings << variables
-        debug "Effective settings: $settings"
-        
-        def shell = groovyShell(settings)
-        files.each { shell.evaluate(new File(it)) }
+            status "> initializing execution engine"
+            
+            def shell = groovyShell(settings)
+            files.each { 
+                info   "> running script: $it"
+                status "> running script: $it"
+                shell.evaluate(new File(it))
+                info   "> running script: $it - done"
+            }
+            
+            status "> execution complete!"
+        }
     }
 }
 
