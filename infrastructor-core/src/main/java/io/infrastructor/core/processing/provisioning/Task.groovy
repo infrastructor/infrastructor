@@ -28,7 +28,11 @@ class Task {
         def failedNodes = [].asSynchronized() 
      
         withTaskProgressStatus(name) { status -> 
-            filtered.each { status.updateStatus(it.id, 'waiting') }
+            
+            filtered.each { status.updateStatus(it.getLogName(), 'waiting') }
+            
+            debug "running task: $name with parallelism: $parallel on nodes: ${filtered.collect { it.getLogName() }}"
+            
             executeParallel(filtered, parallel) { node -> 
                 try {
                     status.updateStatus(node.getLogName(), "${blue("running")}")
