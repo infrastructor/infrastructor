@@ -35,7 +35,7 @@ class ConsoleLogger {
     
     def static synchronized printLine(def message, Ansi.Color color = DEFAULT) {
         eraseStatus()
-        println(Ansi.ansi().cursorToColumn(0).eraseLine(Ansi.Erase.FORWARD).fg(color).a(message).reset())
+        println(Ansi.ansi().cursorToColumn(0).fg(color).a(message).reset())
         updateStatus()
     }
 
@@ -74,8 +74,8 @@ class ConsoleLogger {
     }
 
     def static synchronized eraseAndUpdate() {
-        eraseStatus(); 
-        updateStatus();
+        eraseStatus()
+        updateStatus()
     }
     
     public static void debug(String message) {

@@ -28,28 +28,24 @@ public class Node {
     protected def stopOnError = true
     
     def connect() {
-        if (isDisconnected()) {
+        if (!client?.isConnected()) {
             client = sshClient(host: host, port: port, username: username, password: password, keyfile: keyfile)
             retry(5, 2000) { client.connect() }
-            if (isDisconnected()) { throw new RuntimeException("unable to connect to node $this") }
+            if (!client.isConnected()) { throw new RuntimeException("unable to connect to node $this") }
         }
     }
     
     def disconnect() {
-        if (!isDisconnected()) { 
+        if (client?.isConnected()) { 
             debug "Node($host:$port) :: disconnecting"
             client.disconnect() 
         }
     }
     
-    def isDisconnected() {
-        client == null || !client.isConnected()
-    }
-    
     def execute(Map command) {
         debug "ssh execute: $command"
         
-        if (isDisconnected()) { connect() }
+        connect()
         
         lastResult = client.execute(command)
         
@@ -85,9 +81,7 @@ public class Node {
         if (mode) execute sudo: sudo, command: "chmod $mode $target"
     }
     
-    def allTags() {
-        return tags
-    }
+    def allTags() { tags }
     
     def listTags() {
         def list = []
