@@ -26,11 +26,7 @@ public class Starter {
     public static void main(String [] args) {
         
         // get rid of any SLF4J error output messages
-        System.setErr(new PrintStream(
-                new OutputStream() {
-                    public void write(int b) {
-                    }
-                }));
+        System.setErr(new PrintStream(new OutputStream() { public void write(int b) {} }))
         
         def timeStart = new Date()
         
@@ -46,9 +42,6 @@ public class Starter {
                     new JCommander(handler).parse(args.tail())
                     handler.execute()
                 }
-                
-                def duration = TimeCategory.minus(new Date(), timeStart)
-                info "\n${green('EXECUTION COMPLETE')} in $duration"
             }
         } catch (Exception ex) {
             def message = ex.toString()?.replaceAll("\n", "\n ")

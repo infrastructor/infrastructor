@@ -2,6 +2,7 @@ package io.infrastructor.cli.handlers
 
 import com.beust.jcommander.DynamicParameter
 import com.beust.jcommander.Parameter
+import groovy.time.TimeCategory
 import io.infrastructor.cli.settings.ApplicationSettings
 import io.infrastructor.cli.validation.FileValidator
 
@@ -40,6 +41,8 @@ public class RunHandler extends LoggingAwareHandler {
     def execute() {
         super.execute()
         
+        def timeStart = new Date()
+        
         withTextStatus { status ->
             status "> initializing system settings"
             debug "Application variables: $variables"
@@ -62,6 +65,9 @@ public class RunHandler extends LoggingAwareHandler {
             
             status "> execution complete!"
         }
+        
+        def duration = TimeCategory.minus(new Date(), timeStart)
+        info "\n${green('EXECUTION COMPLETE')} in $duration"
     }
 }
 
