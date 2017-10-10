@@ -31,7 +31,6 @@ public class DockerNode {
         debug "Lanuching docker node with command: $command"
         
         def process = command.execute()
-        sleep(500)
         process.waitFor()
         
         def exitValue = process.exitValue()
@@ -43,7 +42,10 @@ public class DockerNode {
     
     def shutdown() {
         if (id) {
-            def process = "docker rm -f $id".execute()
+            def command = "docker rm -f $id"
+            debug "Shutting down docker node with command: $command"
+            
+            def process = command.execute()
             process.waitFor()
             
             def exitValue = process.exitValue()

@@ -20,7 +20,7 @@ class ConsoleLogger {
     
     def static synchronized addStatusLogger(def logger) {
         eraseStatus()
-        statusLoggers.add(0, logger)
+        statusLoggers.add(logger)
         logger.listener = { eraseAndUpdate() }
         updateStatus()
         logger
