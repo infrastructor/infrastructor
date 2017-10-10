@@ -40,9 +40,6 @@ class TaskProgressLogger {
             addStatusLogger logger
             debug "addStatusLogger:run: $name "
             closure(logger)
-        } catch(Throwable t) {
-            t.printStackTrace()
-            println "withTaskProgressStatus: $t"
         } finally {
             debug "addStatusLogger:removeStatusLogger: $name "
             removeStatusLogger logger
