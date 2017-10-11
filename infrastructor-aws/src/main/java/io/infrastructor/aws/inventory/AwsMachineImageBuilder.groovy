@@ -69,10 +69,10 @@ class AwsMachineImageBuilder {
             statusLine "> Aws Machine Image Builder: waiting for image '$imageName' - '$result.imageId' is available"
             waitForImageState(amazonEC2, result.imageId, 90, 3000, 'available')
         
-            statusLine "> : image is ready, terminating the instance if needed"
+            statusLine "> Aws Machine Image Builder: image is ready, terminating the instance if needed"
             if (terminateInstance) { awsNode.remove(amazonEC2) }
             
-            statusLine "> Aws Machine Image Builder: the image creation has been finished"
+            statusLine "> Aws Machine Image Builder: the image creation has finished"
             return result.imageId
         }
     }

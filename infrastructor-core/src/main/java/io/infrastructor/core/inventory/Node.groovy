@@ -57,7 +57,7 @@ public class Node {
     }
     
     def readFile(def file, def stream, def sudo = false) {
-        execute sudo: sudo, output: stream, command: "cat $file" 
+        execute sudo: sudo, output: stream, command: "cat '$file'" 
     }
     
     def writeText(def target, def content, def sudo = false) {
@@ -65,8 +65,8 @@ public class Node {
     }
     
     def writeFile(def target, def stream, def sudo = false) {
-        execute sudo: sudo, command: "mkdir -p \$(dirname $target)"
-        execute input: stream, command: "cat | " + (sudo ? "sudo tee $target" : "tee $target")
+        execute sudo: sudo, command: "sh -c \"dirname '$target' | xargs -I '{}' mkdir -p '{}'\""
+        execute input: stream, command: "cat | " + (sudo ? "sudo tee '$target'" : "tee '$target'")
     }
     
     def updateOwner(def target, def owner, def sudo = false) {
