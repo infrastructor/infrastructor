@@ -15,6 +15,9 @@ public class Starter {
     
     def static HANDLERS = [:]
     
+    final static int EXIT_BAD_PARAMS = 1
+    final static int EXIT_EXECUTION_ERROR = 2
+    
     static {
         HANDLERS << ['run':     new RunHandler()]
         HANDLERS << ['encrypt': new EncryptHandler()]
@@ -36,8 +39,9 @@ public class Starter {
             } else {
                 def handler = HANDLERS[args.head()]
                 if (!handler) {
-                    error "Unknown command '${args.head()}'"
+                    error "\nERROR: unknown command '${args.head()}'"
                     HANDLERS['help'].execute()
+                    System.exit(EXIT_BAD_PARAMS)
                 } else {
                     new JCommander(handler).parse(args.tail())
                     handler.execute()
@@ -57,6 +61,8 @@ public class Starter {
             error "Application has stopped due to an error:"
             error "${bold(message)}\n"
             error "Please check the log output. Use '-l 3' command line argument to activate debug logs."
+            
+            System.exit(EXIT_EXECUTION_ERROR)
         }
     }
 }
