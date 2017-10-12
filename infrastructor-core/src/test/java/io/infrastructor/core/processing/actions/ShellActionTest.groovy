@@ -7,9 +7,8 @@ public class ShellActionTest extends ActionTestBase {
     @Test
     public void singleLineShellAction() {
         def result = [:]
-        
-        inventory.provision {
-            task name: 'simpleShellAction', filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task name: 'simpleShellAction', actions: {
                 result = shell { 
                     command = "echo 'simple message!'"
                 }
@@ -23,8 +22,8 @@ public class ShellActionTest extends ActionTestBase {
     public void multilineShellAction() {
         def result = [:]
         
-        inventory.provision {
-            task name: 'simpleShellAction', filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task name: 'simpleShellAction', actions: {
                 result = shell { 
                     command = """ 
                         echo 'simple message!'
@@ -43,8 +42,8 @@ public class ShellActionTest extends ActionTestBase {
     public void multilineRestrictedShellActionWithoutSudo() {
         def result = [:]
         
-        inventory.provision {
-            task name: 'simpleShellAction', filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task name: 'simpleShellAction', actions: {
                 result = shell { 
                     command = """ 
                         mkdir /etc/test
@@ -61,8 +60,8 @@ public class ShellActionTest extends ActionTestBase {
     public void multilineRestrictedShellActionWithSudo() {
         def result = [:]
         
-        inventory.provision {
-            task name: 'simpleShellAction', filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task name: 'simpleShellAction', actions: {
                 result = shell { 
                     command = """ 
                         mkdir /etc/test
@@ -79,8 +78,8 @@ public class ShellActionTest extends ActionTestBase {
     public void multilineShellActionWithErrorScript() {
         def result = [:]
         
-        inventory.provision {
-            task name: 'simpleShellAction', filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task name: 'simpleShellAction', actions: {
                 result = shell command: """ 
                         this script can not be executed
                     """

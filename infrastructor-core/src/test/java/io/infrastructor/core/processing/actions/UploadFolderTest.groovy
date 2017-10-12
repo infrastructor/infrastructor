@@ -5,8 +5,8 @@ import org.junit.Test
 class UploadFolderTest extends ActionTestBase {
     @Test
     public void uploadFolderContentToRemoteHost() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = upload {
                     sudo = true
                     source = 'build/resources/test/upload'
@@ -24,8 +24,8 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     public void uploadFolderContentToRemoteHostWithIncludes() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = upload {
                     sudo = true
                     source = 'build/resources/test/upload'
@@ -44,8 +44,8 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     public void uploadFolderContentToRemoteHostWithIncludesNested() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = upload {
                     sudo = true
                     source = 'build/resources/test/upload'
@@ -64,8 +64,8 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     public void uploadFolderContentToRemoteHostWithIncludesNestedMultiple() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = upload {
                     sudo = true
                     source = 'build/resources/test/upload'
@@ -84,8 +84,8 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     public void uploadFolderContentToRemoteHostWithExcludes() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = upload {
                     sudo = true
                     source = 'build/resources/test/upload'
@@ -105,8 +105,8 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     public void uploadFolderContentToRemoteHostWithExcludesOnly() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = upload {
                     sudo = true
                     source = 'build/resources/test/upload'

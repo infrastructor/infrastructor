@@ -14,7 +14,6 @@ public abstract class ActionTestBase {
 
     @Parameters
     public static List<DockerInventoryDecorator> data() {
-        [new DockerInventoryDecorator("infrastructor/ubuntu-sshd"), 
-         new DockerInventoryDecorator("infrastructor/centos-sshd")]
+        [new DockerInventoryDecorator("infrastructor/ubuntu-sshd"), new DockerInventoryDecorator("infrastructor/centos-sshd")]
     }
 }
