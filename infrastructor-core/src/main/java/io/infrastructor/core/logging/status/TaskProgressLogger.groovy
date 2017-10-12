@@ -23,9 +23,8 @@ class TaskProgressLogger {
         def status = new StringBuilder()
         status << "> task: '$name', progress: $progress / ${nodes.size()} node|s" << "\n"
         nodes.each { node, nodeStatus ->
-            status << "  node: '$node' - $nodeStatus" << "\n"
+            status << "  node: '$node', status: $nodeStatus" << "\n"
         }
-        status << "  -----" << "\n"
         return status
     }
     
