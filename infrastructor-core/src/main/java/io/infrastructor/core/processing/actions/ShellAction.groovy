@@ -10,7 +10,7 @@ class ShellAction {
     def execute(def node) {
         if (command.contains("\n")) {
             def result = node.execute(command: "mktemp")
-            def temp = result.output
+            def temp = result.output.trim()
             
             try { 
                 node.writeText(temp, command.stripIndent())
