@@ -6,8 +6,8 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceAllOccurrencesInFileUsingRegex() {
-        inventory.provision {
-            task filter: {'as:root'}, actions: {
+        inventory.provisionAs('root') {
+            task actions: {
                 file {
                     target  = '/test.txt'
                     content = """\
@@ -33,8 +33,8 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceFirstOccurrenceInFileUsingRegex() {
-        inventory.provision {
-            task filter: {'as:root'}, actions: {
+        inventory.provisionAs('root') {
+            task actions: {
                 file {
                     target = '/test.txt'
                     content = """\
@@ -60,8 +60,8 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceBlockWithUnknownOwner() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = replace {
@@ -79,8 +79,8 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceBlockWithUnknownGroup() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = replace {
@@ -98,8 +98,8 @@ public class ReplaceActionTest extends ActionTestBase {
     
     @Test
     public void replaceBlockWithInvalidMode() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = replace {

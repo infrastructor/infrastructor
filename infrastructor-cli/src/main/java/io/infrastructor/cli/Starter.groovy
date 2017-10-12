@@ -53,8 +53,9 @@ public class Starter {
             
             def duration = TimeCategory.minus(new Date(), timeStart)
             
-            error "\n${bold('EXECUTION FAILED')} in $duration"
-            error "Application has stopped due to an error: ${bold(message)}"
+            error "\n${bold('EXECUTION FAILED')} in $duration\n"
+            error "Application has stopped due to an error:"
+            error "${bold(message)}\n"
             error "Please check the log output. Use '-l 3' command line argument to activate debug logs."
         }
     }

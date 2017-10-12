@@ -42,7 +42,7 @@ class Task {
                     error "FAILED - node.id: ${node.getLogName()}, $ex.message"
                     failedNodes << node
                     status.updateStatus(node.getLogName(), "${red("falied")}")
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     error "FAILED - node.id: ${node.getLogName()}, message: $ex.message"
                     failedNodes << node
                     status.updateStatus(node.getLogName(), "${red("falied")}")

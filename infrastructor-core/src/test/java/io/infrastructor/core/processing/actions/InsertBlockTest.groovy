@@ -6,8 +6,8 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockAtTheBeginningOfAFile() {
-        inventory.provision {
-            task filter: {'as:root'}, name: 'insertBlockAtTheBeginningOfAFile', actions: {
+        inventory.provisionAs('root') {
+            task name: 'insertBlockAtTheBeginningOfAFile', actions: {
                 file {
                     target  = '/test.txt'
                     content = """\
@@ -33,8 +33,8 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockAtTheEndingOfAFile() {
-        inventory.provision {
-            task filter: {'as:root'}, actions: {
+        inventory.provisionAs('root') {
+            task actions: {
                 file {
                     target  = '/test.txt'
                     content = """\
@@ -60,8 +60,8 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockWithoutPermissions() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 file {
                     sudo = true
                     target  = '/tmp/test.txt'
@@ -85,8 +85,8 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockToUnexistedFileReturnError() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = insertBlock {
                     target  = '/tmp/test.txt'
                     block = "line 0\n"
@@ -98,8 +98,8 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockWithUnknownOwner() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = insertBlock {
@@ -117,8 +117,8 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockWithUnknownGroup() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = insertBlock {
@@ -136,8 +136,8 @@ public class InsertBlockTest extends ActionTestBase {
     
     @Test
     public void insertBlockWithInvalidMode() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
                 
                 def result = insertBlock {

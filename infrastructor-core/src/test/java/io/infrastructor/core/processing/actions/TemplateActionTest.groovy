@@ -6,8 +6,8 @@ public class TemplateActionTest extends ActionTestBase {
 
     @Test
     public void generateAFileOnRemoteServer() {
-        inventory.provision {
-            task filter: {'as:root'}, actions: {
+        inventory.provisionAs('root') {
+            task actions: {
                 // setup
                 shell("groupadd infra")
             
@@ -36,8 +36,8 @@ public class TemplateActionTest extends ActionTestBase {
 
     @Test
     public void createADeepFolderBeforeTemplateUpload() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 // execution
                 template {
                     source = 'build/resources/test/test.tmpl'
@@ -54,8 +54,8 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithUnknownOwner() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = template {
                     source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
@@ -71,8 +71,8 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithUnknownGroup() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = template {
                     source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
@@ -88,8 +88,8 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithInvalidMode() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 def result = template {
                     source = 'build/resources/test/test.tmpl'
                     target = '/tmp/test.txt'
@@ -105,8 +105,8 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithEncryptedValues() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 template {
                     source = 'build/resources/test/encrypted_part.tmpl'
                     target = '/tmp/test.txt'
@@ -126,8 +126,8 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     public void templateWithFullyEncryptedContent() {
-        inventory.provision {
-            task filter: {'as:devops'}, actions: {
+        inventory.provisionAs('devops') {
+            task actions: {
                 template {
                     source = 'build/resources/test/encrypted_full.tmpl'
                     target = '/tmp/test.txt'
