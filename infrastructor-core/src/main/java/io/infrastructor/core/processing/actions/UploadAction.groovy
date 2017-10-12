@@ -23,38 +23,36 @@ public class UploadAction {
     @NotNull
     def excludes = ''
 
+    private def finder = new FileNameFinder()
+    
     def execute(def node) {
+        def uploads = [:]
         def sourceFile = new File(source)
-        sourceFile.isDirectory() ? uploadFolder(node) : uploadFile(node, sourceFile, target) 
+        
+        if (sourceFile.isDirectory()) {
+            def path = sourceFile.getCanonicalPath()
+            finder.getFileNames(path, includes, excludes).each {
+                uploads[it] = it.replace(path, target)
+            }
+        } else {
+            uploads[source] = target
+        }
+        
+        uploads.each { local, remote -> upload(node, local, remote) }
+        
         node.lastResult
     }
     
-    def uploadFile(def node, def sourceFile, def targetFile) {
-        
-        debug "uploading file: '$sourceFile' to '$targetFile'"
-        
+    def upload(def node, def local, def remote) {
         if (decryptionKey) {
-            byte [] decrypted = CryptoUtils.decryptFullBytes(decryptionKey as String, sourceFile.text)
-            node.writeFile(targetFile, new ByteArrayInputStream(decrypted), sudo)
+            byte [] decrypted = CryptoUtils.decryptFullBytes(decryptionKey as String, new File(local).text)
+            node.writeFile(remote, new ByteArrayInputStream(decrypted), sudo)
         } else {
-            node.writeFile(targetFile, new FileInputStream(sourceFile), sudo)
+            node.writeFile(remote, new FileInputStream(local), sudo)
         }
-        
-        node.updateOwner(target, owner, sudo)
-        node.updateGroup(target, group, sudo)
-        node.updateMode(target, mode, sudo)
+            
+        node.updateOwner(remote, owner, sudo)
+        node.updateGroup(remote, group, sudo)
+        node.updateMode(remote, mode, sudo)
     }
-    
-    def uploadFolder(def node) {
-        def canonicalSource = new File(source).getCanonicalPath()
-        def files = new FileNameFinder().getFileNames(canonicalSource, includes, excludes)
-        
-        withTextStatus { status ->
-            files.each { 
-                status "> uploading file: $it"
-                uploadFile(node, it, it.replace(canonicalSource, target))
-            }
-        }
-    }
-    
 }

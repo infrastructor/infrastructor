@@ -24,5 +24,4 @@ public class DockerInventoryDecorator {
             inventory?.shutdown()
         }
     }
-    
 }
