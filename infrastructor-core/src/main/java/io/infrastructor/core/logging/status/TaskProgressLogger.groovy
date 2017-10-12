@@ -30,21 +30,14 @@ class TaskProgressLogger {
     }
     
     public static void withTaskProgressStatus(def name, Closure closure) {
-        
-        debug "withTaskProgressStatus: $name "
+        debug "withTaskProgressStatus: $name"
         
         def logger = new TaskProgressLogger(name: name)
         
         try {
-            debug "addStatusLogger: $name "
             addStatusLogger logger
-            debug "addStatusLogger:run: $name "
             closure(logger)
-        } catch(Throwable t) {
-            t.printStackTrace()
-            println "withTaskProgressStatus: $t"
         } finally {
-            debug "addStatusLogger:removeStatusLogger: $name "
             removeStatusLogger logger
         }
     }
