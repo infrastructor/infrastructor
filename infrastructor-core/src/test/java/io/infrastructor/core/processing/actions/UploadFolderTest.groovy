@@ -14,10 +14,14 @@ class UploadFolderTest extends ActionTestBase {
                 }
                 
                 assert result.exitcode == 0
-                assert shell("ls /opt/test/").output.find(/file.exta/)
-                assert shell("ls /opt/test/").output.find(/file.extb/)
-                assert shell("ls /opt/test/nested").output.find(/file.exta/)
-                assert shell("ls /opt/test/nested").output.find(/file.extb/)
+                
+                shell("ls /opt/test/").output.with {
+                    assert find(/file.exta/) && find(/file.extb/)
+                }
+                
+                shell("ls /opt/test/nested").output.with {
+                    assert find(/file.exta/) && find(/file.extb/)
+                }
             }
         }
     }
@@ -34,10 +38,14 @@ class UploadFolderTest extends ActionTestBase {
                 }
                 
                 assert result.exitcode == 0
-                assert shell("ls /opt/test/").output.find(/file.exta/)
-                assert !shell("ls /opt/test/").output.find(/file.extb/)
-                assert !shell("ls /opt/test/nested").output.find(/file.exta/)
-                assert !shell("ls /opt/test/nested").output.find(/file.extb/)
+                
+                shell("ls /opt/test/").output.with {
+                    assert find(/file.exta/) && !find(/file.extb/)
+                }
+                
+                shell("ls /opt/test/nested").output.with {
+                    assert !find(/file.exta/) && !find(/file.extb/)
+                }
             }
         }
     }
@@ -54,10 +62,14 @@ class UploadFolderTest extends ActionTestBase {
                 }
                 
                 assert result.exitcode == 0
-                assert shell("ls /opt/test/").output.find(/file.exta/)
-                assert !shell("ls /opt/test/").output.find(/file.extb/)
-                assert shell("ls /opt/test/nested").output.find(/file.exta/)
-                assert !shell("ls /opt/test/nested").output.find(/file.extb/)
+                
+                shell("ls /opt/test/").output.with {
+                    assert find(/file.exta/) && !find(/file.extb/)
+                }
+                
+                shell("ls /opt/test/nested").output.with {
+                    assert find(/file.exta/) && !find(/file.extb/)
+                }
             }
         }
     }
@@ -74,10 +86,14 @@ class UploadFolderTest extends ActionTestBase {
                 }
                 
                 assert result.exitcode == 0
-                assert shell("ls /opt/test/").output.find(/file.exta/)
-                assert shell("ls /opt/test/").output.find(/file.extb/)
-                assert shell("ls /opt/test/nested").output.find(/file.exta/)
-                assert !shell("ls /opt/test/nested").output.find(/file.extb/)
+                
+                shell("ls /opt/test/").output.with {
+                    assert find(/file.exta/) && find(/file.extb/)
+                }
+                
+                shell("ls /opt/test/nested").output.with {
+                    assert find(/file.exta/) && !find(/file.extb/)
+                }
             }
         }
     }
@@ -95,10 +111,14 @@ class UploadFolderTest extends ActionTestBase {
                 }
                 
                 assert result.exitcode == 0
-                assert shell("ls /opt/test/").output.find(/file.exta/)
-                assert shell("ls /opt/test/").output.find(/file.extb/)
-                assert shell("ls /opt/test/nested").output.find(/file.exta/)
-                assert !shell("ls /opt/test/nested").output.find(/file.extb/)
+                
+                shell("ls /opt/test/").output.with {
+                    assert find(/file.exta/) && find(/file.extb/)
+                }
+                
+                shell("ls /opt/test/nested").output.with {
+                    assert find(/file.exta/) && !find(/file.extb/)
+                }
             }
         }
     }
@@ -115,10 +135,14 @@ class UploadFolderTest extends ActionTestBase {
                 }
                 
                 assert result.exitcode == 0
-                assert shell("ls /opt/test/").output.find(/file.exta/)
-                assert shell("ls /opt/test/").output.find(/file.extb/)
-                assert shell("ls /opt/test/nested").output.find(/file.exta/)
-                assert !shell("ls /opt/test/nested").output.find(/file.extb/)
+                
+                shell("ls /opt/test/").output.with {
+                    assert find(/file.exta/) && find(/file.extb/)
+                }
+                
+                shell("ls /opt/test/nested").output.with {
+                    assert find(/file.exta/) && !find(/file.extb/)
+                }
             }
         }
     }

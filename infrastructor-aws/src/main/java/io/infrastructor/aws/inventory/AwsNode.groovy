@@ -169,5 +169,5 @@ public class AwsNode extends Node {
         mappings
     }
     
-    def getLogName() { name }
+    def getLogName() { name ?: id }
 }

@@ -41,11 +41,11 @@ class Task {
                 } catch (ActionExecutionException ex) {
                     error "FAILED - node.id: ${node.getLogName()}, $ex.message"
                     failedNodes << node
-                    status.updateStatus(node.getLogName(), "${red("falied")}")
+                    status.updateStatus(node.getLogName(), "${red("failed")}")
                 } catch (Exception ex) {
                     error "FAILED - node.id: ${node.getLogName()}, message: $ex.message"
                     failedNodes << node
-                    status.updateStatus(node.getLogName(), "${red("falied")}")
+                    status.updateStatus(node.getLogName(), "${red("failed")}")
                 } finally {
                     status.increase()
                     node.disconnect()
