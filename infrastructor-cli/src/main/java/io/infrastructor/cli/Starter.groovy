@@ -39,7 +39,8 @@ public class Starter {
             } else {
                 def handler = HANDLERS[args.head()]
                 if (!handler) {
-                    error "\nERROR: unknown command '${args.head()}'"
+                    printLine ''
+                    error "unknown command '${args.head()}'"
                     HANDLERS['help'].execute()
                     System.exit(EXIT_BAD_PARAMS)
                 } else {
@@ -50,17 +51,16 @@ public class Starter {
         } catch (Exception ex) {
             def message = ex.toString()?.replaceAll("\n", "\n ")
             
-            debug " ${bold('Uncaught exception:')}"
+            debug " ${bold('UNCAUGHT EXCEPTION:')}"
             debug " ${ex.class.name}: $message"
-            debug " ${bold('stack trace:')}"
-            debug (" - ${deepSanitize(ex)}".replaceAll("\n", "\n - "))
+            debug " ${bold('STACK TRACE:\n')} - ${deepSanitize(ex).replaceAll('\n', '\n - ')}"
             
             def duration = TimeCategory.minus(new Date(), timeStart)
             
-            error "\n${bold('EXECUTION FAILED')} in $duration\n"
-            error "Application has stopped due to an error:"
-            error "${bold(message)}\n"
-            error "Please check the log output. Use '-l 3' command line argument to activate debug logs."
+            printLine "\n${bold(red('EXECUTION FAILED'))} in $duration\n"
+            printLine "${red('Application has stopped due to an error:')}"
+            printLine "${bold(red(message))}\n"
+            printLine "${red('Please check the log output. Use \'-l 3\' command line argument to activate debug logs.')}"
             
             System.exit(EXIT_EXECUTION_ERROR)
         }

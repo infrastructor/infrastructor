@@ -12,6 +12,7 @@ class ConsoleLogger {
     public static final int ERROR = 1
     public static final int INFO = 2
     public static final int DEBUG = 3
+    public static final int TRACE = 4
     
     def static statusPrinted = 0
     def static statusLoggers = []
@@ -33,11 +34,6 @@ class ConsoleLogger {
         updateStatus()
     }
     
-    def static synchronized printLine(def message, Ansi.Color color = DEFAULT) {
-        eraseStatus()
-        println(Ansi.ansi().cursorToColumn(0).fg(color).a(message).reset())
-        updateStatus()
-    }
 
     def static synchronized input(String message, boolean secret) {
         def console  = System.console()
@@ -78,21 +74,34 @@ class ConsoleLogger {
         updateStatus()
     }
     
+    def static synchronized printLine(def message, Ansi.Color color = DEFAULT) {
+        eraseStatus()
+        println(Ansi.ansi().cursorToColumn(0).fg(color).a(message).reset())
+        updateStatus()
+    }
+
+    
+    public static void trace(String message) {
+        if (TRACE <= logLevel()) {
+            printLine("[TRACE] " + defColor(message))
+        }
+    }
+    
     public static void debug(String message) {
         if (DEBUG <= logLevel()) {
-            printLine(yellow(message))
+            printLine("${yellow("[DEBUG]")} $message")
         }
     }
 
     public static void info(String message) {
         if (INFO <= logLevel()) {
-            printLine(defColor(message))
+            printLine( "${blue("[INFO]")} $message" )
         }
     }
 
     public static void error(String message) {
         if (ERROR <= logLevel()) {
-            printLine(red(message))
+            printLine(red("[ERROR] $message"))
         }
     }
     
@@ -126,6 +135,10 @@ class ConsoleLogger {
     
     public static final def bold(String text) {
         ansi().bold().a(text).reset()
+    }
+    
+    public static final def bold(def text) {
+        ansi().bold().a("$text").reset()
     }
 }
 

@@ -4,6 +4,7 @@ import io.infrastructor.core.inventory.RemoteExecutionException
 import io.infrastructor.core.processing.actions.ActionExecutionException
 import io.infrastructor.core.validation.ValidationException
 
+import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 class NodeContext {
@@ -11,6 +12,7 @@ class NodeContext {
     
     def execute(def action) {
         try {
+            debug "action: ${action.class.simpleName}, node: ${node.getLogName()}, params: ${action.properties.findAll { 'class' != it.key }}"
             validate(action)
             action.execute(node)
         } catch (RemoteExecutionException ex) {

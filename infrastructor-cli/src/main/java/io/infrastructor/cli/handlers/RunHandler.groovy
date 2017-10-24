@@ -57,17 +57,17 @@ public class RunHandler extends LoggingAwareHandler {
             
             def shell = groovyShell(settings)
             files.each { 
-                info   "> running script: $it"
+                info   "${bold(blue("running script: $it"))}"
                 status "> running script: $it"
                 shell.evaluate(new File(it))
-                info   "> running script: $it - done"
+                info   "${bold(blue("running script: $it - done"))}"
             }
             
             status "> execution complete!"
         }
         
         def duration = TimeCategory.minus(new Date(), timeStart)
-        info "\n${green('EXECUTION COMPLETE')} in $duration"
+        printLine "\n${green('EXECUTION COMPLETE')} in $duration"
     }
 }
 
