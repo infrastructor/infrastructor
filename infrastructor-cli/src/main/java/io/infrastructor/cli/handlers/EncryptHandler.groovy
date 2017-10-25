@@ -1,11 +1,15 @@
 package io.infrastructor.cli.handlers
 
 import com.beust.jcommander.Parameter
+import groovy.io.FileType
+import groovy.time.TimeCategory
 import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
 import io.infrastructor.core.utils.CryptoUtils
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
+import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
 
 public class EncryptHandler extends LoggingAwareHandler {
     
@@ -35,25 +39,46 @@ public class EncryptHandler extends LoggingAwareHandler {
     def execute() {
         super.execute()
         
-        if (!password) { password = input('Encryption password: ', true) }
+        if (!password) { password = input('encryption password: ', true) }
+        
+        def timeStart = new Date()
         
         info "${blue('starting encryption with mode ' + mode)}"
-        encryptFiles( files?.collect { new File(it) } )  
-    }
-    
-    def encryptFiles(def files) {
-        files?.each { it.isDirectory() ? encryptFiles(it.listFiles()) : encryptFile(it) }
-    }
-    
-    def encryptFile(def file) {
-        def encrypted = (mode == 'FULL') ?
-            CryptoUtils.encryptFullBytes(password, file.getBytes(), 80) :
-            CryptoUtils.encryptPart(password, file.getText(), 80)
-        def output = new FileOutputStream(file, false)
-        output.withCloseable { out ->
-            out << encrypted
+        
+        def toEncrypt = []
+        
+        withTextStatus { status ->
+            status "> collecting files to encrypt"
+            
+            files.collect { new File(it) }.each { file -> 
+                file.isDirectory() ? file.eachFileRecurse (FileType.FILES) { toEncrypt << it } : toEncrypt << file
+            }
+        
+            info "found ${toEncrypt.size()} file|s to encrypt"
+            
+            withProgressStatus(toEncrypt.size(), 'file|s processed')  { progressLine ->
+                toEncrypt.each { 
+                    status "> encrypting: $it.canonicalPath"
+                    encrypt(it) 
+                    progressLine.increase()
+                }
+            }
+            
+            status "> encryption is done"
         }
         
-        info "${green('encrypted')}: ${file.getCanonicalPath()}"
+        def duration = TimeCategory.minus(new Date(), timeStart)
+        printLine "\n${green('EXECUTION COMPLETE')} in $duration"
+    }
+    
+    def encrypt(def file) {
+        def encrypted = (mode == 'FULL') ?
+            CryptoUtils.encryptFullBytes(password, file.getBytes(), 80) : 
+            CryptoUtils.encryptPart(password, file.getText(), 80)
+
+        def output = new FileOutputStream(file, false)
+        output.withCloseable { out -> out << encrypted }
+        
+        info "${green('encrypted:')} ${file.getCanonicalPath()}"
     }
 }

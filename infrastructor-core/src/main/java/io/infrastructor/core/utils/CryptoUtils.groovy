@@ -9,8 +9,8 @@ import java.util.Base64
 
 class CryptoUtils {
     
-    static final String ALGORITHM = "AES"
-    static final def ENCODING = StandardCharsets.UTF_8
+    static final def ALGORITHM = "AES"
+    static final def ENCODING  = StandardCharsets.UTF_8
 
     public static String encryptFullBytes(String key, byte [] data, int blockSize = 0) {
         try {
@@ -19,7 +19,7 @@ class CryptoUtils {
             byte [] encrypted = cipher.doFinal(data)
             byte [] encoded   = Base64.getEncoder().encode(encrypted)
             
-            return block(new String(encoded, ENCODING), blockSize)
+            return new String(encoded, ENCODING).split("(?<=\\G.{$blockSize})").join('\n')
         } catch (Exception ex) {
             throw new CryptoUtilsException("unable to encrypt data", ex)
         }
@@ -67,26 +67,5 @@ class CryptoUtils {
         MessageDigest digest = MessageDigest.getInstance("SHA-256")
         byte[] keyBytes = digest.digest(key.getBytes(ENCODING))
         new SecretKeySpec(Arrays.copyOf(keyBytes, 16), ALGORITHM)
-    }
-    
-    private static def block(def data, size) {
-        doBlock([], data, size).join('\n')
-    }
-
-    private static def doBlock(def collection, tail, size) {
-        if (size == 0) {
-            collection << tail
-            return collection
-        }
-        
-        def length = tail.length()
-        if (length > size) {
-            collection << tail.take(size)
-            doBlock(collection, tail.drop(size), size)
-        } else if (length != 0) {
-            collection << tail
-        }
-        
-        collection
     }
 }
