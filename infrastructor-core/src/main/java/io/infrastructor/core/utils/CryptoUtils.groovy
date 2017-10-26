@@ -9,16 +9,14 @@ import java.util.Base64
 
 class CryptoUtils {
     
-    static final def ALGORITHM = "AES"
-    static final def ENCODING  = StandardCharsets.UTF_8
-
+    def static final ALGORITHM = "AES"
+    def static final ENCODING  = StandardCharsets.UTF_8
     
     private static SecretKeySpec prepareKey(String key) {
         MessageDigest digest = MessageDigest.getInstance("SHA-256")
         byte[] keyBytes = digest.digest(key.getBytes(ENCODING))
         new SecretKeySpec(Arrays.copyOf(keyBytes, 16), ALGORITHM)
     }
-    
     
     public static String encryptFullBytes(String key, byte [] data, int blockSize = 0) {
         try {
