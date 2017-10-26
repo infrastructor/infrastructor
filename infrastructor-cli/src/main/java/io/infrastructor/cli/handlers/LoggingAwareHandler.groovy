@@ -14,7 +14,7 @@ public class LoggingAwareHandler {
     int logLevel = ConsoleLogger.INFO
     
     def options() {
-        ["--log, -l" : "Specify a log level: 0 - OFF, 1 - ERROR, 2 - INFO, 3 - DEBUG."]
+        ["--log, -l" : "Specify a log level: 0 - OFF, 1 - ERROR, 2 - INFO, 3 - DEBUG, 4 - TRACE."]
     }
     
     def execute() {

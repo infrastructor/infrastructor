@@ -29,8 +29,6 @@ class TaskProgressLogger {
     }
     
     public static void withTaskProgressStatus(def name, Closure closure) {
-        debug "withTaskProgressStatus: $name"
-        
         def logger = new TaskProgressLogger(name: name)
         
         try {

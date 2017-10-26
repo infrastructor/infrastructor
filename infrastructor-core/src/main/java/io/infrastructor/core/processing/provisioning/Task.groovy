@@ -23,7 +23,7 @@ class Task {
     def execute(def nodes) {
         def filtered = filter ? nodes.findAll { FilteringUtils.match(it.listTags(), filter) } : nodes
             
-        info "${blue("> task: '${name}'")}"
+        info "${green("task: '${name}'")}"
             
         def failedNodes = [].asSynchronized() 
      
@@ -60,7 +60,7 @@ class Task {
             provision(nodes, onSuccess)
         }
                     
-        info "${blue("> task: '$name', done on ${filtered.size()} node|s")}"
+        info "${green("task: '$name', done on ${filtered.size()} node|s")}"
     }
 }
 

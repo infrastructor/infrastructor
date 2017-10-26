@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutionException
 class ParallelUtils {
 
     def static executeParallel(def collection, def threads, def closure) {
-        def executor = Executors.newFixedThreadPool(threads)
+        def executor = Executors.newFixedThreadPool(threads as Integer)
         
         try {
             def futures = collection.collect { item -> executor.submit { closure(item) } }

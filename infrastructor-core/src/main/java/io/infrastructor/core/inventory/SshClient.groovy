@@ -29,6 +29,7 @@ class SshClient {
     
     private def connect() {
         if (!isConnected()) {
+            
             JSch jsch = new JSch()
             JSch.setConfig("StrictHostKeyChecking", "no")
             JSch.setLogger(new Logger() {
@@ -36,7 +37,7 @@ class SshClient {
                     public boolean isEnabled(int level) { return true; }
 
                     @Override
-                    public void log(int level, String message) { debug "JSch :: $message" }
+                    public void log(int level, String message) { trace "jsch: $message" }
                 });
     
             if (keyfile) jsch.addIdentity(keyfile)
@@ -64,6 +65,8 @@ class SshClient {
     private def executeSsh(String command, InputStream input, OutputStream output, OutputStream error) {
         ChannelExec channel = null
         try {
+            debug "ssh: $command"
+            
             channel = ChannelExec.class.cast(session.openChannel("exec"))
             channel.setCommand(command)
             channel.setInputStream(input)

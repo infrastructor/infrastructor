@@ -11,6 +11,7 @@ class LogLevelValidatorTest {
         validator.validate("", "1")
         validator.validate("", "2")
         validator.validate("", "3")
+        validator.validate("", "4")
     }
     
     @Test(expected = ParameterException)
@@ -22,7 +23,7 @@ class LogLevelValidatorTest {
     @Test(expected = ParameterException)
     public void passIncorrectLogLevelAsInteger_four() {
         LogLevelValidator validator = new LogLevelValidator()
-        validator.validate("", "4")
+        validator.validate("", "5")
     }
 }
 

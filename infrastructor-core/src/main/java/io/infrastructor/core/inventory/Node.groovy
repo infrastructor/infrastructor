@@ -30,21 +30,22 @@ public class Node {
     def connect() {
         if (!client?.isConnected()) {
             client = sshClient(host: host, port: port, username: username, password: password, keyfile: keyfile)
-            retry(5, 2000) { client.connect() }
+            retry(5, 2000) { 
+                debug "connecting to node: ${getLogName()}, host: $host, port: $port"
+                client.connect() 
+            }
             if (!client.isConnected()) { throw new RuntimeException("unable to connect to node $this") }
         }
     }
     
     def disconnect() {
         if (client?.isConnected()) { 
-            debug "Node($host:$port) :: disconnecting"
+            debug "disconnecting from node: ${getLogName()}, host: $host, port: $port"
             client.disconnect() 
         }
     }
     
     def execute(Map command) {
-        debug "ssh execute: $command"
-        
         connect()
         
         lastResult = client.execute(command)
