@@ -7,6 +7,7 @@ import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
 import io.infrastructor.core.utils.CryptoUtils
 
+import static io.infrastructor.cli.validation.ModeValidator.*
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
@@ -28,12 +29,12 @@ public class EncryptHandler extends LoggingAwareHandler {
     def options() {
         def options = super.options() 
         options << ["--file, -f" : "A file to encrypt. This file will be replaced with an encrypted one."]
-        options << ["--mode, -m" : "Encryption mode: FULL or PART. Full mode to encrypt entire file. Part mode to substitute 'encrypt' placeholders only."]
+        options << ["--mode, -m" : "Encryption mode: $FULL or $PART. Full mode to encrypt entire file. Part mode to substitute 'encrypt' placeholders only."]
     }
     
     def usage() {
-        ["infrastructor encrypt -f FILE1 -f FILE2 -p SECRET -m FULL", 
-         "infrastructor encrypt -f TEMPLATE1 -f TEMPLATE2 -p SECRET -m PART"]
+        ["infrastructor encrypt -f FILE1 -f FILE2 -p SECRET -m $FULL", 
+         "infrastructor encrypt -f TEMPLATE1 -f TEMPLATE2 -p SECRET -m $PART"]
     }
     
     def execute() {
@@ -72,7 +73,7 @@ public class EncryptHandler extends LoggingAwareHandler {
     }
     
     def encrypt(def file) {
-        def encrypted = (mode == 'FULL') ?
+        def encrypted = (mode == FULL) ?
             CryptoUtils.encryptFullBytes(password, file.getBytes(), 80) : 
             CryptoUtils.encryptPart(password, file.getText(), 80)
 

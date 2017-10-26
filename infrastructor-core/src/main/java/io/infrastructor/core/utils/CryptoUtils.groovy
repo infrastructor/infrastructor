@@ -12,6 +12,14 @@ class CryptoUtils {
     static final def ALGORITHM = "AES"
     static final def ENCODING  = StandardCharsets.UTF_8
 
+    
+    private static SecretKeySpec prepareKey(String key) {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256")
+        byte[] keyBytes = digest.digest(key.getBytes(ENCODING))
+        new SecretKeySpec(Arrays.copyOf(keyBytes, 16), ALGORITHM)
+    }
+    
+    
     public static String encryptFullBytes(String key, byte [] data, int blockSize = 0) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
@@ -37,7 +45,7 @@ class CryptoUtils {
     }
     
     public static String encryptFull(String key, String data, int blockSize = 0) {
-        return encryptFullBytes(key, data.getBytes(ENCODING), blockSize)
+        encryptFullBytes(key, data.getBytes(ENCODING), blockSize)
     }
     
     public static String decryptFull(String key, String data) {
@@ -46,26 +54,16 @@ class CryptoUtils {
     
     public static String encryptPart(String key, String template, int blockSize = 0) {
         def bindings = [:]
-        bindings.encrypt = { 
-            field -> "\${decrypt('${encryptFull(key, field, blockSize)}')}"
-        }
+        bindings.encrypt = { "\${decrypt('${encryptFull(key, it, blockSize)}')}" }
 
         def engine = new groovy.text.SimpleTemplateEngine()
         engine.createTemplate(template).make(bindings).toString()
     }
     
     public static String decryptPart(String key, String template, def bindings = [:]) {
-        bindings.decrypt = {
-            field -> "${decryptFull(key, field)}"
-        }
+        bindings.decrypt = { "${decryptFull(key, it)}" }
         
         def engine = new groovy.text.SimpleTemplateEngine()
         engine.createTemplate(template).make(bindings).toString()
-    }
-    
-    private static SecretKeySpec prepareKey(String key) {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256")
-        byte[] keyBytes = digest.digest(key.getBytes(ENCODING))
-        new SecretKeySpec(Arrays.copyOf(keyBytes, 16), ALGORITHM)
     }
 }

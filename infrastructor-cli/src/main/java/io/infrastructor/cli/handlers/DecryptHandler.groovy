@@ -8,6 +8,7 @@ import io.infrastructor.cli.validation.ModeValidator
 import io.infrastructor.core.utils.CryptoUtils
 import io.infrastructor.core.utils.CryptoUtilsException
 
+import static io.infrastructor.cli.validation.ModeValidator.*
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
@@ -20,7 +21,7 @@ public class DecryptHandler extends LoggingAwareHandler {
     List<String> files = []
     
     @Parameter(names = ["-m", "--mode"], validateWith = ModeValidator)
-    String mode = 'FULL'
+    String mode = FULL
 
     def description() {
         "Decrypt specified files (AES + Base64)."
@@ -29,12 +30,12 @@ public class DecryptHandler extends LoggingAwareHandler {
     def options() {
         def options = super.options() 
         options << ["--file, -f" : "A file to decrypt. This file will be replaced with a decrypted one."]
-        options << ["--mode, -m" : "Decryption mode: FULL or PART. Full mode to decrypt entire file. Part mode to substitute 'decrypt' placeholders only."]
+        options << ["--mode, -m" : "Decryption mode: $FULL or $FULL. Full mode to decrypt entire file. Part mode to substitute 'decrypt' placeholders only."]
     }
 
     def usage() {
-        ["infrastructor decrypt -f FILE1 -f FILE2 -p SECRET -m FULL", 
-         "infrastructor decrypt -f TEMPLATE1 -f TEMPLATE2 -p SECRET -m PART"]
+        ["infrastructor decrypt -f FILE1 -f FILE2 -p SECRET -m $FULL", 
+         "infrastructor decrypt -f TEMPLATE1 -f TEMPLATE2 -p SECRET -m $PART"]
     }
     
     def execute() {
@@ -47,6 +48,7 @@ public class DecryptHandler extends LoggingAwareHandler {
         info "${blue('starting decryption with mode ' + mode)}"
         
         def toDecrypt = []
+        def hasError = false
         
         withTextStatus { status ->
             status "> collecting files to decrypt"
@@ -59,8 +61,12 @@ public class DecryptHandler extends LoggingAwareHandler {
             
             withProgressStatus(toDecrypt.size(), 'file|s processed')  { progressLine ->
                 toDecrypt.each { 
-                    status "> decrypting: $it.canonicalPath"
-                    decrypt(it) 
+                    try {
+                        status "> decrypting: $it.canonicalPath"
+                        decrypt(it) 
+                    } catch (CryptoUtilsException ex) {
+                        error "decryption failed: ${it.getCanonicalPath()}"
+                    }
                     progressLine.increase()
                 }
             }
@@ -68,27 +74,25 @@ public class DecryptHandler extends LoggingAwareHandler {
             status "> encryption is done"
         }
         
-        
         def duration = TimeCategory.minus(new Date(), timeStart)
-        printLine "\n${green('EXECUTION COMPLETE')} in $duration"
+        
+        if (hasError) {
+            printLine "\n${green('EXECUTION COMPLETE')} in $duration"
+        } else {
+            printLine "\n${red('EXECUTION FAILED')} in $duration"
+            printLine "${red('Please check the log output. Use \'-l 3\' command line argument to activate debug logs.')}"
+        }
     }
     
     def decrypt(def file) {
-        try {
-            def encrypted = (mode == 'FULL') ?
-            CryptoUtils.decryptFullBytes(password, file.getText()) :
-            CryptoUtils.decryptPart(password, file.getText())
+        def encrypted = (mode == FULL) ?
+        CryptoUtils.decryptFullBytes(password, file.getText()) :
+        CryptoUtils.decryptPart(password, file.getText())
             
-            def output = new FileOutputStream(file, false)
-            output.withCloseable { out -> 
-                out << encrypted
-            }
+        def output = new FileOutputStream(file, false)
+        output.withCloseable { out -> out << encrypted }
             
-            info "${green('decrypted')}: ${file.getCanonicalPath()}"
-            
-        } catch(CryptoUtilsException ex) {
-            info "${red('decryption failed:')} ${file.getCanonicalPath()}"
-        }
+        info "${green('decrypted')}: ${file.getCanonicalPath()}"
     }
 }
 
