@@ -7,8 +7,7 @@ class RetryUtils {
         def attempt = 1
         while (attempt <= count) {
             try {
-                actions()
-                return
+                return actions()
             } catch (AssertionError | Exception ex) {
                 debug "retry - attempt ${attempt} of $count failed due to:\n" + "$ex"
                 if (attempt == count) throw new RuntimeException("retry failed after $attempt attempts. Last error: $ex")
