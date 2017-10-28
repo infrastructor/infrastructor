@@ -65,6 +65,7 @@ public class DecryptHandler extends LoggingAwareHandler {
                         decrypt(it) 
                     } catch (CryptoUtilsException ex) {
                         error "decryption failed: ${it.getCanonicalPath()}"
+                        hasError = true
                     }
                     progressLine.increase()
                 }
@@ -76,10 +77,10 @@ public class DecryptHandler extends LoggingAwareHandler {
         def duration = TimeCategory.minus(new Date(), timeStart)
         
         if (hasError) {
-            printLine "\n${green('EXECUTION COMPLETE')} in $duration"
-        } else {
-            printLine "\n${red('EXECUTION FAILED')} in $duration"
+            printLine "\n${bold(red('EXECUTION FAILED'))} in $duration"
             printLine "${red('Please check the log output. Use \'-l 3\' command line argument to activate debug logs.')}"
+        } else {
+            printLine "\n${green('EXECUTION COMPLETE')} in $duration"
         }
     }
     

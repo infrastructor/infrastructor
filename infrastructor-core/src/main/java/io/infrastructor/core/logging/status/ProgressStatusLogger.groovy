@@ -30,13 +30,8 @@ class ProgressStatusLogger {
 
         final StringBuilder stringBuilder = new StringBuilder("[")
 
-        for (int i = 0; i < filledElements; i++) {
-            stringBuilder.append(FILLED_CHAR)
-        }
-        
-        for (int i = 0; i < progressLineSize - filledElements; i++) {
-            stringBuilder.append(UNFILLED_CHAR)
-        }
+        (0..filledElements).each { stringBuilder.append(FILLED_CHAR) }
+        (0..(progressLineSize - filledElements)).each { stringBuilder.append(UNFILLED_CHAR) }
 
         stringBuilder.append("] ").append(progress).append(" / ").append(total).append(" ").append(status)
         
