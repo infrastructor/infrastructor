@@ -52,7 +52,7 @@ public class Starter {
             def message = ex.toString()?.replaceAll("\n", "\n ")
             
             debug " ${bold('UNCAUGHT EXCEPTION:')}"
-            debug " ${ex.class.name}: $message"
+            debug " $message"
             debug " ${bold('STACK TRACE:\n')} - ${deepSanitize(ex).replaceAll('\n', '\n - ')}"
             
             def duration = TimeCategory.minus(new Date(), timeStart)

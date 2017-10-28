@@ -5,11 +5,13 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.retry.RetryUtils
 import com.amazonaws.services.ec2.AmazonEC2
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
+import com.amazonaws.services.ec2.model.CreateImageRequest
 import com.amazonaws.services.ec2.model.DescribeImagesRequest
 import com.amazonaws.services.ec2.model.DescribeImagesResult
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest
 import com.amazonaws.services.ec2.model.DescribeInstancesResult
 import com.amazonaws.services.ec2.model.DescribeSubnetsRequest
+import com.amazonaws.services.ec2.model.DeregisterImageRequest
 import com.amazonaws.services.ec2.model.Filter
 import com.amazonaws.services.ec2.model.Instance
 import io.infrastructor.aws.inventory.AwsNode
@@ -40,6 +42,7 @@ class AmazonEC2Utils {
             Instance instance = result.getReservations().get(0).getInstances().get(0)
             debug "waiting for instance $instanceId state is $state, current state: ${instance.getState().getName()}"
             assert instance.getState().getName() == state
+            instance
         }
     }
     
@@ -54,6 +57,30 @@ class AmazonEC2Utils {
         }
     }
     
+    def static findImageId(def amazonEC2, def imageName) {
+        DescribeImagesRequest describeImagesRequest = new DescribeImagesRequest()
+        describeImagesRequest.withFilters(new Filter().withName("name").withValues(imageName))
+        DescribeImagesResult describeImagesResult = amazonEC2.describeImages(describeImagesRequest)
+        def images = describeImagesResult.getImages()
+        
+        if (!images.isEmpty()) {
+            return images.get(0).imageId
+        }
+        
+        return null
+    }
+    
+    def static deregisterImage(def amazonEC2, def imageId) {
+        amazonEC2.deregisterImage(new DeregisterImageRequest(imageId))
+    }
+    
+    def static createImage(def amazonEC2, def imageName, def instanceId) {
+        CreateImageRequest createImageRequest = new CreateImageRequest()
+        createImageRequest.withName(imageName)
+        createImageRequest.withInstanceId(instanceId)
+        amazonEC2.createImage(createImageRequest).imageId
+    }
+        
     public static void assertInstanceExists(def awsAccessKey, def awsSecretKey, def awsRegion, def definition) {
         def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
     
@@ -76,21 +103,4 @@ class AmazonEC2Utils {
         if (expected.securityGroupIds) assert (expected.securityGroupIds as Set) == (instance.securityGroups.collect { it.groupId } as Set)
         if (expected.tags)             assert expected.tags                      == instance.tags.collectEntries { [(it.key as String) : (it.value as String)] } 
     }
-    
-    public static def findSubnetIdByName(def awsAccessKey, def awsSecretKey, def awsRegion, def name) {
-        def amazonEC2 = amazonEC2(awsAccessKey, awsSecretKey, awsRegion) 
-        def result = amazonEC2.describeSubnets(
-            new DescribeSubnetsRequest().withFilters(new Filter("tag:Name", [name])))
-         
-        if (result.getSubnets().size() == 0) {
-            throw new RuntimeException("Unable to find subnet with name '$name'")
-        }
-         
-        if (result.getSubnets().size() > 1) {
-            throw new RuntimeException("Multiple subnets with the same name ($name) has been found")
-        }
-        
-        return result.getSubnets()[0].subnetId
-    }
 }
-

@@ -17,6 +17,7 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest
 import groovy.transform.ToString
 import io.infrastructor.core.inventory.Node
 
+import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.waitForInstanceState
 import static io.infrastructor.core.logging.ConsoleLogger.*
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true, includeSuperProperties = true)
@@ -32,6 +33,9 @@ public class AwsNode extends Node {
     def publicIp
     def blockDeviceMappings = [] as Set
     def state = ''
+    
+    int waitingCount = 100
+    int waitingDelay = 3000
     
     def blockDeviceMapping(Map params) {
         blockDeviceMapping(params, {})
@@ -81,7 +85,7 @@ public class AwsNode extends Node {
         id = amazonEC2.runInstances(request).getReservation().getInstances().get(0).getInstanceId()
         updateTags(amazonEC2)
         
-        def instance = waitForInstanceIsRunning(amazonEC2, 50, 7000)
+        def instance = waitForInstanceState(amazonEC2, id, waitingCount, waitingDelay, 'running')
         
         debug "updating host to publicIp: ${usePublicIp}"
         host      = usePublicIp ? instance.publicIpAddress : instance.privateIpAddress
@@ -137,21 +141,6 @@ public class AwsNode extends Node {
         request.setInstanceId(id)
         request.setGroups(securityGroupIds)
         amazonEC2.modifyInstanceAttribute(request)
-    }
-    
-    private def waitForInstanceIsRunning(def amazonEC2, int attempts, int interval) {
-        for (int i = attempts; i > 0; i--) {
-            DescribeInstancesRequest request = new DescribeInstancesRequest()
-            request.setInstanceIds([id])
-            DescribeInstancesResult result = amazonEC2.describeInstances(request)
-            Instance instance = result.getReservations().get(0).getInstances().get(0)
-            debug "waiting for instance '$id' state is running, current state: ${instance.getState().getCode()}"
-            if (instance.getState().getCode() == 16) { // instance is running
-                return instance
-            }
-            sleep(interval)
-        }
-        throw new RuntimeException("timeout waiting for instance $id state is running after $attempts attempts. node: $this")
     }
     
     private def buildBlockDeviceMappings() {
