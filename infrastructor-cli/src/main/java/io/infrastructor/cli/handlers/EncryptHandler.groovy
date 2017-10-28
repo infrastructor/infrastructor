@@ -5,8 +5,8 @@ import groovy.io.FileType
 import groovy.time.TimeCategory
 import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
-import io.infrastructor.core.utils.CryptoUtils
 
+import static io.infrastructor.core.utils.CryptoUtils.*
 import static io.infrastructor.cli.validation.ModeValidator.*
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
@@ -42,11 +42,10 @@ public class EncryptHandler extends LoggingAwareHandler {
         
         if (!password) { password = input('encryption password: ', true) }
         
+        def toEncrypt = []
         def timeStart = new Date()
         
         info "${blue('starting encryption with mode ' + mode)}"
-        
-        def toEncrypt = []
         
         withTextStatus { status ->
             status "> collecting files to encrypt"
@@ -73,12 +72,10 @@ public class EncryptHandler extends LoggingAwareHandler {
     }
     
     def encrypt(def file) {
-        def encrypted = (mode == FULL) ?
-            CryptoUtils.encryptFullBytes(password, file.getBytes(), 80) : 
-            CryptoUtils.encryptPart(password, file.getText(), 80)
+        def encrypted = (mode == FULL) ? encryptFull(password, file.bytes) : encryptPart(password, file.text)
 
         def output = new FileOutputStream(file, false)
-        output.withCloseable { out -> out << encrypted }
+        output.withCloseable { it << encrypted }
         
         info "${green('encrypted:')} ${file.getCanonicalPath()}"
     }
