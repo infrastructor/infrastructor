@@ -5,9 +5,9 @@ import groovy.io.FileType
 import groovy.time.TimeCategory
 import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
-import io.infrastructor.core.utils.CryptoUtils
 import io.infrastructor.core.utils.CryptoUtilsException
 
+import static io.infrastructor.core.utils.CryptoUtils.*
 import static io.infrastructor.cli.validation.ModeValidator.*
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
@@ -43,12 +43,11 @@ public class DecryptHandler extends LoggingAwareHandler {
         
         if (!password) { password = input('Decryption password: ', true) }
         
+        def toDecrypt = []
+        def hasError = false
         def timeStart = new Date()
         
         info "${blue('starting decryption with mode ' + mode)}"
-        
-        def toDecrypt = []
-        def hasError = false
         
         withTextStatus { status ->
             status "> collecting files to decrypt"
@@ -66,6 +65,7 @@ public class DecryptHandler extends LoggingAwareHandler {
                         decrypt(it) 
                     } catch (CryptoUtilsException ex) {
                         error "decryption failed: ${it.getCanonicalPath()}"
+                        hasError = true
                     }
                     progressLine.increase()
                 }
@@ -77,22 +77,20 @@ public class DecryptHandler extends LoggingAwareHandler {
         def duration = TimeCategory.minus(new Date(), timeStart)
         
         if (hasError) {
-            printLine "\n${green('EXECUTION COMPLETE')} in $duration"
-        } else {
-            printLine "\n${red('EXECUTION FAILED')} in $duration"
+            printLine "\n${bold(red('EXECUTION FAILED'))} in $duration"
             printLine "${red('Please check the log output. Use \'-l 3\' command line argument to activate debug logs.')}"
+        } else {
+            printLine "\n${green('EXECUTION COMPLETE')} in $duration"
         }
     }
     
     def decrypt(def file) {
-        def encrypted = (mode == FULL) ?
-        CryptoUtils.decryptFullBytes(password, file.getText()) :
-        CryptoUtils.decryptPart(password, file.getText())
+        def decrypted = (mode == FULL) ? decryptFull(password, file.text) : decryptPart(password, file.text)
             
         def output = new FileOutputStream(file, false)
-        output.withCloseable { out -> out << encrypted }
+        output.withCloseable { it << decrypted }
             
-        info "${green('decrypted')}: ${file.getCanonicalPath()}"
+        info "${green('decrypted:')} ${file.getCanonicalPath()}"
     }
 }
 

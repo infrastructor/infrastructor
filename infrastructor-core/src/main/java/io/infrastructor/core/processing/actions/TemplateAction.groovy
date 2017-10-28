@@ -2,7 +2,8 @@ package io.infrastructor.core.processing.actions
 
 import groovy.text.SimpleTemplateEngine
 import javax.validation.constraints.NotNull
-import io.infrastructor.core.utils.CryptoUtils
+
+import static io.infrastructor.core.utils.CryptoUtils.*
 
 public class TemplateAction {
     @NotNull
@@ -28,10 +29,9 @@ public class TemplateAction {
         if (!decryptionKey) {
             content = engine.createTemplate(template).make(bindings)
         } else if (decryptionMode == PART) {
-            content = CryptoUtils.decryptPart(decryptionKey as String, template, bindings)
+            content = decryptPart(decryptionKey as String, template, bindings)
         } else if (decryptionMode == FULL) {
-            def decrypted = CryptoUtils.decryptFull(decryptionKey as String, template)
-            content = engine.createTemplate(decrypted).make(bindings)
+            content = engine.createTemplate(new String(decryptFull(decryptionKey as String, template))).make(bindings)
         } else {
             throw new ActionExecutionException("Unable to process template using decryption mode: $decryptionMode")
         }

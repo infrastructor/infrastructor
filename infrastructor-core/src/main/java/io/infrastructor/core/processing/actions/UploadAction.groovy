@@ -45,7 +45,7 @@ public class UploadAction {
     
     def upload(def node, def local, def remote) {
         if (decryptionKey) {
-            byte [] decrypted = CryptoUtils.decryptFullBytes(decryptionKey as String, new File(local).text)
+            byte [] decrypted = CryptoUtils.decryptFull(decryptionKey as String, new File(local).text)
             node.writeFile(remote, new ByteArrayInputStream(decrypted), sudo)
         } else {
             node.writeFile(remote, new FileInputStream(local), sudo)

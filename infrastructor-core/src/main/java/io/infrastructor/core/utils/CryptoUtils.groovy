@@ -1,5 +1,6 @@
 package io.infrastructor.core.utils
 
+import groovy.text.SimpleTemplateEngine
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 import java.nio.charset.StandardCharsets
@@ -11,6 +12,7 @@ class CryptoUtils {
     
     def static final ALGORITHM = "AES"
     def static final ENCODING  = StandardCharsets.UTF_8
+    def static final BLOCK_SIZE = 80
     
     private static SecretKeySpec prepareKey(String key) {
         MessageDigest digest = MessageDigest.getInstance("SHA-256")
@@ -18,20 +20,19 @@ class CryptoUtils {
         new SecretKeySpec(Arrays.copyOf(keyBytes, 16), ALGORITHM)
     }
     
-    public static String encryptFullBytes(String key, byte [] data, int blockSize = 0) {
+    public static String encryptFull(String key, byte [] data) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, prepareKey(key))
             byte [] encrypted = cipher.doFinal(data)
             byte [] encoded   = Base64.getEncoder().encode(encrypted)
-            
-            return new String(encoded, ENCODING).split("(?<=\\G.{$blockSize})").join('\n')
+            return new String(encoded, ENCODING).split("(?<=\\G.{$BLOCK_SIZE})").join('\n')
         } catch (Exception ex) {
             throw new CryptoUtilsException("unable to encrypt data", ex)
         }
     }
 
-    public static byte [] decryptFullBytes(String key, String data) {
+    public static byte [] decryptFull(String key, String data) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.DECRYPT_MODE, prepareKey(key))
@@ -42,26 +43,13 @@ class CryptoUtils {
         }
     }
     
-    public static String encryptFull(String key, String data, int blockSize = 0) {
-        encryptFullBytes(key, data.getBytes(ENCODING), blockSize)
-    }
-    
-    public static String decryptFull(String key, String data) {
-        new String(decryptFullBytes(key, data), ENCODING)
-    }
-    
-    public static String encryptPart(String key, String template, int blockSize = 0) {
-        def bindings = [:]
-        bindings.encrypt = { "\${decrypt('${encryptFull(key, it, blockSize)}')}" }
-
-        def engine = new groovy.text.SimpleTemplateEngine()
-        engine.createTemplate(template).make(bindings).toString()
+    public static String encryptPart(String key, String template, def bindings = [:]) {
+        bindings.encrypt = { "\${decrypt('${encryptFull(key, it.getBytes())}')}" }
+        new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
     
     public static String decryptPart(String key, String template, def bindings = [:]) {
-        bindings.decrypt = { "${decryptFull(key, it)}" }
-        
-        def engine = new groovy.text.SimpleTemplateEngine()
-        engine.createTemplate(template).make(bindings).toString()
+        bindings.decrypt = { "${new String(decryptFull(key, it))}" }
+        new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
 }
