@@ -45,13 +45,11 @@ class CryptoUtils {
     
     public static String encryptPart(String key, String template, def bindings = [:]) {
         bindings.encrypt = { "\${decrypt('${encryptFull(key, it.getBytes())}')}" }
-        def engine = new SimpleTemplateEngine()
-        engine.createTemplate(template).make(bindings).toString()
+        new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
     
     public static String decryptPart(String key, String template, def bindings = [:]) {
         bindings.decrypt = { "${new String(decryptFull(key, it))}" }
-        def engine = new SimpleTemplateEngine()
-        engine.createTemplate(template).make(bindings).toString()
+        new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
 }
