@@ -11,6 +11,8 @@ import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.processing.ProvisioningContext.provision
 import static io.infrastructor.core.validation.ValidationHelper.validate
+import static io.infrastructor.core.utils.ConnectionUtils.canConnectTo
+import static io.infrastructor.core.utils.RetryUtils.retry
 
 class AwsMachineImageBuilder {
     @NotNull
@@ -70,21 +72,30 @@ class AwsMachineImageBuilder {
             
             statusLine "> aws machine image builder: creating a temporary EC2 instance"
             awsNode.create(amazonEC2, usePublicIp)
+            info "the temporary EC2 instance has been created with id: '$awsNode.id' and host: '$awsNode.host'"
             
+            statusLine "> aws machine image builder: waiting for the EC2 instance SSH connectivity is available"
+            retry(waitingCount, waitingDelay) {
+                assert canConnectTo(host: awsNode.host, port: awsNode.port)
+            }
+            
+            info "starting a provisioning process"
             statusLine "> aws machine image builder: provisioning the instance '$awsNode.id'"
             provision([awsNode], closure)
+            info "the provisioning has finished"
             
             statusLine "> aws machine image builder: stopping the instance '$awsNode.id' to speed up image build"
             awsNode.stop(amazonEC2)
             waitForInstanceState(amazonEC2, awsNode.id, waitingCount, waitingDelay, 'stopped')
         
+            info "creating an image"
             statusLine "> aws machine image builder: creating an image '$imageName'"
             def newImageId = createImage(amazonEC2, imageName, awsNode.id)
         
             statusLine "> aws machine image builder: waiting for image '$imageName' - '$newImageId' is available"
             waitForImageState(amazonEC2, newImageId, waitingCount, waitingDelay, 'available')
 
-            info "aws machine image is ready: $newImageId"
+            info "the image is ready: $newImageId"
             
             if (terminateInstance) { 
                 statusLine "> aws machine image builder: terminating the temporary instance"

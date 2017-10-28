@@ -81,7 +81,7 @@ public class AwsNode extends Node {
         request.setPrivateIpAddress(privateIp)
         request.setBlockDeviceMappings(buildBlockDeviceMappings())
         
-        info "creating EC2: $this" 
+        debug "creating EC2: $this" 
         id = amazonEC2.runInstances(request).getReservation().getInstances().get(0).getInstanceId()
         updateTags(amazonEC2)
         
@@ -95,14 +95,14 @@ public class AwsNode extends Node {
     
     def remove(def amazonEC2) {
         if (id) {
-            info "removing EC2: $this" 
+            debug "removing EC2: $this" 
             amazonEC2.terminateInstances(new TerminateInstancesRequest([id]))
         }
     }
     
     def stop(def amazonEC2) {
         if (id) {
-            info "stopping EC2: $this" 
+            debug "stopping EC2: $this" 
             StopInstancesRequest stopInstancesRequest = new StopInstancesRequest()
             stopInstancesRequest.withInstanceIds(id)
             amazonEC2.stopInstances(stopInstancesRequest)
@@ -110,7 +110,7 @@ public class AwsNode extends Node {
     }
     
     def update(def amazonEC2) {
-        info "updating EC2: $this"
+        debug "updating EC2: $this"
         updateTags(amazonEC2)
         updateSecurityGroupIds(amazonEC2)
     }
