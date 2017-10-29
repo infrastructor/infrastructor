@@ -37,6 +37,8 @@ class AwsMachineImageBuilder {
     @Min(0l)
     int waitingDelay = 3000
     
+    private static final String STATUS_HEARED = "> aws image builder:"
+    
     def node(Map params) { node(params, {}) }
     def node(Closure closure) { node([:], closure) }
     def node(Map params, Closure closure) {
@@ -55,54 +57,60 @@ class AwsMachineImageBuilder {
     def build(Closure closure) {
         withTextStatus { statusLine -> 
             AmazonEC2 amazonEC2 = amazonEC2(awsAccessKeyId, awsAccessSecretKey, awsRegion)
+
+            info "staring image creation for '$imageName'"
             
-            statusLine "> aws machine image builder: checking for an existing image with name '$imageName'"
+            statusLine "$STATUS_HEARED checking for an existing image with name '$imageName'"
+            def oldImage = findImage(amazonEC2, imageName)
             
-            def oldImageId = findImageId(amazonEC2, imageName)
+            info "checking if there is an existing image with the same name"
             
-            if (oldImageId && recreate) {
-                info "image '$imageName' - '$oldImageId' already exists, deregistering"
-                deregisterImage(amazonEC2, oldImageId)
-            } else if (oldImageId && !recreate)  {
-                error "Image '$imageName' - '$oldImageId' already exists."
-                throw new AwsMachineImageBuilderException("Image '$imageName' - '$oldImageId' already exists. Please use property 'recreate = true' if you want to rebuild the image.")
-            } else {
-                info "image '$imageName' is not available yet, moving on"
-            }
+            if (oldImage && recreate) {
+                info "removing the existing image '$oldImage.imageId'"
+                deregisterImage(amazonEC2, oldImage.imageId)
+            } else if (oldImage && !recreate)  {
+                error "image '$imageName' - '$oldImage.imageId' already exists"
+                throw new AwsMachineImageBuilderException(
+                    "Image '$imageName' - '$oldImage.imageId' already exists. " + 
+                    "Please use property 'recreate = true' if you want to rebuild the image.")
+            }            
+
+            info "creating a base EC2 instance"
             
-            statusLine "> aws machine image builder: creating a temporary EC2 instance"
+            statusLine "$STATUS_HEARED waiting for the base EC2 instance is running"
             awsNode.create(amazonEC2, usePublicIp)
-            info "the temporary EC2 instance has been created with id: '$awsNode.id' and host: '$awsNode.host'"
-            
-            statusLine "> aws machine image builder: waiting for the EC2 instance SSH connectivity is available"
+            statusLine "$STATUS_HEARED waiting for the instance SSH connectivity is available"
             retry(waitingCount, waitingDelay) {
                 assert canConnectTo(host: awsNode.host, port: awsNode.port)
             }
+         
+            info "configuring the base EC2 instance '$awsNode.id'"
             
-            info "starting a provisioning process"
-            statusLine "> aws machine image builder: provisioning the instance '$awsNode.id'"
+            statusLine "$STATUS_HEARED configuring the instance"
             provision([awsNode], closure)
-            info "the provisioning has finished"
             
-            statusLine "> aws machine image builder: stopping the instance '$awsNode.id' to speed up image build"
+            info "stopping the base EC2 instance '$awsNode.id'"
+                        
             awsNode.stop(amazonEC2)
+            statusLine "$STATUS_HEARED waiting for the base EC2 instance is stopped"
             waitForInstanceState(amazonEC2, awsNode.id, waitingCount, waitingDelay, 'stopped')
         
-            info "creating an image"
-            statusLine "> aws machine image builder: creating an image '$imageName'"
-            def newImageId = createImage(amazonEC2, imageName, awsNode.id)
-        
-            statusLine "> aws machine image builder: waiting for image '$imageName' - '$newImageId' is available"
-            waitForImageState(amazonEC2, newImageId, waitingCount, waitingDelay, 'available')
+            statusLine "$STATUS_HEARED creating an image"
 
-            info "the image is ready: $newImageId"
+            info "creating an image '$imageName'"
+            def newImageId = createImage(amazonEC2, imageName, awsNode.id)
+            
+            statusLine "$STATUS_HEARED waiting for image is available"
+            waitForImageState(amazonEC2, newImageId, waitingCount, waitingDelay, 'available')
+            
+            info "image creation is done: '$newImageId'"
             
             if (terminateInstance) { 
-                statusLine "> aws machine image builder: terminating the temporary instance"
+                statusLine "$STATUS_HEARED terminating the instance"
                 awsNode.remove(amazonEC2) 
             }
             
-            statusLine "> aws machine image builder: image creation proccess is complete"
+            statusLine "$STATUS_HEARED image creation proccess has been done"
             return newImageId
         }
     }
