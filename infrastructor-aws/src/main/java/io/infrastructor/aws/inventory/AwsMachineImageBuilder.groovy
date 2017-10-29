@@ -57,45 +57,53 @@ class AwsMachineImageBuilder {
     def build(Closure closure) {
         withTextStatus { statusLine -> 
             AmazonEC2 amazonEC2 = amazonEC2(awsAccessKeyId, awsAccessSecretKey, awsRegion)
+
+            info "staring image creation for '$imageName'"
             
             statusLine "$STATUS_HEARED checking for an existing image with name '$imageName'"
-            def oldImageId = findImageId(amazonEC2, imageName)
+            def oldImage = findImage(amazonEC2, imageName)
             
-            if (oldImageId && recreate) {
-                info "removing image '$imageName' - '$oldImageId"
-                deregisterImage(amazonEC2, oldImageId)
-            } else if (oldImageId && !recreate)  {
-                error "image '$imageName' - '$oldImageId' already exists"
+            info "checking if there is an existing image with the same name"
+            
+            if (oldImage && recreate) {
+                info "removing the existing image '$oldImage.imageId'"
+                deregisterImage(amazonEC2, oldImage.imageId)
+            } else if (oldImage && !recreate)  {
+                error "image '$imageName' - '$oldImage.imageId' already exists"
                 throw new AwsMachineImageBuilderException(
-                    "Image '$imageName' - '$oldImageId' already exists. " + 
+                    "Image '$imageName' - '$oldImage.imageId' already exists. " + 
                     "Please use property 'recreate = true' if you want to rebuild the image.")
             }            
+
+            info "creating a base EC2 instance"
             
-            statusLine "$STATUS_HEARED creating a base EC2 instance"
+            statusLine "$STATUS_HEARED waiting for the base EC2 instance is running"
             awsNode.create(amazonEC2, usePublicIp)
-            info "the base instance has been created with id: '$awsNode.id' and host: '$awsNode.host'"
-            
             statusLine "$STATUS_HEARED waiting for the instance SSH connectivity is available"
             retry(waitingCount, waitingDelay) {
                 assert canConnectTo(host: awsNode.host, port: awsNode.port)
             }
          
-            statusLine "$STATUS_HEARED configuring the instance '$awsNode.id'"
-            provision([awsNode], closure)
-            info "instance configuration has been done"
+            info "configuring the base EC2 instance '$awsNode.id'"
             
-            statusLine "$STATUS_HEARED stopping the instance '$awsNode.id' to speed up image build"
+            statusLine "$STATUS_HEARED configuring the instance"
+            provision([awsNode], closure)
+            
+            info "stopping the base EC2 instance '$awsNode.id'"
+                        
             awsNode.stop(amazonEC2)
+            statusLine "$STATUS_HEARED waiting for the base EC2 instance is stopped"
             waitForInstanceState(amazonEC2, awsNode.id, waitingCount, waitingDelay, 'stopped')
         
-            info "creating an image"
-            statusLine "$STATUS_HEARED creating an image '$imageName'"
-            def newImageId = createImage(amazonEC2, imageName, awsNode.id)
-        
-            statusLine "$STATUS_HEARED waiting for image '$imageName' - '$newImageId' is available"
-            waitForImageState(amazonEC2, newImageId, waitingCount, waitingDelay, 'available')
+            statusLine "$STATUS_HEARED creating an image"
 
-            info "image is ready: $newImageId"
+            info "creating an image '$imageName'"
+            def newImageId = createImage(amazonEC2, imageName, awsNode.id)
+            
+            statusLine "$STATUS_HEARED waiting for image is available"
+            waitForImageState(amazonEC2, newImageId, waitingCount, waitingDelay, 'available')
+            
+            info "image creation is done: '$newImageId'"
             
             if (terminateInstance) { 
                 statusLine "$STATUS_HEARED terminating the instance"

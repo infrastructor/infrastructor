@@ -57,14 +57,14 @@ class AmazonEC2Utils {
         }
     }
     
-    def static findImageId(def amazonEC2, def imageName) {
+    def static findImage(def amazonEC2, def imageName, def state = 'available') {
         DescribeImagesRequest describeImagesRequest = new DescribeImagesRequest()
         describeImagesRequest.withFilters(new Filter().withName("name").withValues(imageName))
         DescribeImagesResult describeImagesResult = amazonEC2.describeImages(describeImagesRequest)
         def images = describeImagesResult.getImages()
         
-        if (!images.isEmpty()) {
-            return images.get(0).imageId
+        if (!images.isEmpty() && images.get(0).getState() == state) {
+            return images.get(0)
         }
         
         return null
