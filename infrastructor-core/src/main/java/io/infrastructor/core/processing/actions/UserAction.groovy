@@ -14,16 +14,15 @@ public class UserAction {
     def sudo = false
 
     def execute(def node) {
-        def cmd = CMD {
+        node.execute command: CMD {
             add sudo, "sudo"
             add "useradd"
             add uid,   "-u $uid"
             add shell, "-s $shell"
-            add home,  "-d $home"
+            add home,  "-m -d $home"
             add name
         }
         
-        node.execute command: cmd
         node.lastResult
     }
 }
