@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull
 import static io.infrastructor.core.utils.RetryUtils.retry
 
 class RetryAction {
+    
     @Min(1l)
     int count = 2
     @Min(0l)

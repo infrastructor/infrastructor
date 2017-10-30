@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull
 import static io.infrastructor.core.inventory.CommandBuilder.CMD
 
 public class UserAction {
+    
     @NotNull
     def name
     def uid

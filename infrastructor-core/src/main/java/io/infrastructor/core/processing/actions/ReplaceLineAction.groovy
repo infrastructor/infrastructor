@@ -3,6 +3,7 @@ package io.infrastructor.core.processing.actions
 import javax.validation.constraints.NotNull
 
 public class ReplaceLineAction {
+    
     @NotNull
     def target
     @NotNull

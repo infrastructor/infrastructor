@@ -1,7 +1,7 @@
 package io.infrastructor.core.inventory
 
 class CommandBuilder {
-
+    
     def command = []
     
     def add(def part) {

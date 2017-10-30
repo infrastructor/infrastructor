@@ -5,7 +5,6 @@ import static io.infrastructor.core.logging.ConsoleLogger.*
 class TextStatusLogger {
 	
     def text
-    
     def listener = {}
     
     public String statusLine() {

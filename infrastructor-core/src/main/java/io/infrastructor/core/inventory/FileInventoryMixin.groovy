@@ -1,7 +1,7 @@
 package io.infrastructor.core.inventory
 
 class FileInventoryMixin {
-    
+
     def static fileInventory(Script script, String... files) {
         fileInventory(script, [files: files])
     }

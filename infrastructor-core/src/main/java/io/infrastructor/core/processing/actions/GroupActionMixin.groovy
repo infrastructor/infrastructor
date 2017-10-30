@@ -1,6 +1,7 @@
 package io.infrastructor.core.processing.actions
 
 class GroupActionMixin {
+    
     def static group(NodeContext context, Map params) {
         group(context, params, {})
     }

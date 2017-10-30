@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull
 import static io.infrastructor.core.inventory.CommandBuilder.CMD
 
 class ShellAction {
+    
     @NotNull
     def command
     def sudo

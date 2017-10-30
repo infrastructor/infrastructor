@@ -19,7 +19,7 @@ class SshClient {
     
     private Session session
     
-    public static SshClient sshClient(Map params) {
+    def static sshClient(Map params) {
         new SshClient(params)
     }
     
