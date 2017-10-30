@@ -24,42 +24,39 @@ class SshClient {
     }
     
     def isConnected() {
-        session != null && session.isConnected()
+        session?.isConnected()
     }
     
     private def connect() {
         if (!isConnected()) {
-            
             JSch jsch = new JSch()
             JSch.setConfig("StrictHostKeyChecking", "no")
             JSch.setLogger(new Logger() {
                     @Override
-                    public boolean isEnabled(int level) { return true; }
+                    public boolean isEnabled(int level) { return true }
 
                     @Override
                     public void log(int level, String message) { trace "jsch: $message" }
-                });
+                })
     
             if (keyfile) jsch.addIdentity(keyfile)
         
             session = jsch.getSession(username, host, port)
             if (password) session.setPassword(password)
-            session.setServerAliveInterval(5000);
-            session.setServerAliveCountMax(1000000);
+            session.setServerAliveInterval(5000)
+            session.setServerAliveCountMax(1000000)
             session.connect()
             return session.isConnected()
         }
     } 
     
     def disconnect() {
-        if(isConnected()) { 
-            session.disconnect() 
-        }
+        if (isConnected()) { session.disconnect() }
         session = null
     }
     
-    def execute(def command) {
-        new SshCommand(command).execute()
+    def execute(def params) {
+        new SshCommand(params).execute()
     }
     
     private def executeSsh(String command, InputStream input, OutputStream output, OutputStream error) {
@@ -73,10 +70,12 @@ class SshClient {
             channel.setOutputStream(output)
             channel.setErrStream(error)
             channel.connect()
+            
             while (!channel.isClosed()) {
                 Thread.sleep(55)
                 session.sendKeepAliveMsg()
             }
+            
             return channel.getExitStatus()
         } catch (Exception ex) {
             throw new RuntimeException(ex)
@@ -86,39 +85,31 @@ class SshClient {
             }
         }
     }
-        
+    
     class SshCommand {
         def command
-        def sudo   = false
         def output = new ByteArrayOutputStream()
         def error  = new ByteArrayOutputStream()
         def input  = new ByteArrayInputStream()
         
         public def execute() {
             try {
-                def result = [:]
-                result.exitcode = -1 
+                def result = [exitcode: -1, command: command]
             
-                try { result.exitcode = executeSsh(withSudo(sudo, command), input, output, error) } 
+                try { result.exitcode = executeSsh(command, input, output, error) } 
                 catch (IOException ex) { 
                     error "IO exception during command execution: $command"
                     error (ex.getMessage())
                 } 
             
-                result.output = output.toString()
                 result.error  = error.toString()
-                result.command = command
-                result.sudo = sudo
+                result.output = output.toString()
                 return result
             } finally {
                 input.close()
                 output.close()
                 error.close()
             }
-        }
-    
-        public def withSudo(def sudo, def command) {
-            return sudo ? "sudo $command" : command 
         }
     }
 }

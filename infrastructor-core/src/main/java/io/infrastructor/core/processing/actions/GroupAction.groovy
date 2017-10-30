@@ -2,6 +2,8 @@ package io.infrastructor.core.processing.actions
 
 import javax.validation.constraints.NotNull
 
+import static io.infrastructor.core.inventory.CommandBuilder.CMD
+
 public class GroupAction {
     @NotNull
     def name
@@ -9,7 +11,14 @@ public class GroupAction {
     def sudo = false
 
     def execute(def node) {
-        node.execute(command: "groupadd ${gid ? '-g ' + gid : ''} $name", sudo: sudo)
+        def cmd = CMD {
+            add sudo, "sudo"
+            add "groupadd"
+            add gid, "-g $gid"
+            add name
+        }
+        
+        node.execute command: cmd
         node.lastResult
     }
 }
