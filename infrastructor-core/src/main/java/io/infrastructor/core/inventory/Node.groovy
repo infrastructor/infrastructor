@@ -42,7 +42,7 @@ public class Node {
     def disconnect() {
         if (client?.isConnected()) { 
             debug "disconnecting from node: ${getLogName()}, host: $host, port: $port"
-            client.disconnect() 
+            client.disconnect()
         }
     }
     
@@ -111,11 +111,7 @@ public class Node {
     
     def allTags() { tags }
     
-    def listTags() {
-        def list = []
-        allTags().each { k, v -> list << ("$k:$v" as String) } 
-        list
-    }
+    def listTags() { allTags().collect { k, v -> "$k:$v" as String } }
     
     def getLogName() { id }
 }
