@@ -1,6 +1,7 @@
 package io.infrastructor.core.processing.actions
 
 class ReplaceActionMixin {
+    
     def static replace(NodeContext context, Map params) {
         replace(context, params, {})
     }

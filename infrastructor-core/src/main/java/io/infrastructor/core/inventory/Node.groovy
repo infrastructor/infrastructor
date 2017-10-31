@@ -7,6 +7,7 @@ import com.jcraft.jsch.JSchException
 import static io.infrastructor.core.utils.RetryUtils.retry
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.inventory.SshClient.sshClient
+import static io.infrastructor.core.inventory.CommandBuilder.CMD
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 public class Node {
@@ -41,7 +42,7 @@ public class Node {
     def disconnect() {
         if (client?.isConnected()) { 
             debug "disconnecting from node: ${getLogName()}, host: $host, port: $port"
-            client.disconnect() 
+            client.disconnect()
         }
     }
     
@@ -56,39 +57,61 @@ public class Node {
             
         return lastResult
     }
+
+    def readFile(def file, def output, def sudo = false) {
+        execute output: output, command: CMD {
+            add sudo, "sudo"
+            add "cat '$file'"
+        } 
+    }
     
-    def readFile(def file, def stream, def sudo = false) {
-        execute sudo: sudo, output: stream, command: "cat '$file'" 
+    def writeFile(def target, def input, def sudo = false) {
+        execute command: CMD {
+            add sudo, "sudo"
+            add "sh -c \"dirname '$target' | xargs -I '{}' mkdir -p '{}'\""
+        }
+            
+        execute input: input, command: CMD {
+            add "cat | "
+            add sudo, "sudo"
+            add "tee '$target'"
+        }
     }
     
     def writeText(def target, def content, def sudo = false) {
         writeFile(target, new ByteArrayInputStream(content.getBytes()), sudo)
     }
     
-    def writeFile(def target, def stream, def sudo = false) {
-        execute sudo: sudo, command: "sh -c \"dirname '$target' | xargs -I '{}' mkdir -p '{}'\""
-        execute input: stream, command: "cat | " + (sudo ? "sudo tee '$target'" : "tee '$target'")
-    }
-    
     def updateOwner(def target, def owner, def sudo = false) {
-        if (owner) execute sudo: sudo, command: "chown $owner: $target"
+        if (owner) { 
+            execute command: CMD {
+                add sudo, "sudo"
+                add "chown $owner: $target"
+            }
+        }
     }
     
     def updateGroup(def target, def group, def sudo = false) {
-        if (group) execute sudo: sudo, command: "chown :$group $target"
+        if (group) { 
+            execute command: CMD {
+                add sudo, "sudo"
+                add "chown :$group $target"
+            }
+        }
     }
     
     def updateMode(def target, def mode, def sudo = false) {
-        if (mode) execute sudo: sudo, command: "chmod $mode $target"
+        if (mode) { 
+            execute command: CMD {
+                add sudo, "sudo"
+                add "chmod $mode $target"
+            }
+        }
     }
     
     def allTags() { tags }
     
-    def listTags() {
-        def list = []
-        allTags().each() { k, v -> list << ("$k:$v" as String) } 
-        list
-    }
+    def listTags() { allTags().collect { k, v -> "$k:$v" as String } }
     
     def getLogName() { id }
 }

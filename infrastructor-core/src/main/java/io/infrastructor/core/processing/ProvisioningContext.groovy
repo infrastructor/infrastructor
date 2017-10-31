@@ -3,6 +3,7 @@ package io.infrastructor.core.processing
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 class ProvisioningContext {
+    
     def nodes
     def context = [:]
     

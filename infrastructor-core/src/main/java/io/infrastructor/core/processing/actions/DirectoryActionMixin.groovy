@@ -1,6 +1,7 @@
 package io.infrastructor.core.processing.actions
 
 class DirectoryActionMixin {
+    
     def static directory(NodeContext context, Map params) {
         directory(context, params, {})
     }

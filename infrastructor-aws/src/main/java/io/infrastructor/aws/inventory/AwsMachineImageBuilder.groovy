@@ -37,7 +37,7 @@ class AwsMachineImageBuilder {
     @Min(0l)
     int waitingDelay = 3000
     
-    private static final String STATUS_HEARED = "> aws image builder:"
+    private static final String STATUS_HEADER = "> aws image builder:"
     
     def node(Map params) { node(params, {}) }
     def node(Closure closure) { node([:], closure) }
@@ -60,7 +60,7 @@ class AwsMachineImageBuilder {
 
             info "staring image creation for '$imageName'"
             
-            statusLine "$STATUS_HEARED checking for an existing image with name '$imageName'"
+            statusLine "$STATUS_HEADER checking for an existing image with name '$imageName'"
             def oldImage = findImage(amazonEC2, imageName)
             
             info "checking if there is an existing image with the same name"
@@ -77,40 +77,40 @@ class AwsMachineImageBuilder {
 
             info "creating a base EC2 instance"
             
-            statusLine "$STATUS_HEARED waiting for the base EC2 instance is running"
+            statusLine "$STATUS_HEADER waiting for the base EC2 instance is running"
             awsNode.create(amazonEC2, usePublicIp)
-            statusLine "$STATUS_HEARED waiting for the instance SSH connectivity is available"
+            statusLine "$STATUS_HEADER waiting for the instance SSH connectivity is available"
             retry(waitingCount, waitingDelay) {
                 assert canConnectTo(host: awsNode.host, port: awsNode.port)
             }
          
             info "configuring the base EC2 instance '$awsNode.id'"
             
-            statusLine "$STATUS_HEARED configuring the instance"
+            statusLine "$STATUS_HEADER configuring the instance"
             provision([awsNode], closure)
             
             info "stopping the base EC2 instance '$awsNode.id'"
                         
             awsNode.stop(amazonEC2)
-            statusLine "$STATUS_HEARED waiting for the base EC2 instance is stopped"
+            statusLine "$STATUS_HEADER waiting for the base EC2 instance is stopped"
             waitForInstanceState(amazonEC2, awsNode.id, waitingCount, waitingDelay, 'stopped')
         
-            statusLine "$STATUS_HEARED creating an image"
+            statusLine "$STATUS_HEADER creating an image"
 
             info "creating an image '$imageName'"
             def newImageId = createImage(amazonEC2, imageName, awsNode.id)
             
-            statusLine "$STATUS_HEARED waiting for image is available"
+            statusLine "$STATUS_HEADER waiting for image is available"
             waitForImageState(amazonEC2, newImageId, waitingCount, waitingDelay, 'available')
             
             info "image creation is done: '$newImageId'"
             
             if (terminateInstance) { 
-                statusLine "$STATUS_HEARED terminating the instance"
+                statusLine "$STATUS_HEADER terminating the instance"
                 awsNode.remove(amazonEC2) 
             }
             
-            statusLine "$STATUS_HEARED image creation proccess has been done"
+            statusLine "$STATUS_HEADER image creation proccess has been done"
             return newImageId
         }
     }

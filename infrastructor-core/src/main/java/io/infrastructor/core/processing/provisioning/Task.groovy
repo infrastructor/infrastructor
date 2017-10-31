@@ -13,6 +13,7 @@ import static io.infrastructor.core.processing.ProvisioningContext.provision
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
 class Task {
+    
     def name = 'unnamed task'
     def filter = { true }
     def parallel = 1

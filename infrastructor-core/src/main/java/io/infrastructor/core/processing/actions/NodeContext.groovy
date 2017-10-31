@@ -8,6 +8,7 @@ import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 class NodeContext {
+    
     def node
     
     def execute(def action) {

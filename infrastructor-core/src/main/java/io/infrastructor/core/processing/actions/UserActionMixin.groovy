@@ -1,6 +1,7 @@
 package io.infrastructor.core.processing.actions
 
 class UserActionMixin {
+    
     def static user(NodeContext context, Map params) {
         user(context, params, {})
     }

@@ -3,6 +3,7 @@ package io.infrastructor.core.utils
 import static io.infrastructor.core.logging.ConsoleLogger.*
 
 class RetryUtils {
+    
    def static retry(def count, def delay, def actions) {
         def attempt = 1
         while (attempt <= count) {

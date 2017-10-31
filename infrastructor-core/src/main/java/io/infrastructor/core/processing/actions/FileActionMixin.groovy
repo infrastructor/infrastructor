@@ -1,6 +1,7 @@
 package io.infrastructor.core.processing.actions
 
 class FileActionMixin {
+    
     def static file(NodeContext context, Map params) {
         file(context, params, {})
     }

@@ -2,7 +2,10 @@ package io.infrastructor.core.processing.actions
 
 import javax.validation.constraints.NotNull
 
+import static io.infrastructor.core.inventory.CommandBuilder.CMD
+
 public class DirectoryAction {
+    
     @NotNull
     def target
     def owner
@@ -11,7 +14,14 @@ public class DirectoryAction {
     def sudo = false
 
     def execute(def node) {
-        node.execute(command: "mkdir " + (mode ? "-m $mode" : "") + " -p $target", sudo: sudo)
+        def cmd = CMD {
+            add sudo, "sudo"
+            add "mkdir"
+            add mode, "-m $mode"
+            add "-p $target"
+        }
+        
+        node.execute command: cmd
         node.updateOwner(target, owner, sudo)
         node.updateGroup(target, group, sudo)
         node.lastResult

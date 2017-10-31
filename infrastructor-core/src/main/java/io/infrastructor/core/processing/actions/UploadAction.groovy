@@ -8,6 +8,7 @@ import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 
 public class UploadAction {
+    
     @NotNull
     def target
     @NotNull

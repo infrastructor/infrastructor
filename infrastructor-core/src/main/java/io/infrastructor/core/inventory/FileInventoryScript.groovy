@@ -1,6 +1,7 @@
 package io.infrastructor.core.inventory
 
 abstract class FileInventoryScript extends Script {
+    
     def node(Map params) {
         node(params, {})
     }

@@ -1,6 +1,7 @@
 package io.infrastructor.core.processing.actions
 
 class InsertBlockActionMixin {
+    
     def static insertBlock(NodeContext context, Map params) {
         insertBlock(context, params, {})
     }

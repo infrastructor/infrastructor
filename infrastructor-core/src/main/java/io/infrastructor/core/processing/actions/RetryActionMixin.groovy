@@ -1,6 +1,7 @@
 package io.infrastructor.core.processing.actions
 
 class RetryActionMixin {
+    
     def static retry(NodeContext context, Map params) {
         retry(context, params, {})
     }

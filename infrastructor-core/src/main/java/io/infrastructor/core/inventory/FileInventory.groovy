@@ -4,6 +4,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
 class FileInventory {
+    
     def files = []
     def params = [:]
     def provision = {}

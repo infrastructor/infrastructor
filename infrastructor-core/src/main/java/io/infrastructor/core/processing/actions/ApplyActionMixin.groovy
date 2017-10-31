@@ -1,6 +1,7 @@
 package io.infrastructor.core.processing.actions
 
 class ApplyActionMixin {
+    
     def static apply(NodeContext context, Map params) {
         apply(context, params, {})
     }

@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull
 import static io.infrastructor.core.utils.CryptoUtils.*
 
 public class TemplateAction {
+    
     @NotNull
     def target
     @NotNull

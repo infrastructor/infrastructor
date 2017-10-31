@@ -3,6 +3,7 @@ package io.infrastructor.core.processing.actions
 import javax.validation.constraints.NotNull
 
 public class FetchAction {
+    
     @NotNull
     def source
     @NotNull
