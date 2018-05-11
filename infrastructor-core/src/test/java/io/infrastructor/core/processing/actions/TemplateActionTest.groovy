@@ -33,6 +33,24 @@ public class TemplateActionTest extends ActionTestBase {
             }
         }
     }
+    
+    @Test
+    public void generateAFileOnRemoteServerWithEmptyBindings() {
+        inventory.provisionAs('root') {
+            task actions: {
+                template {
+                    source = 'build/resources/test/test.tmpl'
+                    target = '/test.txt'
+                    bindings = [message: "simple!"]
+                }
+                
+                // assertion
+                def result = shell("ls -alh /test.txt")
+                
+                assert shell("cat /test.txt").output.contains("simple")
+            }
+        }
+    }
 
     @Test
     public void createADeepFolderBeforeTemplateUpload() {

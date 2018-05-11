@@ -11,7 +11,7 @@ public class TemplateAction {
     def target
     @NotNull
     def source
-    def bindings
+    def bindings = [:]
     def group
     def owner
     def mode
