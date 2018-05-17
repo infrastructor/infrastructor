@@ -21,9 +21,9 @@ class ProvisioningContext {
         try {
             validate(executable)
             executable.execute(nodes)
-        } catch(ProvisioningExecutionException ex) {
+        } catch (ProvisioningExecutionException ex) {
             throw ex
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new ProvisioningExecutionException(ex.getMessage())
         }
     }

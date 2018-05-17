@@ -9,11 +9,11 @@ public class GroupAction {
     @NotNull
     def name
     def gid
-    def sudo = false
+    def user
 
     def execute(def node) {
         def cmd = CMD {
-            add sudo, "sudo"
+            add user, "sudo -s -u $user"
             add "groupadd"
             add gid, "-g $gid"
             add name

@@ -11,11 +11,11 @@ public class UserAction {
     def uid
     def shell
     def home
-    def sudo = false
+    def user
 
     def execute(def node) {
         node.execute command: CMD {
-            add sudo, "sudo"
+            add user, "sudo -s -u $user"
             add "useradd"
             add uid,   "-u $uid"
             add shell, "-s $shell"

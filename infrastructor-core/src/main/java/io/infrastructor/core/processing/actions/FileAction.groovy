@@ -10,13 +10,13 @@ public class FileAction {
     def owner
     def group
     def mode
-    def sudo = false
+    def user
 
     def execute(def node) {
-        node.writeText(target, content.stripMargin().stripIndent(), sudo)
-        node.updateOwner(target, owner, sudo)
-        node.updateGroup(target, group, sudo)
-        node.updateMode(target, mode, sudo)
+        node.writeText(target, content.stripMargin().stripIndent(), user)
+        node.updateOwner(target, owner, user)
+        node.updateGroup(target, group, user)
+        node.updateMode(target, mode, user)
         node.lastResult
     }
 }
