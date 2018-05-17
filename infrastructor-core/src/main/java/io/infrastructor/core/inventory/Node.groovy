@@ -58,52 +58,52 @@ public class Node {
         return lastResult
     }
 
-    def readFile(def file, def output, def sudo = false) {
+    def readFile(def file, def output, def user = '') {
         execute output: output, command: CMD {
-            add sudo, "sudo"
+            add user, "sudo -s -u $user"
             add "cat '$file'"
         } 
     }
     
-    def writeFile(def target, def input, def sudo = false) {
+    def writeFile(def target, def input, def user = '') {
         execute command: CMD {
-            add sudo, "sudo"
+            add user, "sudo -s -u $user"
             add "sh -c \"dirname '$target' | xargs -I '{}' mkdir -p '{}'\""
         }
             
         execute input: input, command: CMD {
             add "cat | "
-            add sudo, "sudo"
+            add user, "sudo -s -u $user"
             add "tee '$target'"
         }
     }
     
-    def writeText(def target, def content, def sudo = false) {
-        writeFile(target, new ByteArrayInputStream(content.getBytes()), sudo)
+    def writeText(def target, def content, def user = '') {
+        writeFile(target, new ByteArrayInputStream(content.getBytes()), user)
     }
     
-    def updateOwner(def target, def owner, def sudo = false) {
+    def updateOwner(def target, def owner, def user = '') {
         if (owner) { 
             execute command: CMD {
-                add sudo, "sudo"
+                add user, "sudo -s -u $user"
                 add "chown $owner: $target"
             }
         }
     }
     
-    def updateGroup(def target, def group, def sudo = false) {
+    def updateGroup(def target, def group, def user = '') {
         if (group) { 
             execute command: CMD {
-                add sudo, "sudo"
+                add user, "sudo -s -u $user"
                 add "chown :$group $target"
             }
         }
     }
     
-    def updateMode(def target, def mode, def sudo = false) {
+    def updateMode(def target, def mode, def user = '') {
         if (mode) { 
             execute command: CMD {
-                add sudo, "sudo"
+                add user, "sudo -s -u $user"
                 add "chmod $mode $target"
             }
         }

@@ -26,7 +26,7 @@ public class DirectoryActionTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 // execute
-                directory sudo: true, target: '/etc/simple', owner: 'devops', group: 'devops', mode: '0600'
+                directory user: 'root', target: '/etc/simple', owner: 'devops', group: 'devops', mode: '0600'
                 // assert
                 def result = shell("ls -dalh /etc/simple")
                 assert result.output.contains("simple")

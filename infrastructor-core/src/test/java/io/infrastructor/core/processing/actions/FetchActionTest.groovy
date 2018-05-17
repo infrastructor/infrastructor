@@ -35,7 +35,7 @@ public class FetchActionTest extends ActionTestBase {
                     target = '/test.txt'
                     owner = 'root'
                     mode = '0600'
-                    sudo = true
+                    user = 'root'
                 }
 
                 def result = fetch { 
@@ -58,12 +58,12 @@ public class FetchActionTest extends ActionTestBase {
                     target = '/test.txt'
                     owner = 'root'
                     mode = '0600'
-                    sudo = true
+                    user = 'root'
                 }
                 def result = fetch { 
                     source = '/test.txt'
                     target = resultFile
-                    sudo = true
+                    user = 'root'
                 }
                 assert result.exitcode == 0
             }

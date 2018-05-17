@@ -9,7 +9,7 @@ public class FileActionTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 // setup
-                shell sudo: true, command: "groupadd infra"
+                shell user: 'root', command: "groupadd infra"
             
                 // execution
                 file {
@@ -18,7 +18,7 @@ public class FileActionTest extends ActionTestBase {
                     owner = 'devops'
                     group = 'infra'
                     mode = '600'
-                    sudo = true
+                    user = 'root'
                 }
                 
                 // assertion
@@ -41,7 +41,6 @@ public class FileActionTest extends ActionTestBase {
                 def result = file {
                     content = 'message'
                     target = '/test.txt'
-                    sudo = false
                 }
                 
                 // assertion

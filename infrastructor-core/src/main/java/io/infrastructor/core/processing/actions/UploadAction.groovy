@@ -17,7 +17,7 @@ public class UploadAction {
     def owner
     def mode
     def decryptionKey
-    def sudo = false
+    def user
     
     @NotNull
     def includes = ''
@@ -47,13 +47,13 @@ public class UploadAction {
     def upload(def node, def local, def remote) {
         if (decryptionKey) {
             byte [] decrypted = CryptoUtils.decryptFull(decryptionKey as String, new File(local).text)
-            node.writeFile(remote, new ByteArrayInputStream(decrypted), sudo)
+            node.writeFile(remote, new ByteArrayInputStream(decrypted), user)
         } else {
-            node.writeFile(remote, new FileInputStream(local), sudo)
+            node.writeFile(remote, new FileInputStream(local), user)
         }
             
-        node.updateOwner(remote, owner, sudo)
-        node.updateGroup(remote, group, sudo)
-        node.updateMode(remote, mode, sudo)
+        node.updateOwner(remote, owner, user)
+        node.updateGroup(remote, group, user)
+        node.updateMode(remote, mode, user)
     }
 }

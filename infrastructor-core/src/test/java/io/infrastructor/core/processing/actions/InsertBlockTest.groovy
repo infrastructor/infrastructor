@@ -63,7 +63,7 @@ public class InsertBlockTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 file {
-                    sudo = true
+                    user = 'root'
                     target  = '/tmp/test.txt'
                     content = "dummy"
                     owner = 'root'

@@ -61,7 +61,7 @@ public class TemplateActionTest extends ActionTestBase {
                     source = 'build/resources/test/test.tmpl'
                     target = '/etc/deep/deep/folder/test.txt'
                     bindings = [message: "simple!"]
-                    sudo = true
+                    user = 'root'
                 }
                 
                 def result = shell("cat /etc/deep/deep/folder/test.txt")

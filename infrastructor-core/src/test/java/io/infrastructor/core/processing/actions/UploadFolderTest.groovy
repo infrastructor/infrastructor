@@ -8,7 +8,7 @@ class UploadFolderTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
-                    sudo = true
+                    user = 'root'
                     source = 'build/resources/test/upload'
                     target = '/opt/test'
                 }
@@ -31,7 +31,7 @@ class UploadFolderTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
-                    sudo = true
+                    user = 'root'
                     source = 'build/resources/test/upload'
                     includes = '*.exta'
                     target = '/opt/test'
@@ -55,7 +55,7 @@ class UploadFolderTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
-                    sudo = true
+                    user = 'root'
                     source = 'build/resources/test/upload'
                     includes = '**/*.exta'
                     target = '/opt/test'
@@ -79,7 +79,7 @@ class UploadFolderTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
-                    sudo = true
+                    user = 'root'
                     source = 'build/resources/test/upload'
                     includes = '**/*.exta *.extb'
                     target = '/opt/test'
@@ -103,7 +103,7 @@ class UploadFolderTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
-                    sudo = true
+                    user = 'root'
                     source = 'build/resources/test/upload'
                     includes = '**/*'
                     excludes = 'nested/*.extb'
@@ -128,7 +128,7 @@ class UploadFolderTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
-                    sudo = true
+                    user = 'root'
                     source = 'build/resources/test/upload'
                     excludes = 'nested/*.extb'
                     target = '/opt/test'

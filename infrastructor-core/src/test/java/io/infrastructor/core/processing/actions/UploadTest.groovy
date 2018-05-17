@@ -63,7 +63,7 @@ public class UploadTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
-                    sudo = true
+                    user = 'root'
                     source = 'build/resources/test/fileupload.txt'
                     target = '/fileupload.txt'
                 }
@@ -119,7 +119,7 @@ public class UploadTest extends ActionTestBase {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
-                    sudo = true
+                    user = 'root'
                     source = 'build/resources/test/encrypted_full.tmpl'
                     target = '/fileupload.txt'
                     decryptionKey = 'secret'
