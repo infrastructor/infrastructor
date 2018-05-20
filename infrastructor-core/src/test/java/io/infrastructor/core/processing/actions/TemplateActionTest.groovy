@@ -33,6 +33,24 @@ public class TemplateActionTest extends ActionTestBase {
             }
         }
     }
+    
+    @Test
+    public void generateAFileOnRemoteServerWithEmptyBindings() {
+        inventory.provisionAs('root') {
+            task actions: {
+                template {
+                    source = 'build/resources/test/test.tmpl'
+                    target = '/test.txt'
+                    bindings = [message: "simple!"]
+                }
+                
+                // assertion
+                def result = shell("ls -alh /test.txt")
+                
+                assert shell("cat /test.txt").output.contains("simple")
+            }
+        }
+    }
 
     @Test
     public void createADeepFolderBeforeTemplateUpload() {
@@ -43,7 +61,7 @@ public class TemplateActionTest extends ActionTestBase {
                     source = 'build/resources/test/test.tmpl'
                     target = '/etc/deep/deep/folder/test.txt'
                     bindings = [message: "simple!"]
-                    sudo = true
+                    user = 'root'
                 }
                 
                 def result = shell("cat /etc/deep/deep/folder/test.txt")

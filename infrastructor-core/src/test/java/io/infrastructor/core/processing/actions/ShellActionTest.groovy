@@ -66,7 +66,7 @@ public class ShellActionTest extends ActionTestBase {
                     command = """ 
                         mkdir /etc/test
                     """
-                    sudo = true
+                    user = 'root'
                 }
             }
         }
@@ -87,5 +87,43 @@ public class ShellActionTest extends ActionTestBase {
         }
         
         assert result.exitcode != 0
+    }
+    
+    @Test
+    public void singlelineShellActionWithUserSwitch() {
+        def result = [:]
+        
+        inventory.provisionAs('root') {
+            task name: 'create test user', actions: {
+                user name: 'test', uid: 1002, home: '/home/test', shell: '/bin/bash'
+            }
+
+            task name: 'run an action as test user', actions: {
+                result = shell user: 'test', command: 'whoami' 
+            }
+        }
+        
+        assert result.exitcode == 0
+        assert result.output.contains("test")
+    }
+    
+    @Test
+    public void multilineShellActionWithUserSwitch() {
+        def result = [:]
+        
+        inventory.provisionAs('root') {
+            task name: 'create test user', actions: {
+                user name: 'test', uid: 1002, home: '/home/test', shell: '/bin/bash'
+            }
+
+            task name: 'run an action as test user', actions: {
+                result = shell user: 'test', command: '''
+                    whoami
+                ''' 
+            }
+        }
+        
+        assert result.exitcode == 0
+        assert result.output.contains("test")
     }
 }

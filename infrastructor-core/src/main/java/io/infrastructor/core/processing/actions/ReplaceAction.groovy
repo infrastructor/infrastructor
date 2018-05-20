@@ -14,19 +14,19 @@ public class ReplaceAction {
     def group
     def mode
     def all = false
-    def sudo = false
+    def user = false
 
     def execute(def node) {
         def stream = new ByteArrayOutputStream()
-        node.readFile(target, stream, sudo)
+        node.readFile(target, stream, user)
 
         def original = stream.toString()
         def updated = all ? original.replaceAll(regexp, content) : original.replaceFirst(regexp, content)
 
-        node.writeText(target, updated, sudo)
-        node.updateOwner(target, owner, sudo)
-        node.updateGroup(target, group, sudo)
-        node.updateMode(target, mode, sudo)
+        node.writeText(target, updated, user)
+        node.updateOwner(target, owner, user)
+        node.updateGroup(target, group, user)
+        node.updateMode(target, mode, user)
         node.lastResult
     }
 }
