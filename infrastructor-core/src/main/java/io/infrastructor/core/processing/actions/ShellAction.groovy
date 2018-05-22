@@ -12,14 +12,16 @@ class ShellAction {
     
     def execute(def node) {
         if (command.contains("\n")) {
+
             def result = node.execute command: CMD {
                 add user, "sudo -s -u $user"
                 add "mktemp"
             }
             
+            def temp = result.output.trim()
+
             try {
-                def temp = result.output.trim()
-                node.writeText(temp, command.stripIndent())
+                node.writeText(temp, command.stripIndent(), user)
                 node.execute command: CMD {
                     add user, "sudo -s -u $user"
                     add "sh $temp"
@@ -27,7 +29,10 @@ class ShellAction {
                 
                 return node.lastResult
             } finally {
-                node.execute command: "rm $temp"
+                node.execute command: CMD {
+                    add user, "sudo -s -u $user"
+                    add "rm $temp"
+                }
             }
         } else {
             node.execute command: CMD {
