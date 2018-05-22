@@ -111,12 +111,9 @@ public class ShellActionTest extends ActionTestBase {
     public void multilineShellActionWithUserSwitch() {
         def result = [:]
         
-        inventory.provisionAs('root') {
-            task name: 'create test user', actions: {
-                user name: 'test', uid: 1002, home: '/home/test', shell: '/bin/bash'
-            }
-
+        inventory.provisionAs('devops') {
             task name: 'run an action as test user', actions: {
+                user name: 'test', user: 'root'
                 result = shell user: 'test', command: '''
                     whoami
                 ''' 
