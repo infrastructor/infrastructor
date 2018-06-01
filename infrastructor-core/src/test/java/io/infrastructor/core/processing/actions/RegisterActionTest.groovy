@@ -41,4 +41,21 @@ public class RegisterActionTest extends ActionTestBase {
 
         assert result.output.contains('simple')
     }
+    
+    @Test
+    public void registerALocalActionWithoutParameters() {
+        def result = [:]
+        inventory.provisionAs('root') {
+            def action = { shell "mkdir /var/simple" }
+
+            register name: 'mydirectory', action: action
+
+            task actions: {
+                mydirectory name: '/var/simple'
+                result = shell 'ls /var'
+            }
+        }
+
+        assert result.output.contains('simple')
+    }
 }
