@@ -34,8 +34,57 @@ public class RegisterActionTest extends ActionTestBase {
             register name: 'mydirectory', action: action
 
             task actions: {
-                mydirectory name: '/var/simple'
+                mydirectory (name: '/var/simple') 
                 result = shell 'ls /var'
+            }
+        }
+
+        assert result.output.contains('simple')
+    }
+    
+    @Test
+    public void registerALocalActionWithMultilineParams() {
+        def result = [:]
+        inventory.provisionAs('root') {
+            def action = { params -> 
+                file {
+                    target  = params.file
+                    content = params.content
+                }
+            }
+
+            register name: 'createFile', action: action
+
+            task actions: {
+                createFile {
+                    file    = "/var/test.txt"
+                    content = "simple"
+                }
+                result = shell 'cat /var/test.txt'
+            }
+        }
+
+        assert result.output.contains('simple')
+    }
+    
+    @Test
+    public void registerALocalActionWithMultilineMixedParams() {
+        def result = [:]
+        inventory.provisionAs('root') {
+            def action = { params -> 
+                file {
+                    target  = params.file
+                    content = params.content
+                }
+            }
+
+            register name: 'createFile', action: action
+
+            task actions: {
+                createFile(file: "/var/test.txt") {
+                    content = "simple"
+                }
+                result = shell 'cat /var/test.txt'
             }
         }
 

@@ -25,4 +25,3 @@ class GroovyShellUtils {
         groovyShell(bindings).evaluate(new File(filename))
     }
 }
-
