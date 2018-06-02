@@ -9,15 +9,19 @@ import static io.infrastructor.core.utils.GroovyShellUtils.load
 
 class ActionRegistrationUtils {
 
-    def static register(Map params) {
-        register(params, {})
+    def static action(String name, Closure closure) {
+        action name: name, closure: closure
+    }
+
+    def static action(Map params) {
+        action(params, {})
     }
     
-    def static register(Closure closure) {
-        register([:], closure)
+    def static action(Closure closure) {
+        action([:], closure)
     }
     
-    def static register(Map params, Closure closure) {
+    def static action(Map params, Closure closure) {
         def action = new ActionRegistrationAction(params)
         action.with(closure)
         action.execute()

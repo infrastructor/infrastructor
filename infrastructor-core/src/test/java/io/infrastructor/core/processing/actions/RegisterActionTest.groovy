@@ -11,10 +11,8 @@ public class RegisterActionTest extends ActionTestBase {
     public void loadAndRegisterAnExternalAction() {
         def result = [:]
         inventory.provisionAs('root') {
-
-            def action = load 'build/resources/test/apply_action/directory.groovy'
-            
-            register name: 'createDirectory', action: action
+            def closure = load 'build/resources/test/apply_action/directory.groovy'
+            action name: 'createDirectory', closure: closure
             
             task actions: {
                 createDirectory target_name: '/var/simple'
@@ -29,9 +27,7 @@ public class RegisterActionTest extends ActionTestBase {
     public void registerALocalAction() {
         def result = [:]
         inventory.provisionAs('root') {
-            def action = { params -> shell "mkdir $params.name" }
-
-            register name: 'mydirectory', action: action
+            action name: 'mydirectory', closure: { params -> shell "mkdir $params.name" }
 
             task actions: {
                 mydirectory (name: '/var/simple') 
@@ -46,14 +42,12 @@ public class RegisterActionTest extends ActionTestBase {
     public void registerALocalActionWithMultilineParams() {
         def result = [:]
         inventory.provisionAs('root') {
-            def action = { params -> 
+            action name: 'createFile', closure: { params -> 
                 file {
                     target  = params.file
                     content = params.content
                 }
             }
-
-            register name: 'createFile', action: action
 
             task actions: {
                 createFile {
@@ -71,14 +65,12 @@ public class RegisterActionTest extends ActionTestBase {
     public void registerALocalActionWithMultilineMixedParams() {
         def result = [:]
         inventory.provisionAs('root') {
-            def action = { params -> 
+            action name: 'createFile', closure: { params -> 
                 file {
                     target  = params.file
                     content = params.content
                 }
             }
-
-            register name: 'createFile', action: action
 
             task actions: {
                 createFile(file: "/var/test.txt") {
@@ -95,16 +87,51 @@ public class RegisterActionTest extends ActionTestBase {
     public void registerALocalActionWithoutParameters() {
         def result = [:]
         inventory.provisionAs('root') {
-            def action = { shell "mkdir /var/simple" }
-
-            register name: 'mydirectory', action: action
+            action name: 'mydirectory', closure: { shell "mkdir /var/simple" }
 
             task actions: {
-                mydirectory name: '/var/simple'
+                mydirectory()
                 result = shell 'ls /var'
             }
         }
 
         assert result.output.contains('simple')
+    }
+
+    @Test 
+    public void reRegisterAnExistingAction() { 
+        def result = [:]
+
+        inventory.provisionAs('root') {
+            action name: 'mydirectory', closure: { shell "mkdir /var/simple" }
+            action name: 'mydirectory', closure: { shell "mkdir /var/another" }
+
+            task actions: {
+                mydirectory()
+                result = shell 'ls /var'
+            }
+        }
+
+        assert result.output.contains('another')
+
+    }
+
+    @Test 
+    public void registerActionWithSimplifiedMultilineDefinition() { 
+        def result = [:]
+            
+        action('mydirectory') { 
+            shell "mkdir /var/simple" 
+        }
+
+        inventory.provisionAs('root') {
+            task actions: {
+                mydirectory()
+                result = shell 'ls /var'
+            }
+        }
+
+        assert result.output.contains('simple')
+
     }
 }
