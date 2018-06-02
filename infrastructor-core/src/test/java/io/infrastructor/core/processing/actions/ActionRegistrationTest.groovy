@@ -1,5 +1,6 @@
 package io.infrastructor.core.processing.actions
 
+import io.infrastructor.core.utils.ActionRegistrationException
 import org.junit.Test
 
 import static io.infrastructor.core.utils.ActionRegistrationUtils.*
@@ -131,5 +132,15 @@ public class ActionRegistrationTest extends ActionTestBase {
         }
 
         assert result.output.contains('simple')
+    }
+
+    @Test(expected = ActionRegistrationException) 
+    public void registerActionWithNullName() { 
+        action name: null, closure: { shell "mkdir /var/simple" }
+    }
+    
+    @Test(expected = ActionRegistrationException) 
+    public void registerActionWithNullClosure() { 
+        action name: 'test', closure: null
     }
 }

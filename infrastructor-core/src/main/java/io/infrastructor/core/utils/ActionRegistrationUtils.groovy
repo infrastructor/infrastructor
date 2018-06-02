@@ -1,11 +1,7 @@
 package io.infrastructor.core.utils
 
-import io.infrastructor.core.processing.actions.NodeContext
-import io.infrastructor.core.processing.actions.ApplyAction
-import io.infrastructor.core.processing.actions.ActionRegistrationAction
-
-import static io.infrastructor.core.logging.ConsoleLogger.*
-import static io.infrastructor.core.utils.GroovyShellUtils.load
+import io.infrastructor.core.validation.ValidationException
+import static io.infrastructor.core.validation.ValidationHelper.validate
 
 class ActionRegistrationUtils {
 
@@ -22,9 +18,14 @@ class ActionRegistrationUtils {
     }
     
     def static action(Map params, Closure closure) {
-        def action = new ActionRegistrationAction(params)
-        action.with(closure)
-        action.execute()
+        try {
+            def registration = new ActionRegistration(params)
+            registration.with(closure)
+            validate(registration)
+            registration.execute()
+        } catch (ValidationException ex) {
+            throw new ActionRegistrationException(ex.getMessage(), ex)
+        }
     }
 }
 

@@ -1,7 +1,13 @@
-package io.infrastructor.core.processing.actions
+package io.infrastructor.core.utils
 
-class ActionRegistrationAction {
+import io.infrastructor.core.processing.actions.ApplyAction
+import io.infrastructor.core.processing.actions.NodeContext
+import javax.validation.constraints.NotNull
+
+class ActionRegistration {
+    @NotNull
     def name
+    @NotNull
     def closure
 
     def execute() {
