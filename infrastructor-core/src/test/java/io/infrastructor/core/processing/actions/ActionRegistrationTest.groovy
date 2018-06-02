@@ -5,7 +5,7 @@ import org.junit.Test
 import static io.infrastructor.core.utils.ActionRegistrationUtils.*
 import static io.infrastructor.core.utils.GroovyShellUtils.load
 
-public class RegisterActionTest extends ActionTestBase {
+public class ActionRegistrationTest extends ActionTestBase {
 
     @Test
     public void loadAndRegisterAnExternalAction() {
@@ -113,7 +113,6 @@ public class RegisterActionTest extends ActionTestBase {
         }
 
         assert result.output.contains('another')
-
     }
 
     @Test 
@@ -132,6 +131,5 @@ public class RegisterActionTest extends ActionTestBase {
         }
 
         assert result.output.contains('simple')
-
     }
 }
