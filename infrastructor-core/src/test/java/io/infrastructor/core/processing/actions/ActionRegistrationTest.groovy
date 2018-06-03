@@ -12,9 +12,8 @@ public class ActionRegistrationTest extends ActionTestBase {
     public void loadAndRegisterAnExternalAction() {
         def result = [:]
         inventory.provisionAs('root') {
-            def closure = load 'build/resources/test/apply_action/directory.groovy'
-            action name: 'createDirectory', closure: closure
-            
+            action name: 'createDirectory', file: 'build/resources/test/apply_action/directory.groovy'
+
             task actions: {
                 createDirectory target_name: '/var/simple'
                 result = shell 'ls /var'
@@ -147,5 +146,15 @@ public class ActionRegistrationTest extends ActionTestBase {
     @Test(expected = ActionRegistrationException) 
     public void registerActionWithNullClosure() { 
         action name: 'test', closure: null
+    }
+    
+    @Test(expected = ActionRegistrationException) 
+    public void registerActionWithUnspecifiedFile() { 
+        action name: 'test', file: ''
+    }
+   
+    @Test(expected = ActionRegistrationException) 
+    public void registerActionWithMissingFile() { 
+        action name: 'test', file: 'missing'
     }
 }
