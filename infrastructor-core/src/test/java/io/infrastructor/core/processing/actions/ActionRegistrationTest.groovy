@@ -140,6 +140,11 @@ public class ActionRegistrationTest extends ActionTestBase {
     }
     
     @Test(expected = ActionRegistrationException) 
+    public void registerActionWithEmptyName() { 
+        action name: '', closure: { shell "mkdir /var/simple" }
+    }
+    
+    @Test(expected = ActionRegistrationException) 
     public void registerActionWithNullClosure() { 
         action name: 'test', closure: null
     }

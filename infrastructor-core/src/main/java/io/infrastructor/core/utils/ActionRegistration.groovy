@@ -3,12 +3,14 @@ package io.infrastructor.core.utils
 import io.infrastructor.core.processing.actions.ApplyAction
 import io.infrastructor.core.processing.actions.NodeContext
 import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 class ActionRegistration {
     @NotNull
-    def name
+    @Size(min=1)
+    String name
     @NotNull
-    def closure
+    Closure closure
 
     def execute() {
         NodeContext.metaClass[name] = { "$name"([:], {}) }
