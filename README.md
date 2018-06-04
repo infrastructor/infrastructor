@@ -4,6 +4,6 @@ Infrastructor is a server provisioning and automation framework. It implements I
 ### Documentation
 A comprehensive documentation is still in progress and will be available soon.
 Please check the [wiki](https://github.com/infrastructor/infrastructor/wiki) for tutorials and references.
-You may also find these slides interesting: [Bring your infrastructure under control with Infrastructor](https://www.slideshare.net/nirro/infrastructor)
+You may also find these slides interesting: [Bring your infrastructure under control with Infrastructor](https://www.slideshare.net/nirro/bring-you-infrastructure-under-control-at-gr8conf-europe-2018)
 ### Examples
 A catalog of examples grows [here](https://github.com/infrastructor/examples) 
