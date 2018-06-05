@@ -1,6 +1,7 @@
 /.gradle/
-/build/
+/.directory
 /.nb-gradle/
+/build/
 /gradle.properties
 /infrastructor-core/.gradle/
 /infrastructor-core/.nb-gradle/
@@ -9,7 +10,5 @@
 /infrastructor-cli/.nb-gradle/
 /infrastructor-cli/build/
 /infrastructor-core/infrastructor-cli/.nb-gradle/
-/.directory
 /infrastructor-aws/build/
-/simple-ext/target/
 /infrastructor-aws/.nb-gradle/
