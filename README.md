@@ -10,6 +10,13 @@ Infrastructor is a server provisioning and configuration management tool written
 * Has minimal dependencies on the host’s side, just a few posix utilities are used: cat, tee, mkdir, cp, etc.
 
 It is also designed to be easy to learn and provides rich programming functionality and extensibility. Thank you for your interest in Infrastructor! 
+### Installation
+Infrastructor can be installed using [SDKMAN](https://sdkman.io):
+```
+sdk install infrastructor
+```
+As an alternative you can download and unpack ZIP file from the [releases page](https://github.com/infrastructor/infrastructor/releases)
+
 ### Documentation
 A comprehensive documentation is still in progress and will be available soon.
 Please check the [wiki](https://github.com/infrastructor/infrastructor/wiki) for tutorials and references.
