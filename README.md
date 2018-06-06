@@ -1,5 +1,5 @@
 # Infrastructor [![Build Status](https://travis-ci.org/infrastructor/infrastructor.svg?branch=master)](https://travis-ci.org/infrastructor/infrastructor)
-### Introduction
+### Overview
 Infrastructor is a server provisioning and configuration management tool written in Groovy programming language. It implements Infrastructure as Code paradigm. Here are key features of Infrasructor:
 * It provides a DSL on top of Groovy programming language to describe, manage and provision servers: either bare metal and virtual machines
 * It is possible to use all Groovy features: loops, conditions, closures, etc.
