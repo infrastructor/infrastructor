@@ -6,7 +6,7 @@ mainClassName = "io.infrastructor.cli.Starter"
 dependencies {
     compile project(':infrastructor-core')
     compile project(':infrastructor-aws')
-    compile 'com.beust:jcommander:1.58'
+    compile 'com.beust:jcommander:1.72'
 }
 
 task unpack(type: Copy, dependsOn: 'build') {
