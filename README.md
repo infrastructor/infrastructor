@@ -17,7 +17,7 @@ Infrastructor can be installed using [SDKMAN](https://sdkman.io):
 ```
 sdk install infrastructor
 ```
-As an alternative you can download and unpack ZIP file from the [releases page](https://github.com/infrastructor/infrastructor/releases)
+As an alternative you can download and unpack a ZIP file from the [releases page](https://github.com/infrastructor/infrastructor/releases)
 
 ### Documentation
 Building comprehensive documentation can be a long process and it can always be a bit out of date.
