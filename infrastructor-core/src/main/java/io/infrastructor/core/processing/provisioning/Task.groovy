@@ -34,7 +34,11 @@ class Task {
             executeParallel(filtered, parallel) { node -> 
                 try {
                     status.updateStatus(node.getLogName(), "${blue("running")}")
-                    new NodeContext(node: node).with(actions.clone())
+                    
+                    def clonned = actions.clone()
+                    clonned.delegate = new NodeContext(node: node)
+                    clonned(node)
+
                     status.updateStatus(node.getLogName(), "${green("done")}")
                 } catch (ActionExecutionException ex) {
                     error "FAILED - node.id: ${node.getLogName()}, $ex.message"
