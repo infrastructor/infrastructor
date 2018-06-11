@@ -5,13 +5,13 @@ import org.junit.experimental.categories.Category
 
 import static io.infrastructor.aws.inventory.AwsInventory.awsInventory
 import static io.infrastructor.aws.inventory.ManagedAwsInventory.managedAwsInventory
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.info
 
 @Category(AwsCategory.class)
 class AwsInventoryTest extends AwsTestBase {
     
     @Test
-    public void findAwsNodes() {
+    void findAwsNodes() {
         try {
             def inventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(parallel: 2, tags: [managed: true], usePublicIp: true, username: cfg.USERNAME, keyfile: cfg.KEYFILE) {

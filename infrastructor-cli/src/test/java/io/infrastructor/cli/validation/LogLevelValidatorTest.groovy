@@ -5,7 +5,7 @@ import org.junit.Test
 
 class LogLevelValidatorTest {
     @Test
-    public void passCorrectLogLevelAsInteger() {
+    void passCorrectLogLevelAsInteger() {
         LogLevelValidator validator = new LogLevelValidator()
         validator.validate("", "0")
         validator.validate("", "1")
@@ -15,13 +15,13 @@ class LogLevelValidatorTest {
     }
     
     @Test(expected = ParameterException)
-    public void passIncorrectLogLevelAsInteger_minus_one() {
+    void passIncorrectLogLevelAsInteger_minus_one() {
         LogLevelValidator validator = new LogLevelValidator()
         validator.validate("", "-1")
     }
     
     @Test(expected = ParameterException)
-    public void passIncorrectLogLevelAsInteger_four() {
+    void passIncorrectLogLevelAsInteger_four() {
         LogLevelValidator validator = new LogLevelValidator()
         validator.validate("", "5")
     }

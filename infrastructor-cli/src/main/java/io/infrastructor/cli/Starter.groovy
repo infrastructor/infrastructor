@@ -2,14 +2,10 @@ package io.infrastructor.cli
 
 import com.beust.jcommander.JCommander
 import groovy.time.TimeCategory
-import io.infrastructor.cli.handlers.DecryptHandler
-import io.infrastructor.cli.handlers.EncryptHandler
-import io.infrastructor.cli.handlers.HelpHandler
-import io.infrastructor.cli.handlers.RunHandler
-import io.infrastructor.cli.handlers.VersionHandler
+import io.infrastructor.cli.handlers.*
 
-import static io.infrastructor.core.utils.ExceptionUtils.deepSanitize
 import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.utils.ExceptionUtils.deepSanitize
 
 public class Starter {
     

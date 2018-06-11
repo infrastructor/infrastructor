@@ -1,6 +1,7 @@
 package io.infrastructor.core.utils
 
 import groovy.text.SimpleTemplateEngine
+
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 import java.nio.charset.StandardCharsets

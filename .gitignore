@@ -12,3 +12,4 @@
 /infrastructor-core/infrastructor-cli/.nb-gradle/
 /infrastructor-aws/build/
 /infrastructor-aws/.nb-gradle/
+/.idea/

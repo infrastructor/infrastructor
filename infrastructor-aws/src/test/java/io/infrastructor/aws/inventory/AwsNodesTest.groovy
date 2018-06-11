@@ -8,7 +8,7 @@ import static io.infrastructor.aws.inventory.AwsBlockDeviceMapping.awsBlockDevic
 class AwsNodesTest {
 
     @Test
-    public void createAwsNodes() {
+    void createAwsNodes() {
         AwsNodes awsNodes = build {
             node {
                 id               = 'id_A'
@@ -55,7 +55,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void filterNodes() {
+    void filterNodes() {
         AwsNodes awsNodes = build {
             node {
                 id   = 'id_A'
@@ -84,7 +84,7 @@ class AwsNodesTest {
     
     
     @Test
-    public void filterByTags() {
+    void filterByTags() {
         AwsNodes awsNodes = build {
             node {
                 id   = 'id_A'
@@ -120,7 +120,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void usePublicNodes() {
+    void usePublicNodes() {
         AwsNodes awsNodes = build {
             node {
                 id = 'id_A'
@@ -146,7 +146,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void usePrivateNodes() {
+    void usePrivateNodes() {
         AwsNodes awsNodes = build {
             node {
                 id = 'id_A'
@@ -173,7 +173,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeCurrentIsEmptyTargetOneNew() {
+    void mergeCurrentIsEmptyTargetOneNew() {
         AwsNodes target = build {
             node {
                 name = "node_A"
@@ -196,7 +196,7 @@ class AwsNodesTest {
     
     
     @Test
-    public void mergeTargetIsEmptyCurrentHasOneToRemove() {
+    void mergeTargetIsEmptyCurrentHasOneToRemove() {
         
         def target = new AwsNodes()
         
@@ -220,7 +220,7 @@ class AwsNodesTest {
     
     
     @Test
-    public void mergeTargetOneIsSameAsCurrentOne() {
+    void mergeTargetOneIsSameAsCurrentOne() {
         
         def target = build {
             node {
@@ -254,7 +254,7 @@ class AwsNodesTest {
 
 
     @Test
-    public void mergeTargetOneIsCreatedCurrentOneIsRemoved() {
+    void mergeTargetOneIsCreatedCurrentOneIsRemoved() {
         
         def target = build {
             node {
@@ -282,7 +282,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeWhenSeveralNodesAlreadyExistsWithTheSameName() {
+    void mergeWhenSeveralNodesAlreadyExistsWithTheSameName() {
         
         def target = build {
             node {
@@ -319,7 +319,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeWhenSeveralNodesAlreadyExistsWithTheSameNameAndChangedOrder() {
+    void mergeWhenSeveralNodesAlreadyExistsWithTheSameNameAndChangedOrder() {
         
         def target = build {
             node {
@@ -356,7 +356,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeRebuild_imageId() {
+    void mergeRebuild_imageId() {
         
         def target = build {
             node {
@@ -388,7 +388,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeRebuild_instanceType() {
+    void mergeRebuild_instanceType() {
         
         def target = build {
             node {
@@ -420,7 +420,7 @@ class AwsNodesTest {
     }
 
     @Test
-    public void mergeRebuild_subnetId() {
+    void mergeRebuild_subnetId() {
         
         def target = build {
             node {
@@ -452,7 +452,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeRebuild_keyName() {
+    void mergeRebuild_keyName() {
         
         def target = build {
             node {
@@ -484,7 +484,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeRebuild_blockDeviceMappings() {
+    void mergeRebuild_blockDeviceMappings() {
         
         def target = build {
             node {
@@ -544,7 +544,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeUnmodifiedIfblockDeviceMappingsAreNotSet() {
+    void mergeUnmodifiedIfblockDeviceMappingsAreNotSet() {
         
         def target = build {
             node {
@@ -584,7 +584,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeUpdate_securityGroupIds() {
+    void mergeUpdate_securityGroupIds() {
         
         def target = build {
             node {
@@ -611,7 +611,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeUpdate_tags() {
+    void mergeUpdate_tags() {
         
         def target = build {
             node {
@@ -638,7 +638,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void mergeTypelessTagsComparison() {
+    void mergeTypelessTagsComparison() {
             
         def target = build {
             node {
@@ -665,7 +665,7 @@ class AwsNodesTest {
     }
     
     @Test
-    public void comprehensiveMerge() {
+    void comprehensiveMerge() {
         AwsNodes current = build {
             node {
                 name = "node_A"

@@ -2,14 +2,15 @@ package io.infrastructor.core.inventory.docker
 
 import groovy.transform.ToString
 import io.infrastructor.core.inventory.Node
+
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
-import static io.infrastructor.core.utils.NodeUtils.randomPort
+import static io.infrastructor.core.logging.ConsoleLogger.debug
 import static io.infrastructor.core.utils.FlatUUID.flatUUID
+import static io.infrastructor.core.utils.NodeUtils.randomPort
 
 @ToString(includePackage = false, includeNames = true)
-public class DockerNode {
+class DockerNode {
     
     def id 
     def port

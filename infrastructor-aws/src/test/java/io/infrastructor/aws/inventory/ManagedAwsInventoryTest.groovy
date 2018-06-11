@@ -10,7 +10,7 @@ import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.assertInstance
 class ManagedAwsInventoryTest extends AwsTestBase  {
     
     @Test
-    public void createInventory() {
+    void createInventory() {
         try {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {
@@ -69,7 +69,7 @@ class ManagedAwsInventoryTest extends AwsTestBase  {
     }
     
     @Test
-    public void updateTags() {
+    void updateTags() {
         try {
             managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {
                 ec2(tags: [managed: true], usePublicIp: true) {

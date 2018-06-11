@@ -2,7 +2,7 @@ package io.infrastructor.core.logging
 
 import static io.infrastructor.core.logging.ConsoleLogger.input
 
-public class InputAction {
+class InputAction {
     
     def message = 'enter a value: '
     def secret = false

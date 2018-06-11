@@ -2,7 +2,7 @@ package io.infrastructor.core.processing.actions
 
 import javax.validation.constraints.NotNull
 
-public class FileAction {
+class FileAction {
     
     @NotNull
     def target

@@ -4,7 +4,7 @@ import com.amazonaws.services.ec2.model.DescribeVolumesRequest
 
 import static io.infrastructor.aws.inventory.AwsBlockDeviceMapping.awsBlockDeviceMapping
 
-public class AwsNodesBuilder {
+class AwsNodesBuilder {
     
     def nodes = []
     
@@ -22,18 +22,18 @@ public class AwsNodesBuilder {
         nodes << node
     }
     
-    public static def build(def closure) {
+    static def build(def closure) {
         def builder = new AwsNodesBuilder()
         closure.delegate = builder
         closure()
         fromNodes(builder.nodes)
     }
 
-    public static AwsNodes fromNodes(def nodes) {
+    static AwsNodes fromNodes(def nodes) {
         new AwsNodes(nodes: nodes)
     }
     
-    public static AwsNodes fromEC2(def amazonEC2) {
+    static AwsNodes fromEC2(def amazonEC2) {
         def reservations = amazonEC2.describeInstances().getReservations();
         def nodes = reservations.collect { 
             it.getInstances().findAll { 
@@ -59,7 +59,7 @@ public class AwsNodesBuilder {
         fromNodes(nodes)
     }
     
-    public static AwsNode fromEC2(def instance, def deviceMappings) {
+    static AwsNode fromEC2(def instance, def deviceMappings) {
         def node = new AwsNode()
         node.with {
             id               = instance.instanceId

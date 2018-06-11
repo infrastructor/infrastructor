@@ -2,17 +2,17 @@ package io.infrastructor.aws.inventory
 
 import com.amazonaws.services.ec2.AmazonEC2
 
-import io.infrastructor.core.inventory.Inventory
-import javax.validation.constraints.NotNull
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotNull
 
 import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.*
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.error
+import static io.infrastructor.core.logging.ConsoleLogger.info
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.processing.ProvisioningContext.provision
-import static io.infrastructor.core.validation.ValidationHelper.validate
 import static io.infrastructor.core.utils.ConnectionUtils.canConnectTo
 import static io.infrastructor.core.utils.RetryUtils.retry
+import static io.infrastructor.core.validation.ValidationHelper.validate
 
 class AwsMachineImageBuilder {
     @NotNull

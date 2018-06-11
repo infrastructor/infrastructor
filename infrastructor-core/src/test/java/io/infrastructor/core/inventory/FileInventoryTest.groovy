@@ -1,7 +1,8 @@
 package io.infrastructor.core.inventory
 
 import org.junit.Test
-import static io.infrastructor.core.inventory.FileInventory.*
+
+import static io.infrastructor.core.inventory.FileInventory.fileInventory
 
 class FileInventoryTest {
     

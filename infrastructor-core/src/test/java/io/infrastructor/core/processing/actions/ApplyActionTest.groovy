@@ -2,6 +2,7 @@ package io.infrastructor.core.processing.actions
 
 import io.infrastructor.core.processing.provisioning.TaskExecutionException
 import org.junit.Test
+
 import static io.infrastructor.core.utils.GroovyShellUtils.load
 
 class ApplyActionTest extends ActionTestBase {

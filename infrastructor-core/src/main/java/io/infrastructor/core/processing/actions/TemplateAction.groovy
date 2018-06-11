@@ -1,11 +1,13 @@
 package io.infrastructor.core.processing.actions
 
 import groovy.text.SimpleTemplateEngine
+
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.core.utils.CryptoUtils.*
+import static io.infrastructor.core.utils.CryptoUtils.decryptFull
+import static io.infrastructor.core.utils.CryptoUtils.decryptPart
 
-public class TemplateAction {
+class TemplateAction {
     
     @NotNull
     def target

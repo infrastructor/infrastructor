@@ -1,27 +1,14 @@
 package io.infrastructor.aws.inventory
 
-import com.amazonaws.services.ec2.AmazonEC2
-import com.amazonaws.services.ec2.model.BlockDeviceMapping
-import com.amazonaws.services.ec2.model.CreateTagsRequest
-import com.amazonaws.services.ec2.model.DeleteTagsRequest
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest
-import com.amazonaws.services.ec2.model.DescribeInstancesResult
-import com.amazonaws.services.ec2.model.DescribeVolumesRequest
-import com.amazonaws.services.ec2.model.EbsBlockDevice
-import com.amazonaws.services.ec2.model.Instance
-import com.amazonaws.services.ec2.model.ModifyInstanceAttributeRequest
-import com.amazonaws.services.ec2.model.RunInstancesRequest
-import com.amazonaws.services.ec2.model.StopInstancesRequest
-import com.amazonaws.services.ec2.model.Tag
-import com.amazonaws.services.ec2.model.TerminateInstancesRequest
+import com.amazonaws.services.ec2.model.*
 import groovy.transform.ToString
 import io.infrastructor.core.inventory.Node
 
 import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.waitForInstanceState
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.debug
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true, includeSuperProperties = true)
-public class AwsNode extends Node {
+class AwsNode extends Node {
     
     def name
     def imageId

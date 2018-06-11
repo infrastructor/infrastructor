@@ -1,6 +1,7 @@
 package io.infrastructor.core.logging.status
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.addStatusLogger
+import static io.infrastructor.core.logging.ConsoleLogger.removeStatusLogger
 
 class TaskProgressLogger {
     

@@ -2,7 +2,7 @@ package io.infrastructor.cli.handlers
 
 import io.infrastructor.core.ApplicationProperties
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.blue
 
 public class VersionHandler {
     

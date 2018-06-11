@@ -1,11 +1,10 @@
 package io.infrastructor.core.logging
 
 import org.fusesource.jansi.Ansi
-import org.fusesource.jansi.Ansi.Color
 
 import static io.infrastructor.core.ApplicationProperties.logLevel
-import static org.fusesource.jansi.Ansi.ansi
 import static org.fusesource.jansi.Ansi.Color.*
+import static org.fusesource.jansi.Ansi.ansi
 
 class ConsoleLogger {
 

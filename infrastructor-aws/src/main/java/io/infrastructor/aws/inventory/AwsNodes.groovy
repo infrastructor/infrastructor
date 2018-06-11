@@ -1,9 +1,9 @@
 package io.infrastructor.aws.inventory
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.debug
 import static io.infrastructor.core.utils.FilteringUtils.match
 
-public class AwsNodes {
+class AwsNodes {
     
     def nodes = []
 

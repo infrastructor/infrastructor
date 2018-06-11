@@ -1,16 +1,16 @@
 package io.infrastructor.core.inventory
 
 import groovy.transform.ToString
-import javax.validation.constraints.NotNull
-import com.jcraft.jsch.JSchException
 
-import static io.infrastructor.core.utils.RetryUtils.retry
-import static io.infrastructor.core.logging.ConsoleLogger.*
-import static io.infrastructor.core.inventory.SshClient.sshClient
+import javax.validation.constraints.NotNull
+
 import static io.infrastructor.core.inventory.CommandBuilder.CMD
+import static io.infrastructor.core.inventory.SshClient.sshClient
+import static io.infrastructor.core.logging.ConsoleLogger.debug
+import static io.infrastructor.core.utils.RetryUtils.retry
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
-public class Node {
+class Node {
     
     def id
     @NotNull

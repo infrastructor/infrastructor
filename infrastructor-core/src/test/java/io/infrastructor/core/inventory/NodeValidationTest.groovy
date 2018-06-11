@@ -1,7 +1,7 @@
 package io.infrastructor.core.inventory
 
-import org.junit.Test
 import io.infrastructor.core.validation.ValidationException
+import org.junit.Test
 
 import static io.infrastructor.core.inventory.InlineInventory.inlineInventory
 
