@@ -6,7 +6,8 @@ import com.jcraft.jsch.Logger
 import com.jcraft.jsch.Session
 import groovy.transform.ToString
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.debug
+import static io.infrastructor.core.logging.ConsoleLogger.trace
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 class SshClient {

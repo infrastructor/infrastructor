@@ -4,10 +4,10 @@ import org.junit.Test
 
 import static io.infrastructor.aws.inventory.AwsBlockDeviceMapping.awsBlockDeviceMapping
 
-public class AwsBlockDeviceMappingTest {
+class AwsBlockDeviceMappingTest {
     
     @Test
-    public void compareEqualDeviceBlockMappings() {
+    void compareEqualDeviceBlockMappings() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -31,7 +31,7 @@ public class AwsBlockDeviceMappingTest {
     }
     
     @Test
-    public void compareDeviceBlockMappingsAsSet() {
+    void compareDeviceBlockMappingsAsSet() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -55,7 +55,7 @@ public class AwsBlockDeviceMappingTest {
     }
     
     @Test
-    public void compareDeviceBlockMappings_changedName() {
+    void compareDeviceBlockMappings_changedName() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -79,7 +79,7 @@ public class AwsBlockDeviceMappingTest {
     }
     
     @Test
-    public void compareDeviceBlockMappings_changedDeleteOnTermination() {
+    void compareDeviceBlockMappings_changedDeleteOnTermination() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -103,7 +103,7 @@ public class AwsBlockDeviceMappingTest {
     }
     
     @Test
-    public void compareDeviceBlockMappings_changedEncrypted() {
+    void compareDeviceBlockMappings_changedEncrypted() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -127,7 +127,7 @@ public class AwsBlockDeviceMappingTest {
     }
     
     @Test
-    public void compareDeviceBlockMappings_changedIops() {
+    void compareDeviceBlockMappings_changedIops() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -151,7 +151,7 @@ public class AwsBlockDeviceMappingTest {
     }
     
     @Test
-    public void compareDeviceBlockMappings_changedVolumeSize() {
+    void compareDeviceBlockMappings_changedVolumeSize() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -176,7 +176,7 @@ public class AwsBlockDeviceMappingTest {
     
     
     @Test
-    public void compareDeviceBlockMappings_changedVolumeType() {
+    void compareDeviceBlockMappings_changedVolumeType() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -201,7 +201,7 @@ public class AwsBlockDeviceMappingTest {
     
    
     @Test
-    public void emptyFieldComparison_name() {
+    void emptyFieldComparison_name() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -221,11 +221,10 @@ public class AwsBlockDeviceMappingTest {
         }
         
         assert mappingA == mappingB
-        
     }
     
     @Test
-    public void emptyFieldComparison_deleteOnTermination() {
+    void emptyFieldComparison_deleteOnTermination() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -245,11 +244,10 @@ public class AwsBlockDeviceMappingTest {
         }
         
         assert mappingA == mappingB
-        
     }
     
     @Test
-    public void emptyFieldComparison_encrypted() {
+    void emptyFieldComparison_encrypted() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -269,11 +267,10 @@ public class AwsBlockDeviceMappingTest {
         }
         
         assert mappingA == mappingB
-        
     }
     
     @Test
-    public void emptyFieldComparison_iops() {
+    void emptyFieldComparison_iops() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -293,11 +290,10 @@ public class AwsBlockDeviceMappingTest {
         }
         
         assert mappingA == mappingB
-        
     }
     
     @Test
-    public void emptyFieldComparison_volumeSize() {
+    void emptyFieldComparison_volumeSize() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -317,11 +313,10 @@ public class AwsBlockDeviceMappingTest {
         }
         
         assert mappingA == mappingB
-        
     }
     
     @Test
-    public void emptyFieldComparison_volumeType() {
+    void emptyFieldComparison_volumeType() {
         
         def mappingA = awsBlockDeviceMapping {
             name = '/dev/sda1'
@@ -341,6 +336,5 @@ public class AwsBlockDeviceMappingTest {
         }
         
         assert mappingA == mappingB
-        
     }
 }

@@ -2,21 +2,12 @@ package io.infrastructor.aws.inventory.utils
 
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.retry.RetryUtils
 import com.amazonaws.services.ec2.AmazonEC2
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
-import com.amazonaws.services.ec2.model.CreateImageRequest
-import com.amazonaws.services.ec2.model.DescribeImagesRequest
-import com.amazonaws.services.ec2.model.DescribeImagesResult
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest
-import com.amazonaws.services.ec2.model.DescribeInstancesResult
-import com.amazonaws.services.ec2.model.DescribeSubnetsRequest
-import com.amazonaws.services.ec2.model.DeregisterImageRequest
-import com.amazonaws.services.ec2.model.Filter
-import com.amazonaws.services.ec2.model.Instance
+import com.amazonaws.services.ec2.model.*
 import io.infrastructor.aws.inventory.AwsNode
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.debug
 import static io.infrastructor.core.utils.RetryUtils.retry
 
 class AmazonEC2Utils {

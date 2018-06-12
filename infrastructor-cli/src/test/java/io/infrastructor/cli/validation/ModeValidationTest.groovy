@@ -5,7 +5,7 @@ import org.junit.Test
 
 class ModeValidationTest {
     @Test
-    public void passCorrectMode() {
+    void passCorrectMode() {
         ModeValidator validator = new ModeValidator()
         validator.validate("", "FULL")
         validator.validate("", "PART")
@@ -16,19 +16,19 @@ class ModeValidationTest {
     }
     
     @Test(expected = ParameterException)
-    public void passIncorrectMode_empty() {
+    void passIncorrectMode_empty() {
         ModeValidator validator = new ModeValidator()
         validator.validate("", "")
     }
     
     @Test(expected = ParameterException)
-    public void passIncorrectMode_null() {
+    void passIncorrectMode_null() {
         ModeValidator validator = new ModeValidator()
         validator.validate("", null)
     }
     
     @Test(expected = ParameterException)
-    public void passIncorrectMode_something() {
+    void passIncorrectMode_something() {
         ModeValidator validator = new ModeValidator()
         validator.validate("", "dummy")
     }

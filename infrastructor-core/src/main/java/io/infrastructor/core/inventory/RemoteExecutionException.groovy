@@ -1,8 +1,8 @@
 package io.infrastructor.core.inventory
 
-public class RemoteExecutionException extends RuntimeException {
+class RemoteExecutionException extends RuntimeException {
     
-    public RemoteExecutionException(String message) {
+    RemoteExecutionException(String message) {
         super(message)
     }
 }

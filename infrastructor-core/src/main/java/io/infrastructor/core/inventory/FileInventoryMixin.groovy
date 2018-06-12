@@ -18,4 +18,3 @@ class FileInventoryMixin {
         FileInventory.fileInventory(params, setup)
     }
 }
-

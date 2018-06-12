@@ -1,6 +1,7 @@
 package io.infrastructor.core.utils
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.debug
+import static io.infrastructor.core.logging.ConsoleLogger.error
 
 class ConfigUtils {
     

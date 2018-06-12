@@ -5,7 +5,7 @@ import org.junit.Test
 public class EncryptHandlerTest {
     
     @Test
-    public void encryptFull() {
+    void encryptFull() {
         def file = 'build/resources/test/encryption/file.txt'
         EncryptHandler handler = new EncryptHandler(files: [file], password: 'test')
         handler.execute()
@@ -13,7 +13,7 @@ public class EncryptHandlerTest {
     }
     
     @Test
-    public void encryptPart() {
+    void encryptPart() {
         def file = 'build/resources/test/encryption/template.txt'
         EncryptHandler handler = new EncryptHandler(files: [file], password: 'test', mode: 'PART')
         handler.execute()

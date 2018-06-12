@@ -1,11 +1,11 @@
 package io.infrastructor.aws.inventory
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.aws.inventory.AwsNodesBuilder.fromEC2
 import static io.infrastructor.aws.inventory.AwsNodesBuilder.fromNodes
-import static io.infrastructor.core.utils.ParallelUtils.executeParallel
-
+import static io.infrastructor.core.logging.ConsoleLogger.debug
+import static io.infrastructor.core.logging.ConsoleLogger.info
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
+import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
 public class EC2 {
     

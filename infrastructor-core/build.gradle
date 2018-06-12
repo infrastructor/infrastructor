@@ -1,4 +1,4 @@
-import org.apache.tools.ant.filters.*
+import org.apache.tools.ant.filters.ReplaceTokens
 
 dependencies {
     compile 'ch.qos.logback:logback-classic:1.2.3'

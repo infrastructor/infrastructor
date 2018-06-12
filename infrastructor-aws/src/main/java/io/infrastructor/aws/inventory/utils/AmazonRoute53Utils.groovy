@@ -5,7 +5,6 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.services.route53.AmazonRoute53
 import com.amazonaws.services.route53.AmazonRoute53ClientBuilder
 import com.amazonaws.services.route53.model.ListResourceRecordSetsRequest
-import com.amazonaws.services.route53.model.ResourceRecord
 import com.amazonaws.services.route53.model.ResourceRecordSet
 
 class AmazonRoute53Utils {

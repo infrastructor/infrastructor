@@ -1,7 +1,7 @@
 package io.infrastructor.core.utils
 
-import java.util.concurrent.Executors
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executors
 
 class ParallelUtils {
 

@@ -1,13 +1,10 @@
 package io.infrastructor.core.processing.actions
 
-import groovy.util.FileNameFinder
-import javax.validation.constraints.NotNull
 import io.infrastructor.core.utils.CryptoUtils
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
-import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
+import javax.validation.constraints.NotNull
 
-public class UploadAction {
+class UploadAction {
     
     @NotNull
     def target

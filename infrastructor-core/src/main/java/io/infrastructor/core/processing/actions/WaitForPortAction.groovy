@@ -2,9 +2,10 @@ package io.infrastructor.core.processing.actions
 
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.debug
+import static io.infrastructor.core.logging.ConsoleLogger.info
 
-public class WaitForPortAction {
+class WaitForPortAction {
     
     @NotNull
     def port

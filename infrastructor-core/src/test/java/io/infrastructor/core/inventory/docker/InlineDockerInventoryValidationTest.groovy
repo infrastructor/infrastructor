@@ -1,7 +1,7 @@
 package io.infrastructor.core.inventory.docker
 
-import org.junit.Test
 import io.infrastructor.core.validation.ValidationException
+import org.junit.Test
 
 import static io.infrastructor.core.inventory.docker.InlineDockerInventory.inlineDockerInventory
 

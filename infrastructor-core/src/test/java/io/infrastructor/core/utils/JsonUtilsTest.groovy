@@ -1,7 +1,8 @@
 package io.infrastructor.core.utils
 
 import org.junit.Test
-import static io.infrastructor.core.utils.JsonUtils.*
+
+import static io.infrastructor.core.utils.JsonUtils.json
 
 class JsonUtilsTest {
     @Test

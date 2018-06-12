@@ -3,14 +3,13 @@ package io.infrastructor.aws.inventory
 import org.junit.Test
 import org.junit.experimental.categories.Category
 
-import static io.infrastructor.aws.inventory.AwsInventory.awsInventory
 import static io.infrastructor.aws.inventory.ManagedAwsInventory.managedAwsInventory
 
 @Category(AwsCategory.class)
 class AwsNodeCreationTest extends AwsTestBase {
     
     @Test
-    public void rebuildNodeWhenDiskSizehasChanged() {
+    void rebuildNodeWhenDiskSizehasChanged() {
         try {
             
             def initialInventory = managedAwsInventory(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, AWS_REGION) {

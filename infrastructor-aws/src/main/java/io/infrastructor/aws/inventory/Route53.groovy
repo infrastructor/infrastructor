@@ -1,9 +1,9 @@
 package io.infrastructor.aws.inventory
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.aws.inventory.AwsNodesBuilder.fromEC2
+import static io.infrastructor.core.logging.ConsoleLogger.info
 
-public class Route53 {
+class Route53 {
     
     def hostedZoneId
     def records = []

@@ -2,9 +2,9 @@ package io.infrastructor.aws.inventory
 
 import io.infrastructor.core.inventory.Inventory
 
+import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.amazonEC2
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
-import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.amazonEC2
 
 public class AwsInventory {
 

@@ -1,6 +1,6 @@
 package io.infrastructor.core.utils
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.debug
 
 class RetryUtils {
     

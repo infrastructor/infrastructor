@@ -1,8 +1,9 @@
 package io.infrastructor.core.utils
 
-import org.junit.Test
 import io.infrastructor.core.validation.ValidationException
-import static io.infrastructor.core.utils.ConnectionUtils.*
+import org.junit.Test
+
+import static io.infrastructor.core.utils.ConnectionUtils.canConnectTo
 
 class ConnectionUtilsTest {
     @Test

@@ -1,7 +1,5 @@
 package io.infrastructor.aws.inventory
 
-import static io.infrastructor.core.validation.ValidationHelper.validate
-
 class AwsMachineImageBuilderMixin {
     
     def static awsMachineImage(Script script, Closure closure) {

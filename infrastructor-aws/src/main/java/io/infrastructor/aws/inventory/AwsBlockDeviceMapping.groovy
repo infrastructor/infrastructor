@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder
 import org.apache.commons.lang3.builder.HashCodeBuilder
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
-public class AwsBlockDeviceMapping {
+class AwsBlockDeviceMapping {
     
     def name
     def deleteOnTermination 
@@ -14,13 +14,13 @@ public class AwsBlockDeviceMapping {
     def volumeSize
     def volumeType
     
-    public static def awsBlockDeviceMapping(Closure closure) {
+    static def awsBlockDeviceMapping(Closure closure) {
         def blockDeviceMapping = new AwsBlockDeviceMapping()
         blockDeviceMapping.with(closure)
         blockDeviceMapping
     }
     
-    public boolean equals(Object obj) {
+    boolean equals(Object obj) {
         if (null == obj)  { return false }
         if (this.is(obj)) { return true }
         if (obj.getClass() != getClass()) { return false }
@@ -38,7 +38,7 @@ public class AwsBlockDeviceMapping {
         return builder.isEquals()
     }
     
-    public int hashCode() {
+    int hashCode() {
         def builder = new HashCodeBuilder(177, 457)
         if (name != null)                builder.append(name)
         if (deleteOnTermination != null) builder.append(deleteOnTermination)

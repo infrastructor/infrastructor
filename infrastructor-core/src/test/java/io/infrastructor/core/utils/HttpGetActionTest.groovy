@@ -2,8 +2,8 @@ package io.infrastructor.core.utils
 
 import org.junit.Test
 
-import static io.infrastructor.core.utils.HttpUtils.*
-import static io.infrastructor.core.utils.JsonUtils.*
+import static io.infrastructor.core.utils.HttpUtils.httpGet
+import static io.infrastructor.core.utils.JsonUtils.json
 
 class HttpGetActionTest {
     @Test

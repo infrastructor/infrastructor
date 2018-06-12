@@ -1,7 +1,7 @@
 package io.infrastructor.aws.inventory
 
-import org.junit.Test
 import io.infrastructor.core.validation.ValidationException
+import org.junit.Test
 
 class AwsMachineImageBuilderTest {
     

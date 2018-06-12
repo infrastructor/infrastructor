@@ -3,8 +3,7 @@ package io.infrastructor.core.processing.actions
 import io.infrastructor.core.utils.ActionRegistrationException
 import org.junit.Test
 
-import static io.infrastructor.core.utils.ActionRegistrationUtils.*
-import static io.infrastructor.core.utils.GroovyShellUtils.load
+import static io.infrastructor.core.utils.ActionRegistrationUtils.action
 
 public class ActionRegistrationTest extends ActionTestBase {
 

@@ -5,7 +5,7 @@ import org.junit.Test
 public class DecryptHandlerTest {
     
     @Test
-    public void decryptFull() {
+    void decryptFull() {
         def file = 'build/resources/test/decryption/file.txt'
         DecryptHandler handler = new DecryptHandler(files: [file], password: 'test')
         handler.execute()
@@ -13,7 +13,7 @@ public class DecryptHandlerTest {
     }
     
     @Test
-    public void decryptPart() {
+    void decryptPart() {
         def file = 'build/resources/test/decryption/template.txt'
         DecryptHandler handler = new DecryptHandler(files: [file], password: 'test', mode: 'PART')
         handler.execute()

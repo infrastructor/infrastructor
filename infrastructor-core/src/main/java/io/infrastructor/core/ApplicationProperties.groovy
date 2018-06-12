@@ -3,10 +3,9 @@ package io.infrastructor.core
 import static java.lang.Integer.parseInt
 import static java.lang.String.valueOf
 import static java.lang.System.getProperty
-import io.infrastructor.core.logging.ConsoleLogger
+import static io.infrastructor.core.logging.ConsoleLogger.INFO
 
-
-public class ApplicationProperties {
+class ApplicationProperties {
     
     public static final String LOG_LEVEL = "LOG_LEVEL"
     
@@ -29,7 +28,7 @@ public class ApplicationProperties {
     }
 
     def static logLevel() {
-        parseInt(getProperty(LOG_LEVEL, valueOf(ConsoleLogger.INFO)))
+        parseInt(getProperty(LOG_LEVEL, valueOf(INFO)))
     }
 }
 

@@ -64,7 +64,7 @@ public class DecryptHandler extends LoggingAwareHandler {
                         status "> decrypting: $it.canonicalPath"
                         decrypt(it) 
                     } catch (CryptoUtilsException ex) {
-                        error "decryption failed: ${it.getCanonicalPath()}"
+                        error "decryption failed: ${it.canonicalPath}"
                         hasError = true
                     }
                     progressLine.increase()

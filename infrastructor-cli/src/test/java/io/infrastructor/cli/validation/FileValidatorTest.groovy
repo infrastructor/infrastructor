@@ -5,13 +5,13 @@ import org.junit.Test
 
 class FileValidatorTest {
     @Test
-    public void passExistingFile() {
+    void passExistingFile() {
         FileValidator validator = new FileValidator()
         validator.validate("", "build/resources/test/validation/existing.file")
     }
     
     @Test(expected = ParameterException)
-    public void passMissingFile() {
+    void passMissingFile() {
         FileValidator validator = new FileValidator()
         validator.validate("", "missing.file")
     }

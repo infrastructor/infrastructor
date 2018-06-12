@@ -4,7 +4,7 @@ import io.infrastructor.core.inventory.RemoteExecutionException
 import io.infrastructor.core.processing.actions.ActionExecutionException
 import io.infrastructor.core.validation.ValidationException
 
-import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.ConsoleLogger.debug
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 class NodeContext {

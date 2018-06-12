@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull
 
 import static io.infrastructor.core.inventory.CommandBuilder.CMD
 
-public class GroupAction {
+class GroupAction {
     
     @NotNull
     def name

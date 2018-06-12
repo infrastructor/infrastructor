@@ -8,7 +8,7 @@ class ApplicationSettingsTest {
     private static final LIVE = 'live'
     
     @Test
-    public void loadSettingWithProfile() {
+    void loadSettingWithProfile() {
         def test = ApplicationSettings.systemSettings(new File('build/resources/test/settings/settings.groovy'), TEST)
         assert test
         assert test.message == TEST
@@ -19,7 +19,7 @@ class ApplicationSettingsTest {
     }
     
     @Test
-    public void loadSettingWithUnexistedProfile() {
+    void loadSettingWithUnexistedProfile() {
         def settings = ApplicationSettings.systemSettings(new File('build/resources/test/settings/settings.groovy'), 'unknown')
         assert settings
         assert settings.test.message == TEST
