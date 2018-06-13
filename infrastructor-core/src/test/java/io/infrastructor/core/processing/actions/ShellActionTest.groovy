@@ -5,7 +5,7 @@ import org.junit.Test
 public class ShellActionTest extends ActionTestBase {
 
     @Test
-    public void singleLineShellAction() {
+    void singleLineShellAction() {
         def result = [:]
         inventory.provisionAs('devops') {
             task name: 'simpleShellAction', actions: {
@@ -19,7 +19,7 @@ public class ShellActionTest extends ActionTestBase {
     }
     
     @Test
-    public void multilineShellAction() {
+    void multilineShellAction() {
         def result = [:]
         
         inventory.provisionAs('devops') {
@@ -39,7 +39,7 @@ public class ShellActionTest extends ActionTestBase {
     }
     
     @Test
-    public void multilineRestrictedShellActionWithoutSudo() {
+    void multilineRestrictedShellActionWithoutSudo() {
         def result = [:]
         
         inventory.provisionAs('devops') {
@@ -57,7 +57,7 @@ public class ShellActionTest extends ActionTestBase {
     }
     
     @Test
-    public void multilineRestrictedShellActionWithSudo() {
+    void multilineRestrictedShellActionWithSudo() {
         def result = [:]
         
         inventory.provisionAs('devops') {
@@ -75,7 +75,7 @@ public class ShellActionTest extends ActionTestBase {
     }
     
     @Test
-    public void multilineShellActionWithErrorScript() {
+    void multilineShellActionWithErrorScript() {
         def result = [:]
         
         inventory.provisionAs('devops') {
@@ -90,7 +90,7 @@ public class ShellActionTest extends ActionTestBase {
     }
     
     @Test
-    public void singlelineShellActionWithUserSwitch() {
+    void singlelineShellActionWithUserSwitch() {
         def result = [:]
         
         inventory.provisionAs('root') {
@@ -108,7 +108,7 @@ public class ShellActionTest extends ActionTestBase {
     }
     
     @Test
-    public void multilineShellActionWithUserSwitch() {
+    void multilineShellActionWithUserSwitch() {
         def result = [:]
         
         inventory.provisionAs('devops') {

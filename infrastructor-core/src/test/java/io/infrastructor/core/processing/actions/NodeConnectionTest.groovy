@@ -5,7 +5,7 @@ import org.junit.Test
 public class NodeConnectionTest extends ActionTestBase {
     
     @Test
-    public void useSshKeyToConnectToNode() {
+    void useSshKeyToConnectToNode() {
         def result = [:]
         inventory.provisionAs('root') {
             task actions: {
@@ -16,7 +16,7 @@ public class NodeConnectionTest extends ActionTestBase {
     }
     
     @Test
-    public void useSshPasswordToConnectToNode() {
+    void useSshPasswordToConnectToNode() {
         def result = [:]
         inventory.provisionAs('devops') {
             task actions: {

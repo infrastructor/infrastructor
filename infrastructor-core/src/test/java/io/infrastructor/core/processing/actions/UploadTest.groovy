@@ -5,7 +5,7 @@ import org.junit.Test
 public class UploadTest extends ActionTestBase {
     
     @Test
-    public void uploadAFileToRemoteHost() {
+    void uploadAFileToRemoteHost() {
         inventory.provisionAs('root') {
             task actions: {
                 user  name: 'test'
@@ -25,7 +25,7 @@ public class UploadTest extends ActionTestBase {
     } 
     
     @Test
-    public void uploadAFileToADeepFolder() {
+    void uploadAFileToADeepFolder() {
         inventory.provisionAs('root') {
             task actions: {
                 user  name: 'test'
@@ -45,7 +45,7 @@ public class UploadTest extends ActionTestBase {
     } 
     
     @Test
-    public void uploadAFileToRemoteHostWithoutPermissions() {
+    void uploadAFileToRemoteHostWithoutPermissions() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
@@ -59,7 +59,7 @@ public class UploadTest extends ActionTestBase {
     }
     
     @Test
-    public void uploadAFileToRemoteHostWithSudo() {
+    void uploadAFileToRemoteHostWithSudo() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
@@ -75,7 +75,7 @@ public class UploadTest extends ActionTestBase {
     }
     
     @Test
-    public void uploadFileWithUnknownOwner() {
+    void uploadFileWithUnknownOwner() {
         inventory.provisionAs('devops') {
             task actions: {
                 // execute
@@ -88,7 +88,7 @@ public class UploadTest extends ActionTestBase {
     }
  
     @Test
-    public void uploadFileWithUnknownGroup() {
+    void uploadFileWithUnknownGroup() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -101,7 +101,7 @@ public class UploadTest extends ActionTestBase {
     }
     
     @Test
-    public void uploadFileWithInvalidMode() {
+    void uploadFileWithInvalidMode() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -115,7 +115,7 @@ public class UploadTest extends ActionTestBase {
     
     
     @Test
-    public void decryptAndUploadFileToRemoteHost() {
+    void decryptAndUploadFileToRemoteHost() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {

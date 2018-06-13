@@ -5,7 +5,7 @@ import org.junit.Test
 public class ReplaceLineActionTest extends ActionTestBase {
     
     @Test
-    public void replaceLineInFile() {
+    void replaceLineInFile() {
         inventory.provisionAs('root') {
             task actions: {
                 file {
@@ -34,7 +34,7 @@ public class ReplaceLineActionTest extends ActionTestBase {
     }
     
     @Test
-    public void replaceLineWithoutChange() {
+    void replaceLineWithoutChange() {
         inventory.provisionAs('root') {
             task actions: {
                 file {
@@ -63,7 +63,7 @@ public class ReplaceLineActionTest extends ActionTestBase {
     }
     
     @Test
-    public void replaceLineChangeAttributes() {
+    void replaceLineChangeAttributes() {
         inventory.provisionAs('root') {
             task actions: {
                 file {

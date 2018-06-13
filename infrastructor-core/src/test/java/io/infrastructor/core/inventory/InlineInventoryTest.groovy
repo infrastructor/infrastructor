@@ -7,7 +7,7 @@ import static io.infrastructor.core.inventory.InlineInventory.inlineInventory
 public class InlineInventoryTest {
 
     @Test
-    public void mapLikeDeclaration() {
+    void mapLikeDeclaration() {
         def inventory = inlineInventory {
             node id: "idX", host: "10.0.0.1", port: 10000, username: "root", password: "infra", tags: [x: "t1", y: "t2"]
             node id: "idY", host: "10.0.0.2", port: 10000, username: "root", password: "infra"
@@ -36,7 +36,7 @@ public class InlineInventoryTest {
     }
     
     @Test
-    public void closureLikeDeclaration() {
+    void closureLikeDeclaration() {
         def inventory = inlineInventory {
             node {
                 id = "idX"
@@ -79,7 +79,7 @@ public class InlineInventoryTest {
     }
     
     @Test
-    public void combinedDeclaration() {
+    void combinedDeclaration() {
         def inventory = inlineInventory {
             node(id: "idX", host: "10.0.0.1") {
                 port = 10000

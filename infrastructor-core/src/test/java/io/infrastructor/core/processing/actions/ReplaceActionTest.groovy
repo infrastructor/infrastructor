@@ -5,7 +5,7 @@ import org.junit.Test
 public class ReplaceActionTest extends ActionTestBase {
     
     @Test
-    public void replaceAllOccurrencesInFileUsingRegex() {
+    void replaceAllOccurrencesInFileUsingRegex() {
         inventory.provisionAs('root') {
             task actions: {
                 file {
@@ -32,7 +32,7 @@ public class ReplaceActionTest extends ActionTestBase {
     }
     
     @Test
-    public void replaceFirstOccurrenceInFileUsingRegex() {
+    void replaceFirstOccurrenceInFileUsingRegex() {
         inventory.provisionAs('root') {
             task actions: {
                 file {
@@ -59,7 +59,7 @@ public class ReplaceActionTest extends ActionTestBase {
     }
     
     @Test
-    public void replaceBlockWithUnknownOwner() {
+    void replaceBlockWithUnknownOwner() {
         inventory.provisionAs('devops') {
             task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
@@ -78,7 +78,7 @@ public class ReplaceActionTest extends ActionTestBase {
     }
     
     @Test
-    public void replaceBlockWithUnknownGroup() {
+    void replaceBlockWithUnknownGroup() {
         inventory.provisionAs('devops') {
             task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
@@ -97,7 +97,7 @@ public class ReplaceActionTest extends ActionTestBase {
     }
     
     @Test
-    public void replaceBlockWithInvalidMode() {
+    void replaceBlockWithInvalidMode() {
         inventory.provisionAs('devops') {
             task actions: {
                 file target: '/tmp/test.txt', content: "dummy"

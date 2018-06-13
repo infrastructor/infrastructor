@@ -10,7 +10,7 @@ public class DockerInventoryDecorator {
         this.imageName = imageName
     }
 
-    public void provisionAs(String username, Object closure) {
+    void provisionAs(String username, Object closure) {
         def inventory
 
         try {

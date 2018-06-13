@@ -6,7 +6,7 @@ import static io.infrastructor.core.inventory.docker.InlineDockerInventory.inlin
 
 class ProvisioningContextTest {
     @Test
-    public void simple() {
+    void simple() {
         def inventory = inlineDockerInventory {
             node image: "infrastructor/ubuntu-sshd", username: 'root', keyfile: 'build/resources/test/itest.pem'
         }

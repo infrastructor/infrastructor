@@ -5,7 +5,7 @@ import org.junit.Test
 public class InsertBlockTest extends ActionTestBase {
     
     @Test
-    public void insertBlockAtTheBeginningOfAFile() {
+    void insertBlockAtTheBeginningOfAFile() {
         inventory.provisionAs('root') {
             task name: 'insertBlockAtTheBeginningOfAFile', actions: {
                 file {
@@ -32,7 +32,7 @@ public class InsertBlockTest extends ActionTestBase {
     } 
     
     @Test
-    public void insertBlockAtTheEndingOfAFile() {
+    void insertBlockAtTheEndingOfAFile() {
         inventory.provisionAs('root') {
             task actions: {
                 file {
@@ -59,7 +59,7 @@ public class InsertBlockTest extends ActionTestBase {
     } 
     
     @Test
-    public void insertBlockWithoutPermissions() {
+    void insertBlockWithoutPermissions() {
         inventory.provisionAs('devops') {
             task actions: {
                 file {
@@ -84,7 +84,7 @@ public class InsertBlockTest extends ActionTestBase {
     }
     
     @Test
-    public void insertBlockToUnexistedFileReturnError() {
+    void insertBlockToUnexistedFileReturnError() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = insertBlock {
@@ -97,7 +97,7 @@ public class InsertBlockTest extends ActionTestBase {
     }
     
     @Test
-    public void insertBlockWithUnknownOwner() {
+    void insertBlockWithUnknownOwner() {
         inventory.provisionAs('devops') {
             task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
@@ -116,7 +116,7 @@ public class InsertBlockTest extends ActionTestBase {
     }
     
     @Test
-    public void insertBlockWithUnknownGroup() {
+    void insertBlockWithUnknownGroup() {
         inventory.provisionAs('devops') {
             task actions: {
                 file target: '/tmp/test.txt', content: "dummy"
@@ -135,7 +135,7 @@ public class InsertBlockTest extends ActionTestBase {
     }
     
     @Test
-    public void insertBlockWithInvalidMode() {
+    void insertBlockWithInvalidMode() {
         inventory.provisionAs('devops') {
             task actions: {
                 file target: '/tmp/test.txt', content: "dummy"

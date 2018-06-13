@@ -7,7 +7,7 @@ import static io.infrastructor.core.inventory.docker.InlineDockerInventory.inlin
 public class InlineDockerInventoryTest {
     
     @Test
-    public void createDockerNodes() {
+    void createDockerNodes() {
         def inventory = inlineDockerInventory {
             node id: 'hostA', image: 'infrastructor/hostA', tags: [id: 'hostA'], username: 'root',   keyfile: 'resources/key.pem', password: 'hApass'
             node id: 'hostB', image: 'infrastructor/hostB', tags: [id: 'hostB'], username: 'devops', keyfile: 'resources/key.pem'
@@ -48,7 +48,7 @@ public class InlineDockerInventoryTest {
     }
     
     @Test
-    public void launchDockerNodes() {
+    void launchDockerNodes() {
         def inventory = inlineDockerInventory {
             node image: 'infrastructor/ubuntu-sshd', username: 'root',   keyfile: 'build/resources/test/itest.pem'
             node image: 'infrastructor/ubuntu-sshd', username: 'devops', password: 'devops'

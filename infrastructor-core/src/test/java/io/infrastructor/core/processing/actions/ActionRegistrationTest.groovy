@@ -8,7 +8,7 @@ import static io.infrastructor.core.utils.ActionRegistrationUtils.action
 public class ActionRegistrationTest extends ActionTestBase {
 
     @Test
-    public void loadAndRegisterAnExternalAction() {
+    void loadAndRegisterAnExternalAction() {
         def result = [:]
         inventory.provisionAs('root') {
             action name: 'createDirectory', file: 'build/resources/test/apply_action/directory.groovy'
@@ -23,7 +23,7 @@ public class ActionRegistrationTest extends ActionTestBase {
     }
 
     @Test
-    public void registerALocalAction() {
+    void registerALocalAction() {
         def result = [:]
         inventory.provisionAs('root') {
             action name: 'mydirectory', closure: { params -> shell "mkdir $params.name" }
@@ -38,7 +38,7 @@ public class ActionRegistrationTest extends ActionTestBase {
     }
     
     @Test
-    public void registerALocalActionWithMultilineParams() {
+    void registerALocalActionWithMultilineParams() {
         def result = [:]
         inventory.provisionAs('root') {
             action name: 'createFile', closure: { params -> 
@@ -61,7 +61,7 @@ public class ActionRegistrationTest extends ActionTestBase {
     }
     
     @Test
-    public void registerALocalActionWithMultilineMixedParams() {
+    void registerALocalActionWithMultilineMixedParams() {
         def result = [:]
         inventory.provisionAs('root') {
             action name: 'createFile', closure: { params -> 
@@ -83,7 +83,7 @@ public class ActionRegistrationTest extends ActionTestBase {
     }
     
     @Test
-    public void registerALocalActionWithoutParameters() {
+    void registerALocalActionWithoutParameters() {
         def result = [:]
         inventory.provisionAs('root') {
             action name: 'mydirectory', closure: { shell "mkdir /var/simple" }
@@ -98,7 +98,7 @@ public class ActionRegistrationTest extends ActionTestBase {
     }
 
     @Test 
-    public void reRegisterAnExistingAction() { 
+    void reRegisterAnExistingAction() { 
         def result = [:]
 
         inventory.provisionAs('root') {
@@ -115,7 +115,7 @@ public class ActionRegistrationTest extends ActionTestBase {
     }
 
     @Test 
-    public void registerActionWithSimplifiedMultilineDefinition() { 
+    void registerActionWithSimplifiedMultilineDefinition() { 
         def result = [:]
             
         action('mydirectory') { 
@@ -133,27 +133,27 @@ public class ActionRegistrationTest extends ActionTestBase {
     }
 
     @Test(expected = ActionRegistrationException) 
-    public void registerActionWithNullName() { 
+    void registerActionWithNullName() { 
         action name: null, closure: { shell "mkdir /var/simple" }
     }
     
     @Test(expected = ActionRegistrationException) 
-    public void registerActionWithEmptyName() { 
+    void registerActionWithEmptyName() { 
         action name: '', closure: { shell "mkdir /var/simple" }
     }
     
     @Test(expected = ActionRegistrationException) 
-    public void registerActionWithNullClosure() { 
+    void registerActionWithNullClosure() { 
         action name: 'test', closure: null
     }
     
     @Test(expected = ActionRegistrationException) 
-    public void registerActionWithUnspecifiedFile() { 
+    void registerActionWithUnspecifiedFile() { 
         action name: 'test', file: ''
     }
    
     @Test(expected = ActionRegistrationException) 
-    public void registerActionWithMissingFile() { 
+    void registerActionWithMissingFile() { 
         action name: 'test', file: 'missing'
     }
 }

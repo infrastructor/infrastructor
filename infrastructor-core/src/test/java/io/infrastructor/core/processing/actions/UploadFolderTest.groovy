@@ -4,7 +4,7 @@ import org.junit.Test
 
 class UploadFolderTest extends ActionTestBase {
     @Test
-    public void uploadFolderContentToRemoteHost() {
+    void uploadFolderContentToRemoteHost() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
@@ -27,7 +27,7 @@ class UploadFolderTest extends ActionTestBase {
     }
     
     @Test
-    public void uploadFolderContentToRemoteHostWithIncludes() {
+    void uploadFolderContentToRemoteHostWithIncludes() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
@@ -51,7 +51,7 @@ class UploadFolderTest extends ActionTestBase {
     }
     
     @Test
-    public void uploadFolderContentToRemoteHostWithIncludesNested() {
+    void uploadFolderContentToRemoteHostWithIncludesNested() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
@@ -75,7 +75,7 @@ class UploadFolderTest extends ActionTestBase {
     }
     
     @Test
-    public void uploadFolderContentToRemoteHostWithIncludesNestedMultiple() {
+    void uploadFolderContentToRemoteHostWithIncludesNestedMultiple() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
@@ -99,7 +99,7 @@ class UploadFolderTest extends ActionTestBase {
     }
     
     @Test
-    public void uploadFolderContentToRemoteHostWithExcludes() {
+    void uploadFolderContentToRemoteHostWithExcludes() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {
@@ -124,7 +124,7 @@ class UploadFolderTest extends ActionTestBase {
     }
     
     @Test
-    public void uploadFolderContentToRemoteHostWithExcludesOnly() {
+    void uploadFolderContentToRemoteHostWithExcludesOnly() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = upload {

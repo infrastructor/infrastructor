@@ -7,7 +7,7 @@ import org.junit.Test
 public class FetchActionTest extends ActionTestBase {
     
     @Test
-    public void fetchFileFromRemoteHost() {
+    void fetchFileFromRemoteHost() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
         inventory.provisionAs('root') {
             task actions: {
@@ -26,7 +26,7 @@ public class FetchActionTest extends ActionTestBase {
     }
     
     @Test
-    public void fetchFileFromRemoteHostWithoutPermissions() {
+    void fetchFileFromRemoteHostWithoutPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
         inventory.provisionAs('devops') {
             task actions: {
@@ -49,7 +49,7 @@ public class FetchActionTest extends ActionTestBase {
     }
     
     @Test
-    public void fetchFileFromRemoteHostWithPermissions() {
+    void fetchFileFromRemoteHostWithPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
         inventory.provisionAs('devops') {
             task actions: {
@@ -72,7 +72,7 @@ public class FetchActionTest extends ActionTestBase {
     }
         
     @Test(expected = TaskExecutionException)
-    public void fetchFileWithEmptyArguments() {
+    void fetchFileWithEmptyArguments() {
         inventory.provisionAs('root') {
             task actions: {
                 fetch { }

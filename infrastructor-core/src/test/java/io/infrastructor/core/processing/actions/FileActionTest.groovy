@@ -5,7 +5,7 @@ import org.junit.Test
 public class FileActionTest extends ActionTestBase {
    
     @Test
-    public void writeAContentToAFileOnRemoteServerWithSudo() {
+    void writeAContentToAFileOnRemoteServerWithSudo() {
         inventory.provisionAs('devops') {
             task actions: {
                 // setup
@@ -34,7 +34,7 @@ public class FileActionTest extends ActionTestBase {
     }
     
     @Test
-    public void writeAFileOnRemoteServerWithoutSudo() {
+    void writeAFileOnRemoteServerWithoutSudo() {
         inventory.provisionAs('devops') {
             task actions: {
                 // execution
@@ -50,7 +50,7 @@ public class FileActionTest extends ActionTestBase {
     }
     
     @Test
-    public void writeAFileOnRemoteServerAsRoot() {
+    void writeAFileOnRemoteServerAsRoot() {
         inventory.provisionAs('root') {
             task actions: {
                 // execution
@@ -66,7 +66,7 @@ public class FileActionTest extends ActionTestBase {
     }
     
     @Test
-    public void createFileWithUnknownOwner() {
+    void createFileWithUnknownOwner() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -79,7 +79,7 @@ public class FileActionTest extends ActionTestBase {
     }
  
     @Test
-    public void createFileWithUnknownGroup() {
+    void createFileWithUnknownGroup() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -92,7 +92,7 @@ public class FileActionTest extends ActionTestBase {
     }
     
     @Test
-    public void createFileWithInvalidMode() {
+    void createFileWithInvalidMode() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute

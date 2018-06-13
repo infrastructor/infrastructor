@@ -7,7 +7,7 @@ import static io.infrastructor.core.inventory.InlineInventory.inlineInventory
 public class TaskExecutorTest {
 	
     @Test
-    public void runPlanWithAllNodes() {
+    void runPlanWithAllNodes() {
         def collector = [] as Set
         inlineInventory {
             node host: "testA", username: "dummy"
@@ -22,7 +22,7 @@ public class TaskExecutorTest {
     }
     
     @Test
-    public void runPlanWithTagedNode() {
+    void runPlanWithTagedNode() {
         def collector = [] as Set
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
@@ -37,7 +37,7 @@ public class TaskExecutorTest {
     }
         
     @Test
-    public void runPlanWithTagedNodes() {
+    void runPlanWithTagedNodes() {
         def collector = [] as Set
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
@@ -52,7 +52,7 @@ public class TaskExecutorTest {
     }
         
     @Test
-    public void runPlanWithTagedNodesAndParallelism() {
+    void runPlanWithTagedNodesAndParallelism() {
         def collector = ([] as Set).asSynchronized() 
         def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
@@ -70,7 +70,7 @@ public class TaskExecutorTest {
     }
         
     @Test
-    public void runPlanWithParallelism() {
+    void runPlanWithParallelism() {
         def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
@@ -85,7 +85,7 @@ public class TaskExecutorTest {
     }
     
     @Test
-    public void runPlanWithParallelismNestedSyntax() {
+    void runPlanWithParallelismNestedSyntax() {
         def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
@@ -103,7 +103,7 @@ public class TaskExecutorTest {
     }
         
     @Test
-    public void runPlanWithASinlgeTagInClosure() {
+    void runPlanWithASinlgeTagInClosure() {
         def collector = [] as Set
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
@@ -119,7 +119,7 @@ public class TaskExecutorTest {
     }
         
     @Test
-    public void runPlanWithASinlgeNegationTagInClosure() {
+    void runPlanWithASinlgeNegationTagInClosure() {
         def collector = [] as Set
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
@@ -135,7 +135,7 @@ public class TaskExecutorTest {
     }
         
     @Test
-    public void runPlanWithADoubleNegationTagInClosure() {
+    void runPlanWithADoubleNegationTagInClosure() {
         def collector = [] as Set
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'a']
@@ -151,7 +151,7 @@ public class TaskExecutorTest {
     }
         
     @Test
-    public void runPlanWithAComplexTagFilteringExpression() {
+    void runPlanWithAComplexTagFilteringExpression() {
         def collector = [] as Set
         inlineInventory {
             node host: "testA", username: "dummy", tags: [a: 'tag A', b: '1']
@@ -167,7 +167,7 @@ public class TaskExecutorTest {
     }
     
     @Test
-    public void runPlanWithExpressionForNonNodes() {
+    void runPlanWithExpressionForNonNodes() {
         def collector = [] as Set
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'tag A']
@@ -182,7 +182,7 @@ public class TaskExecutorTest {
     }
     
     @Test
-    public void runActionsOnSuccess() {
+    void runActionsOnSuccess() {
         def collector = []
         inlineInventory {
             node host: "testA", username: "dummy", tags: [id: 'tag A']
@@ -199,7 +199,7 @@ public class TaskExecutorTest {
     }
     
     @Test
-    public void runActionsOnFailed() {
+    void runActionsOnFailed() {
         def collector = []
         inlineInventory {
             node id: 'testA', host: "testA", username: "dummy", tags: [id: 'tag A']

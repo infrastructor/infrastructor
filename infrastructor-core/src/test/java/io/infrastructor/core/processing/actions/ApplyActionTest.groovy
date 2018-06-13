@@ -8,7 +8,7 @@ import static io.infrastructor.core.utils.GroovyShellUtils.load
 class ApplyActionTest extends ActionTestBase {
 	
     @Test
-    public void applyActionsDefinedInExternalClosure() {
+    void applyActionsDefinedInExternalClosure() {
         def the_closure = { params -> shell(params.command) }
         
         inventory.provisionAs('root') {
@@ -27,7 +27,7 @@ class ApplyActionTest extends ActionTestBase {
     }
     
     @Test
-    public void loadActionFromExternalFileInsideNodesSection() {
+    void loadActionFromExternalFileInsideNodesSection() {
         inventory.provisionAs('root') {
             task actions: {
                 def directory_action_set = load 'build/resources/test/apply_action/directory.groovy'
@@ -37,7 +37,7 @@ class ApplyActionTest extends ActionTestBase {
     }
     
     @Test(expected = TaskExecutionException)
-    public void loadActionFromUnxesistingFile() {
+    void loadActionFromUnxesistingFile() {
         inventory.provisionAs('root') {
             task actions: {
                 def closure = load 'build/resources/test/apply_action/missing.groovy'

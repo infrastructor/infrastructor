@@ -5,7 +5,7 @@ import org.junit.Test
 public class TemplateActionTest extends ActionTestBase {
 
     @Test
-    public void generateAFileOnRemoteServer() {
+    void generateAFileOnRemoteServer() {
         inventory.provisionAs('root') {
             task actions: {
                 // setup
@@ -35,7 +35,7 @@ public class TemplateActionTest extends ActionTestBase {
     }
     
     @Test
-    public void generateAFileOnRemoteServerWithEmptyBindings() {
+    void generateAFileOnRemoteServerWithEmptyBindings() {
         inventory.provisionAs('root') {
             task actions: {
                 template {
@@ -53,7 +53,7 @@ public class TemplateActionTest extends ActionTestBase {
     }
 
     @Test
-    public void createADeepFolderBeforeTemplateUpload() {
+    void createADeepFolderBeforeTemplateUpload() {
         inventory.provisionAs('devops') {
             task actions: {
                 // execution
@@ -71,7 +71,7 @@ public class TemplateActionTest extends ActionTestBase {
     }
     
     @Test
-    public void templateWithUnknownOwner() {
+    void templateWithUnknownOwner() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = template {
@@ -88,7 +88,7 @@ public class TemplateActionTest extends ActionTestBase {
     }
     
     @Test
-    public void templateWithUnknownGroup() {
+    void templateWithUnknownGroup() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = template {
@@ -105,7 +105,7 @@ public class TemplateActionTest extends ActionTestBase {
     }
     
     @Test
-    public void templateWithInvalidMode() {
+    void templateWithInvalidMode() {
         inventory.provisionAs('devops') {
             task actions: {
                 def result = template {
@@ -122,7 +122,7 @@ public class TemplateActionTest extends ActionTestBase {
     }
     
     @Test
-    public void templateWithEncryptedValues() {
+    void templateWithEncryptedValues() {
         inventory.provisionAs('devops') {
             task actions: {
                 template {
@@ -143,7 +143,7 @@ public class TemplateActionTest extends ActionTestBase {
     
     
     @Test
-    public void templateWithFullyEncryptedContent() {
+    void templateWithFullyEncryptedContent() {
         inventory.provisionAs('devops') {
             task actions: {
                 template {

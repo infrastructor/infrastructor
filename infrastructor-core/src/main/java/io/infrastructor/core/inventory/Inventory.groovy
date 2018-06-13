@@ -10,7 +10,7 @@ class Inventory {
     
     def nodes = []
     
-    public void leftShift(Node node) {
+    void leftShift(Node node) {
         nodes << validate(node)
     }
     

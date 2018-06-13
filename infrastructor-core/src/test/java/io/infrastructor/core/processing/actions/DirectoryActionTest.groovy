@@ -5,7 +5,7 @@ import org.junit.Test
 public class DirectoryActionTest extends ActionTestBase {
     
     @Test
-    public void createDirectoryAsRoot() {
+    void createDirectoryAsRoot() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -22,7 +22,7 @@ public class DirectoryActionTest extends ActionTestBase {
     }
     
     @Test
-    public void createDirectoryAsDevopsWithSudo() {
+    void createDirectoryAsDevopsWithSudo() {
         inventory.provisionAs('devops') {
             task actions: {
                 // execute
@@ -37,7 +37,7 @@ public class DirectoryActionTest extends ActionTestBase {
     }
     
     @Test
-    public void createNestedDirectories() {
+    void createNestedDirectories() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -68,7 +68,7 @@ public class DirectoryActionTest extends ActionTestBase {
     }
 
     @Test
-    public void createDirectoryAsDevopsWithoutSudo() {
+    void createDirectoryAsDevopsWithoutSudo() {
         inventory.provisionAs('devops') {
             task actions: {
                 // execute
@@ -80,7 +80,7 @@ public class DirectoryActionTest extends ActionTestBase {
     }
     
     @Test
-    public void createDirectoryWithUnknownOwner() {
+    void createDirectoryWithUnknownOwner() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -93,7 +93,7 @@ public class DirectoryActionTest extends ActionTestBase {
     }
  
     @Test
-    public void createDirectoryWithUnknownGroup() {
+    void createDirectoryWithUnknownGroup() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -106,7 +106,7 @@ public class DirectoryActionTest extends ActionTestBase {
     }
     
     @Test
-    public void createDirectoryWithInvalidMode() {
+    void createDirectoryWithInvalidMode() {
         inventory.provisionAs('root') {
             task actions: {
                 // execute
@@ -119,7 +119,7 @@ public class DirectoryActionTest extends ActionTestBase {
     }
     
     @Test
-    public void createDirectoryWithEmptyMode() {
+    void createDirectoryWithEmptyMode() {
         inventory.provisionAs('root') {
             task actions: {
                 assert directory(target: '/etc/simple/test1', mode: '').exitcode == 0

@@ -4,7 +4,7 @@ import org.junit.Test
 
 public class FilteringUtilsTest {
     @Test
-    public void matchTags() {
+    void matchTags() {
         assert true  == FilteringUtils.match(['a', 'b', 'c']) { 'a' && 'b' } 
         assert false == FilteringUtils.match(['a', 'b', 'c']) { 'a' && 'b' && !'c' } 
         assert true  == FilteringUtils.match(['a', 'b', 'c']) { 'c' } 
@@ -12,7 +12,7 @@ public class FilteringUtilsTest {
     }
     
     @Test
-    public void matchEmptyTags() {
+    void matchEmptyTags() {
         assert false == FilteringUtils.match([]) { 'a' } 
         assert false == FilteringUtils.match([]) { 'a' && 'b' } 
         assert true  == FilteringUtils.match([]) { !'a' && !'b' } 
