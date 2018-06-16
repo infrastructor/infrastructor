@@ -5,7 +5,7 @@ import org.junit.Test
 
 import static io.infrastructor.core.inventory.InlineInventory.inlineInventory
 
-public class NodeValidationTest {
+class NodeValidationTest {
     
     @Test(expected = ValidationException)
     void nodeMustHaveAHost() {

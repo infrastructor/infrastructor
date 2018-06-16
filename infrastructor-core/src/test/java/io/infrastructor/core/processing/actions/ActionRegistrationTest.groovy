@@ -1,159 +1,174 @@
 package io.infrastructor.core.processing.actions
 
+import io.infrastructor.core.inventory.InventoryAwareTestBase
 import io.infrastructor.core.utils.ActionRegistrationException
 import org.junit.Test
 
 import static io.infrastructor.core.utils.ActionRegistrationUtils.action
 
-public class ActionRegistrationTest extends ActionTestBase {
+class ActionRegistrationTest extends InventoryAwareTestBase {
 
     @Test
     void loadAndRegisterAnExternalAction() {
         def result = [:]
-        inventory.provisionAs('root') {
-            action name: 'createDirectory', file: 'build/resources/test/apply_action/directory.groovy'
+        withInventory { inventory ->
+            inventory.provision {
+                action name: 'createDirectory', file: 'build/resources/test/apply_action/directory.groovy'
 
-            task actions: {
-                createDirectory target_name: '/var/simple'
-                result = shell 'ls /var'
+                task actions: {
+                    createDirectory target_name: '~/simple'
+                    result = shell 'ls ~'
+                }
             }
         }
-        
+
         assert result.output.contains('simple')
     }
 
     @Test
     void registerALocalAction() {
         def result = [:]
-        inventory.provisionAs('root') {
-            action name: 'mydirectory', closure: { params -> shell "mkdir $params.name" }
+        withInventory { inventory ->
+            inventory.provision {
+                action name: 'mydirectory', closure: { params -> shell "mkdir $params.name" }
 
-            task actions: {
-                mydirectory (name: '/var/simple') 
-                result = shell 'ls /var'
+                task actions: {
+                    mydirectory(name: '~/simple')
+                    result = shell 'ls ~'
+                }
             }
         }
 
         assert result.output.contains('simple')
     }
-    
+
     @Test
     void registerALocalActionWithMultilineParams() {
         def result = [:]
-        inventory.provisionAs('root') {
-            action name: 'createFile', closure: { params -> 
-                file {
-                    target  = params.file
-                    content = params.content
+        withInventory { inventory ->
+            inventory.provision {
+                action name: 'createFile', closure: { params ->
+                    file {
+                        target = params.file
+                        content = params.content
+                    }
                 }
-            }
 
-            task actions: {
-                createFile {
-                    file    = "/var/test.txt"
-                    content = "simple"
+                task actions: {
+                    createFile {
+                        file = "test.txt"
+                        content = "simple"
+                    }
+                    result = shell 'cat test.txt'
                 }
-                result = shell 'cat /var/test.txt'
             }
         }
 
         assert result.output.contains('simple')
     }
-    
+
     @Test
     void registerALocalActionWithMultilineMixedParams() {
         def result = [:]
-        inventory.provisionAs('root') {
-            action name: 'createFile', closure: { params -> 
-                file {
-                    target  = params.file
-                    content = params.content
+        withInventory { inventory ->
+            inventory.provision {
+                action name: 'createFile', closure: { params ->
+                    file {
+                        target = params.file
+                        content = params.content
+                    }
                 }
-            }
 
-            task actions: {
-                createFile(file: "/var/test.txt") {
-                    content = "simple"
+                task actions: {
+                    createFile(file: "test.txt") {
+                        content = "simple"
+                    }
+                    result = shell 'cat test.txt'
                 }
-                result = shell 'cat /var/test.txt'
             }
         }
 
         assert result.output.contains('simple')
     }
-    
+
     @Test
     void registerALocalActionWithoutParameters() {
         def result = [:]
-        inventory.provisionAs('root') {
-            action name: 'mydirectory', closure: { shell "mkdir /var/simple" }
+        withInventory { inventory ->
+            inventory.provision {
+                action name: 'mydirectory', closure: { shell "mkdir ~/simple" }
 
-            task actions: {
-                mydirectory()
-                result = shell 'ls /var'
+                task actions: {
+                    mydirectory()
+                    result = shell 'ls ~'
+                }
             }
         }
 
         assert result.output.contains('simple')
     }
 
-    @Test 
-    void reRegisterAnExistingAction() { 
+    @Test
+    void reRegisterAnExistingAction() {
         def result = [:]
 
-        inventory.provisionAs('root') {
-            action name: 'mydirectory', closure: { shell "mkdir /var/simple" }
-            action name: 'mydirectory', closure: { shell "mkdir /var/another" }
+        withInventory { inventory ->
+            inventory.provision {
+                action name: 'mydirectory', closure: { shell "mkdir ~/simple" }
+                action name: 'mydirectory', closure: { shell "mkdir ~/another" }
 
-            task actions: {
-                mydirectory()
-                result = shell 'ls /var'
+                task actions: {
+                    mydirectory()
+                    result = shell 'ls ~'
+                }
             }
         }
 
         assert result.output.contains('another')
     }
 
-    @Test 
-    void registerActionWithSimplifiedMultilineDefinition() { 
+    @Test
+    void registerActionWithSimplifiedMultilineDefinition() {
         def result = [:]
-            
-        action('mydirectory') { 
-            shell "mkdir /var/simple" 
+
+        action('mydirectory') {
+            shell "mkdir ~/simple"
         }
 
-        inventory.provisionAs('root') {
-            task actions: {
-                mydirectory()
-                result = shell 'ls /var'
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    mydirectory()
+                    result = shell 'ls ~'
+                }
             }
         }
 
         assert result.output.contains('simple')
     }
 
-    @Test(expected = ActionRegistrationException) 
-    void registerActionWithNullName() { 
-        action name: null, closure: { shell "mkdir /var/simple" }
+    @Test(expected = ActionRegistrationException)
+    void registerActionWithNullName() {
+        action name: null, closure: { shell "mkdir ~/simple" }
     }
-    
-    @Test(expected = ActionRegistrationException) 
-    void registerActionWithEmptyName() { 
-        action name: '', closure: { shell "mkdir /var/simple" }
+
+    @Test(expected = ActionRegistrationException)
+    void registerActionWithEmptyName() {
+        action name: '', closure: { shell "mkdir ~/simple" }
     }
-    
-    @Test(expected = ActionRegistrationException) 
-    void registerActionWithNullClosure() { 
+
+    @Test(expected = ActionRegistrationException)
+    void registerActionWithNullClosure() {
         action name: 'test', closure: null
     }
-    
-    @Test(expected = ActionRegistrationException) 
-    void registerActionWithUnspecifiedFile() { 
+
+    @Test(expected = ActionRegistrationException)
+    void registerActionWithUnspecifiedFile() {
         action name: 'test', file: ''
     }
-   
-    @Test(expected = ActionRegistrationException) 
-    void registerActionWithMissingFile() { 
+
+    @Test(expected = ActionRegistrationException)
+    void registerActionWithMissingFile() {
         action name: 'test', file: 'missing'
     }
 }

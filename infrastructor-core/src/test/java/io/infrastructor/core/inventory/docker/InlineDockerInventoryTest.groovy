@@ -4,7 +4,7 @@ import org.junit.Test
 
 import static io.infrastructor.core.inventory.docker.InlineDockerInventory.inlineDockerInventory
 
-public class InlineDockerInventoryTest {
+class InlineDockerInventoryTest {
     
     @Test
     void createDockerNodes() {
@@ -15,7 +15,7 @@ public class InlineDockerInventoryTest {
         }
         
         assert inventory.nodes.size() == 3
-        
+
         def hostA = inventory.nodes.find { it.id == 'hostA' }
         
         assert hostA
@@ -55,11 +55,13 @@ public class InlineDockerInventoryTest {
         }
         
         try {
-            inventory.provision {
+            def result = ''
+            inventory.launch(500).provision {
                 task actions: {
-                    assert shell("ls /etc").output
+                    result = shell("ls /home")
                 }
             }
+            assert result.output.contains("devops")
         } finally {
             inventory.shutdown()
         }

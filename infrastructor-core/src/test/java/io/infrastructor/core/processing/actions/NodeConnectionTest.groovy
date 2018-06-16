@@ -1,15 +1,18 @@
 package io.infrastructor.core.processing.actions
 
+import io.infrastructor.core.inventory.InventoryAwareTestBase
 import org.junit.Test
 
-public class NodeConnectionTest extends ActionTestBase {
+class NodeConnectionTest extends InventoryAwareTestBase {
     
     @Test
     void useSshKeyToConnectToNode() {
         def result = [:]
-        inventory.provisionAs('root') {
-            task actions: {
-                result = shell("echo 'test!'")
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    result = shell(user: 'root', command: "echo 'test!'")
+                }
             }
         }
         assert result.output.contains('test!')
@@ -18,9 +21,11 @@ public class NodeConnectionTest extends ActionTestBase {
     @Test
     void useSshPasswordToConnectToNode() {
         def result = [:]
-        inventory.provisionAs('devops') {
-            task actions: {
-                result = shell("echo 'test!'")
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    result = shell("echo 'test!'")
+                }
             }
         }
         assert result.output.contains('test!')

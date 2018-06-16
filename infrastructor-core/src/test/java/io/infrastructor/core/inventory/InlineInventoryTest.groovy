@@ -4,7 +4,7 @@ import org.junit.Test
 
 import static io.infrastructor.core.inventory.InlineInventory.inlineInventory
 
-public class InlineInventoryTest {
+class InlineInventoryTest {
 
     @Test
     void mapLikeDeclaration() {

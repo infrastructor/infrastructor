@@ -11,65 +11,64 @@ import static io.infrastructor.core.utils.NodeUtils.randomPort
 
 @ToString(includePackage = false, includeNames = true)
 class DockerNode {
-    
-    def id 
-    def port
+
+    def id
     @NotNull
     def image
     @NotNull
-    def username 
+    def username
     def password
     def keyfile
     Map tags = [:]
-    
-    def stopOnError = false
-    
-    def launch() {
-        port = port ?: randomPort()
-        id = id ?: flatUUID()
-        
-        def command = "docker run -d -p $port:22 --name $id $image"
+    Map metadata = [:]
+
+    private def containerId
+    private def containerPort
+
+    def synchronized launch() {
+        containerId = flatUUID()
+        containerPort = randomPort()
+
+        def command = "docker run -d -p $containerPort:22 --name $containerId $image"
+
         debug "Lanuching docker node with command: $command"
-        
+
         def process = command.execute()
-        process.waitFor()
-        
-        def exitValue = process.exitValue()
+        def exitValue = process.waitFor()
         if (exitValue) {
             throw new RuntimeException("Unable to launch docker node: '$this', exit value: '$exitValue', output: ${process.text}")
         }
-        return this as Node
+
+        return asNode()
     }
-    
-    def shutdown() {
+
+    def synchronized shutdown() {
         if (id) {
-            def command = "docker rm -f $id"
+            def command = "docker rm -f $containerId"
+
             debug "Shutting down docker node with command: $command"
-            
+
             def process = command.execute()
-            process.waitFor()
-            
-            def exitValue = process.exitValue()
+            def exitValue = process.waitFor()
+
             if (exitValue) {
                 throw new RuntimeException("Unable to remove docker node: '$this', exit value: '$exitValue', output: ${process.text}")
             }
         }
     }
-    
-    public Object asType(Class clazz) {
-        if (clazz == Node) {
-            return new Node(
-                id: id, 
-                host: 'localhost', 
-                port: port, 
-                username: username, 
-                password: password, 
-                keyfile: keyfile, 
-                tags: tags, 
-                stopOnError: stopOnError)
-        }
-        
-        return null
+
+    Node asNode() {
+        new Node(id: id,
+                host: 'localhost',
+                port: containerPort,
+                username: username,
+                password: password,
+                keyfile: keyfile,
+                tags: tags,
+                metadata: metadata,
+                stopOnError: false
+        )
     }
+
 }
 

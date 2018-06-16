@@ -5,7 +5,7 @@ import org.junit.Test
 
 import static io.infrastructor.core.inventory.docker.InlineDockerInventory.inlineDockerInventory
 
-public class InlineDockerInventoryValidationTest {
+class InlineDockerInventoryValidationTest {
     
     @Test(expected = ValidationException)
     void validateDockerNodesImageMayNotBeNull() {

@@ -7,54 +7,48 @@ import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStat
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 class InlineDockerInventory {
-    
+
     def nodes = []
-    
+
     def static inlineDockerInventory(Closure closure) {
-        def inlineDockerInventory = new InlineDockerInventory()
-        inlineDockerInventory.with(closure)
-        return inlineDockerInventory
+        def dockerNodes = new InlineDockerInventory()
+        dockerNodes.with(closure)
+        dockerNodes
     }
-    
+
+    def node(Map params) {
+        node(params, {})
+    }
+
+    def node(Closure closure) {
+        node([:], closure)
+    }
+
     def node(Map params, Closure closure) {
         def dockerNode = new DockerNode(params)
         dockerNode.with(closure)
         nodes << validate(dockerNode)
     }
-    
-    def node(Map params) {
-        node(params, {})
-    }
-    
-    def node(Closure closure) {
-        node([:], closure)
-    }
-    
-    def provision(Closure setupClosure) {
-        new Inventory(nodes: launch()).provision(setupClosure)
-        this
-    }
-    
-    def launch() {
-        def inventoryNodes = []
-        
-        withTextStatus("> launching docker nodes") { 
-            withProgressStatus(nodes.size(), 'nodes launched')  { progressLine ->
-                inventoryNodes = nodes.collect { 
-                    def node = it.launch() 
+
+    def synchronized launch(def timeout = 0) {
+        def inventory = new Inventory()
+        withTextStatus("> launching docker nodes") {
+            withProgressStatus(nodes.size(), 'nodes launched') { progressLine ->
+                nodes.each {
+                    inventory << it.launch()
                     progressLine.increase()
-                    node
                 }
             }
         }
-        
-        return inventoryNodes
+
+        sleep timeout
+        inventory
     }
-   
-    def shutdown() {
+
+    def synchronized shutdown() {
         withTextStatus("> shutting down docker nodes") {
-            withProgressStatus(nodes.size(), 'nodes terminated')  { progressLine ->
-                nodes.each { 
+            withProgressStatus(nodes.size(), 'nodes terminated') { progressLine ->
+                nodes.each {
                     it.shutdown()
                     progressLine.increase()
                 }

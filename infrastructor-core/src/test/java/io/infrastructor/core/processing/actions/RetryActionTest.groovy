@@ -1,17 +1,20 @@
 package io.infrastructor.core.processing.actions
 
+import io.infrastructor.core.inventory.InventoryAwareTestBase
 import io.infrastructor.core.processing.provisioning.TaskExecutionException
 import org.junit.Test
 
-class RetryActionTest extends ActionTestBase {
+class RetryActionTest extends InventoryAwareTestBase {
 
     @Test
     void retryWithoutFail() {
-        inventory.provisionAs('devops') {
-            task name: 'retry without fail', actions: {
-                retry actions: {
-                    def result = shell "echo 'simple message!'"
-                    assert result.output.contains('simple message!')
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry without fail', actions: {
+                    retry actions: {
+                        def result = shell "echo 'simple message!'"
+                        assert result.output.contains('simple message!')
+                    }
                 }
             }
         }
@@ -19,10 +22,12 @@ class RetryActionTest extends ActionTestBase {
     
     @Test(expected = TaskExecutionException)
     void retryWithRuntimeException() {
-        inventory.provisionAs('devops') {
-            task name: 'retry with runtime exception', actions: {
-                retry count: 1, delay: 1, actions: {
-                    throw new RuntimeException("test!")
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry with runtime exception', actions: {
+                    retry count: 1, delay: 1, actions: {
+                        throw new RuntimeException("test!")
+                    }
                 }
             }
         }
@@ -30,10 +35,12 @@ class RetryActionTest extends ActionTestBase {
     
     @Test(expected = TaskExecutionException)
     void retryWithAssertionError() {
-        inventory.provisionAs('devops') {
-            task name: 'retry with assertion error', actions: {
-                retry count: 1, delay: 1, actions: {
-                    assert false
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry with assertion error', actions: {
+                    retry count: 1, delay: 1, actions: {
+                        assert false
+                    }
                 }
             }
         }
@@ -41,12 +48,14 @@ class RetryActionTest extends ActionTestBase {
     
     @Test
     void retryThreeTimesWithoutAssertionError() {
-        inventory.provisionAs('devops') {
-            task name: 'retry three times without assertion error', actions: {
-                def x = 0
-                retry count: 3, delay: 1, actions: {
-                    x++
-                    assert x == 3
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry three times without assertion error', actions: {
+                    def x = 0
+                    retry count: 3, delay: 1, actions: {
+                        x++
+                        assert x == 3
+                    }
                 }
             }
         }
@@ -54,58 +63,70 @@ class RetryActionTest extends ActionTestBase {
 
     @Test(expected = TaskExecutionException)
     void retryNegativeCountNumber() {
-        inventory.provisionAs('devops') {
-            task name: 'retry incorrect count number', actions: {
-                retry count: -1, delay: 1, actions: {}
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry incorrect count number', actions: {
+                    retry count: -1, delay: 1, actions: {}
+                }
             }
         }
     }
     
     @Test(expected = TaskExecutionException)
     void retryZeroCountNumber() {
-        inventory.provisionAs('devops') {
-            task name: 'retry incorrect count number', actions: {
-                retry count: 0, delay: 1, actions: {}
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry incorrect count number', actions: {
+                    retry count: 0, delay: 1, actions: {}
+                }
             }
         }
     }
     
     @Test(expected = TaskExecutionException)
     void retryNegativeDelay() {
-        inventory.provisionAs('devops') {
-            task name: 'retry negative delay', actions: {
-                retry count: 1, delay: -1, actions: {}
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry negative delay', actions: {
+                    retry count: 1, delay: -1, actions: {}
+                }
             }
         }
     }
     
     @Test
     void retryWithZeroDelay() {
-        inventory.provisionAs('devops') {
-            task name: 'retry negative delay', actions: {
-                def x = false
-                retry count: 1, delay: 0, actions: { x = true }
-                assert x
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry negative delay', actions: {
+                    def x = false
+                    retry count: 1, delay: 0, actions: { x = true }
+                    assert x
+                }
             }
         }
     }
     
     @Test(expected = TaskExecutionException)
     void retryNullActions() {
-        inventory.provisionAs('devops') {
-            task name: 'retry with null action', actions: {
-                retry count: 1, delay: 1, actions: null
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry with null action', actions: {
+                    retry count: 1, delay: 1, actions: null
+                }
             }
         }
     }
     
     @Test
     void retryWithDefaultCountAndDelay() {
-        inventory.provisionAs('devops') {
-            task name: 'retry with null action', actions: {
-                def x = false
-                retry actions: { x = true }
-                assert x
+        withInventory { inventory ->
+            inventory.provision {
+                task name: 'retry with null action', actions: {
+                    def x = false
+                    retry actions: { x = true }
+                    assert x
+                }
             }
         }
     }

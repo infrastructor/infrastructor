@@ -1,26 +1,29 @@
 package io.infrastructor.core.processing.actions
 
+import io.infrastructor.core.inventory.InventoryAwareTestBase
 import org.junit.Test
 
-class UploadFolderTest extends ActionTestBase {
+class UploadFolderTest extends InventoryAwareTestBase {
     @Test
     void uploadFolderContentToRemoteHost() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = upload {
-                    user = 'root'
-                    source = 'build/resources/test/upload'
-                    target = '/opt/test'
-                }
-                
-                assert result.exitcode == 0
-                
-                shell("ls /opt/test/").output.with {
-                    assert find(/file.exta/) && find(/file.extb/)
-                }
-                
-                shell("ls /opt/test/nested").output.with {
-                    assert find(/file.exta/) && find(/file.extb/)
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = upload {
+                        user = 'root'
+                        source = 'build/resources/test/upload'
+                        target = '/opt/test'
+                    }
+
+                    assert result.exitcode == 0
+
+                    shell("ls /opt/test/").output.with {
+                        assert find(/file.exta/) && find(/file.extb/)
+                    }
+
+                    shell("ls /opt/test/nested").output.with {
+                        assert find(/file.exta/) && find(/file.extb/)
+                    }
                 }
             }
         }
@@ -28,23 +31,25 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithIncludes() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = upload {
-                    user = 'root'
-                    source = 'build/resources/test/upload'
-                    includes = '*.exta'
-                    target = '/opt/test'
-                }
-                
-                assert result.exitcode == 0
-                
-                shell("ls /opt/test/").output.with {
-                    assert find(/file.exta/) && !find(/file.extb/)
-                }
-                
-                shell("ls /opt/test/nested").output.with {
-                    assert !find(/file.exta/) && !find(/file.extb/)
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = upload {
+                        user = 'root'
+                        source = 'build/resources/test/upload'
+                        includes = '*.exta'
+                        target = '/opt/test'
+                    }
+
+                    assert result.exitcode == 0
+
+                    shell("ls /opt/test/").output.with {
+                        assert find(/file.exta/) && !find(/file.extb/)
+                    }
+
+                    shell("ls /opt/test/nested").output.with {
+                        assert !find(/file.exta/) && !find(/file.extb/)
+                    }
                 }
             }
         }
@@ -52,23 +57,25 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithIncludesNested() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = upload {
-                    user = 'root'
-                    source = 'build/resources/test/upload'
-                    includes = '**/*.exta'
-                    target = '/opt/test'
-                }
-                
-                assert result.exitcode == 0
-                
-                shell("ls /opt/test/").output.with {
-                    assert find(/file.exta/) && !find(/file.extb/)
-                }
-                
-                shell("ls /opt/test/nested").output.with {
-                    assert find(/file.exta/) && !find(/file.extb/)
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = upload {
+                        user = 'root'
+                        source = 'build/resources/test/upload'
+                        includes = '**/*.exta'
+                        target = '/opt/test'
+                    }
+
+                    assert result.exitcode == 0
+
+                    shell("ls /opt/test/").output.with {
+                        assert find(/file.exta/) && !find(/file.extb/)
+                    }
+
+                    shell("ls /opt/test/nested").output.with {
+                        assert find(/file.exta/) && !find(/file.extb/)
+                    }
                 }
             }
         }
@@ -76,23 +83,25 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithIncludesNestedMultiple() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = upload {
-                    user = 'root'
-                    source = 'build/resources/test/upload'
-                    includes = '**/*.exta *.extb'
-                    target = '/opt/test'
-                }
-                
-                assert result.exitcode == 0
-                
-                shell("ls /opt/test/").output.with {
-                    assert find(/file.exta/) && find(/file.extb/)
-                }
-                
-                shell("ls /opt/test/nested").output.with {
-                    assert find(/file.exta/) && !find(/file.extb/)
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = upload {
+                        user = 'root'
+                        source = 'build/resources/test/upload'
+                        includes = '**/*.exta *.extb'
+                        target = '/opt/test'
+                    }
+
+                    assert result.exitcode == 0
+
+                    shell("ls /opt/test/").output.with {
+                        assert find(/file.exta/) && find(/file.extb/)
+                    }
+
+                    shell("ls /opt/test/nested").output.with {
+                        assert find(/file.exta/) && !find(/file.extb/)
+                    }
                 }
             }
         }
@@ -100,24 +109,26 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithExcludes() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = upload {
-                    user = 'root'
-                    source = 'build/resources/test/upload'
-                    includes = '**/*'
-                    excludes = 'nested/*.extb'
-                    target = '/opt/test'
-                }
-                
-                assert result.exitcode == 0
-                
-                shell("ls /opt/test/").output.with {
-                    assert find(/file.exta/) && find(/file.extb/)
-                }
-                
-                shell("ls /opt/test/nested").output.with {
-                    assert find(/file.exta/) && !find(/file.extb/)
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = upload {
+                        user = 'root'
+                        source = 'build/resources/test/upload'
+                        includes = '**/*'
+                        excludes = 'nested/*.extb'
+                        target = '/opt/test'
+                    }
+
+                    assert result.exitcode == 0
+
+                    shell("ls /opt/test/").output.with {
+                        assert find(/file.exta/) && find(/file.extb/)
+                    }
+
+                    shell("ls /opt/test/nested").output.with {
+                        assert find(/file.exta/) && !find(/file.extb/)
+                    }
                 }
             }
         }
@@ -125,23 +136,25 @@ class UploadFolderTest extends ActionTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithExcludesOnly() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = upload {
-                    user = 'root'
-                    source = 'build/resources/test/upload'
-                    excludes = 'nested/*.extb'
-                    target = '/opt/test'
-                }
-                
-                assert result.exitcode == 0
-                
-                shell("ls /opt/test/").output.with {
-                    assert find(/file.exta/) && find(/file.extb/)
-                }
-                
-                shell("ls /opt/test/nested").output.with {
-                    assert find(/file.exta/) && !find(/file.extb/)
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = upload {
+                        user = 'root'
+                        source = 'build/resources/test/upload'
+                        excludes = 'nested/*.extb'
+                        target = '/opt/test'
+                    }
+
+                    assert result.exitcode == 0
+
+                    shell("ls /opt/test/").output.with {
+                        assert find(/file.exta/) && find(/file.extb/)
+                    }
+
+                    shell("ls /opt/test/nested").output.with {
+                        assert find(/file.exta/) && !find(/file.extb/)
+                    }
                 }
             }
         }

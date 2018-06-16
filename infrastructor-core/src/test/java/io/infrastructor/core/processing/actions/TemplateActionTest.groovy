@@ -1,142 +1,159 @@
 package io.infrastructor.core.processing.actions
 
+import io.infrastructor.core.inventory.InventoryAwareTestBase
 import org.junit.Test
 
-public class TemplateActionTest extends ActionTestBase {
+class TemplateActionTest extends InventoryAwareTestBase {
 
     @Test
     void generateAFileOnRemoteServer() {
-        inventory.provisionAs('root') {
-            task actions: {
-                // setup
-                shell("groupadd infra")
-            
-                // execution
-                template {
-                    source = 'build/resources/test/test.tmpl'
-                    target = '/test.txt'
-                    bindings = [message: "simple!"]
-                    owner = 'devops'
-                    group = 'infra'
-                    mode = '600'
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    // setup
+                    shell(user: 'root', command: "groupadd infra")
+
+                    // execution
+                    template {
+                        user = 'root'
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/test.txt'
+                        bindings = [message: "simple!"]
+                        owner = 'devops'
+                        group = 'infra'
+                        mode = '600'
+                    }
+
+                    // assertion
+                    def result = shell(user: 'root', command: "ls -alh /test.txt")
+
+                    assert result.output.contains("test.txt")
+                    assert result.output.contains("devops infra")
+                    assert result.output.contains("-rw-------")
+
+                    def catResult = shell(user: 'root', command: "cat /test.txt")
+                    assert catResult.output.contains("simple")
                 }
-                
-                // assertion
-                def result = shell("ls -alh /test.txt")
-                                
-                assert result.output.contains("test.txt")
-                assert result.output.contains("devops infra")
-                assert result.output.contains("-rw-------")
-                
-                def catResult = shell("cat /test.txt")
-                assert catResult.output.contains("simple")
             }
         }
     }
     
     @Test
     void generateAFileOnRemoteServerWithEmptyBindings() {
-        inventory.provisionAs('root') {
-            task actions: {
-                template {
-                    source = 'build/resources/test/test.tmpl'
-                    target = '/test.txt'
-                    bindings = [message: "simple!"]
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    template {
+                        user = 'root'
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/test.txt'
+                        bindings = [message: "simple!"]
+                    }
+
+                    // assertion
+                    def result = shell user: 'root', command: "ls -alh /test.txt"
+
+                    assert shell(user: 'root', command: "cat /test.txt").output.contains("simple")
                 }
-                
-                // assertion
-                def result = shell("ls -alh /test.txt")
-                
-                assert shell("cat /test.txt").output.contains("simple")
             }
         }
     }
 
     @Test
     void createADeepFolderBeforeTemplateUpload() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                // execution
-                template {
-                    source = 'build/resources/test/test.tmpl'
-                    target = '/etc/deep/deep/folder/test.txt'
-                    bindings = [message: "simple!"]
-                    user = 'root'
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    // execution
+                    template {
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/etc/deep/deep/folder/test.txt'
+                        bindings = [message: "simple!"]
+                        user = 'root'
+                    }
+
+                    def result = shell("cat /etc/deep/deep/folder/test.txt")
+                    assert result.output.contains("simple")
                 }
-                
-                def result = shell("cat /etc/deep/deep/folder/test.txt")
-                assert result.output.contains("simple")
             }
         }
     }
     
     @Test
     void templateWithUnknownOwner() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = template {
-                    source = 'build/resources/test/test.tmpl'
-                    target = '/tmp/test.txt'
-                    bindings = [message: "simple!"]
-                    owner = 'unknown'
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = template {
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/tmp/test.txt'
+                        bindings = [message: "simple!"]
+                        owner = 'unknown'
+                    }
+
+                    assert result.exitcode != 0
+                    assert result.error.find(/invalid spec/)
                 }
-                
-                assert result.exitcode != 0
-                assert result.error.find(/invalid spec/)
             }
         }
     }
     
     @Test
     void templateWithUnknownGroup() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = template {
-                    source = 'build/resources/test/test.tmpl'
-                    target = '/tmp/test.txt'
-                    bindings = [message: "simple!"]
-                    group = 'unknown'
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = template {
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/tmp/test.txt'
+                        bindings = [message: "simple!"]
+                        group = 'unknown'
+                    }
+
+                    assert result.exitcode != 0
+                    assert result.error.find(/invalid group/)
                 }
-                
-                assert result.exitcode != 0
-                assert result.error.find(/invalid group/)
             }
         }
     }
     
     @Test
     void templateWithInvalidMode() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                def result = template {
-                    source = 'build/resources/test/test.tmpl'
-                    target = '/tmp/test.txt'
-                    bindings = [message: "simple!"]
-                    mode = '888'
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = template {
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/tmp/test.txt'
+                        bindings = [message: "simple!"]
+                        mode = '888'
+                    }
+
+                    assert result.exitcode != 0
+                    assert result.error.find(/invalid mode/)
                 }
-                
-                assert result.exitcode != 0
-                assert result.error.find(/invalid mode/)
             }
         }
     }
     
     @Test
     void templateWithEncryptedValues() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                template {
-                    source = 'build/resources/test/encrypted_part.tmpl'
-                    target = '/tmp/test.txt'
-                    bindings = [message: "simple!"]
-                    mode = '644'
-                    decryptionKey = 'secret'
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    template {
+                        source = 'build/resources/test/encrypted_part.tmpl'
+                        target = '/tmp/test.txt'
+                        bindings = [message: "simple!"]
+                        mode = '644'
+                        decryptionKey = 'secret'
+                    }
+
+                    def result = shell "cat /tmp/test.txt"
+
+                    assert result.exitcode == 0
+                    assert result.output.find(/secret message/)
                 }
-                
-                def result = shell "cat /tmp/test.txt"
-                
-                assert result.exitcode == 0
-                assert result.output.find(/secret message/)
             }
         }
     }
@@ -144,24 +161,25 @@ public class TemplateActionTest extends ActionTestBase {
     
     @Test
     void templateWithFullyEncryptedContent() {
-        inventory.provisionAs('devops') {
-            task actions: {
-                template {
-                    source = 'build/resources/test/encrypted_full.tmpl'
-                    target = '/tmp/test.txt'
-                    bindings = [message: "simple!"]
-                    mode = '644'
-                    decryptionKey = 'secret'
-                    decryptionMode = FULL
+        withInventory { inventory ->
+            inventory.provision {
+                task actions: {
+                    template {
+                        source = 'build/resources/test/encrypted_full.tmpl'
+                        target = '/tmp/test.txt'
+                        bindings = [message: "simple!"]
+                        mode = '644'
+                        decryptionKey = 'secret'
+                        decryptionMode = FULL
+                    }
+
+                    def result = shell "cat /tmp/test.txt"
+
+                    assert result.exitcode == 0
+                    assert result.output.find(/secret message/)
+                    assert result.output.find(/simple!/)
                 }
-                
-                def result = shell "cat /tmp/test.txt"
-                
-                assert result.exitcode == 0
-                assert result.output.find(/secret message/)
-                assert result.output.find(/simple!/)
             }
         }
     }
 }
-
