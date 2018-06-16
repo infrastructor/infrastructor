@@ -12,7 +12,7 @@ abstract class InventoryAwareTestBase {
     def static PASSWORD = 'devops'
 
     @Parameterized.Parameter
-    public Closure withInventory = { }
+    public Closure withInventory = {}
 
     @Parameterized.Parameters
     def static inventory() {
@@ -20,17 +20,22 @@ abstract class InventoryAwareTestBase {
             def dockerNodes = inlineDockerInventory {
                 node id: 'docker_test_node', image: 'infrastructor/ubuntu-sshd', username: USERNAME, password: PASSWORD
             }
-
-            closure(dockerNodes.launch())
-            dockerNodes.shutdown()
+            try {
+                closure(dockerNodes.launch())
+            } finally {
+                dockerNodes.shutdown()
+            }
          },
          { closure ->
-            def dockerNodes = inlineDockerInventory {
-                node id: 'docker_test_node', image: 'infrastructor/centos-sshd', username: USERNAME, password: PASSWORD
-            }
+             def dockerNodes = inlineDockerInventory {
+                 node id: 'docker_test_node', image: 'infrastructor/centos-sshd', username: USERNAME, password: PASSWORD
+             }
 
-            closure(dockerNodes.launch())
-            dockerNodes.shutdown()
+             try {
+                 closure(dockerNodes.launch())
+             } finally {
+                 dockerNodes.shutdown()
+             }
          }]
     }
 }

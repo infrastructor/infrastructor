@@ -5,7 +5,9 @@ import io.infrastructor.core.inventory.Node
 
 import javax.validation.constraints.NotNull
 
+import static io.infrastructor.core.logging.ConsoleLogger.cyan
 import static io.infrastructor.core.logging.ConsoleLogger.debug
+import static io.infrastructor.core.logging.ConsoleLogger.info
 import static io.infrastructor.core.utils.FlatUUID.flatUUID
 import static io.infrastructor.core.utils.NodeUtils.randomPort
 
@@ -43,7 +45,7 @@ class DockerNode {
     }
 
     def synchronized shutdown() {
-        if (id) {
+        if (containerId) {
             def command = "docker rm -f $containerId"
 
             debug "Shutting down docker node with command: $command"
@@ -53,6 +55,8 @@ class DockerNode {
 
             if (exitValue) {
                 throw new RuntimeException("Unable to remove docker node: '$this', exit value: '$exitValue', output: ${process.text}")
+            } else {
+                containerId = ''
             }
         }
     }

@@ -16,7 +16,7 @@ class Inventory {
     }
 
     def provision(Closure closure) {
-        provision(nodes, closure)
+        provision(this, closure)
         this
     }
 

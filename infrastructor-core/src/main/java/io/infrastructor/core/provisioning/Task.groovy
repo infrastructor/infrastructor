@@ -18,8 +18,9 @@ class Task {
     def onSuccess = {}
     def onFailure = { throw new TaskExecutionException(":task '$name' - failed on ${context.failed.size()} node|s") }
     
-    def execute(def nodes) {
-        def filtered = filter ? nodes.findAll { FilteringUtils.match(it.listTags(), filter) } : nodes
+    def execute(def inventory) {
+
+        def filtered = inventory.filter(filter)
             
         info "${green("task: '${name}'")}"
             
@@ -57,9 +58,9 @@ class Task {
         
         // determine if we can go to the next task or we should stop the execution
         if (failedNodes.size() > 0) {
-            provision(nodes, [failed: failedNodes], onFailure)
+            provision(inventory, [failed: failedNodes], onFailure)
         } else {
-            provision(nodes, onSuccess)
+            provision(inventory, onSuccess)
         }
                     
         info "${green("task: '$name', done on ${filtered.size()} node|s")}"
