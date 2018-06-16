@@ -3,14 +3,13 @@ package io.infrastructor.core.inventory
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-import static io.infrastructor.core.inventory.docker.InlineDockerInventory.inlineDockerInventory
+import static InlineDockerInventory.inlineDockerInventory
 
 @RunWith(Parameterized.class)
 abstract class InventoryAwareTestBase {
 
     def static USERNAME = 'devops'
     def static PASSWORD = 'devops'
-    def static TIMEOUT  = 500
 
     @Parameterized.Parameter
     public Closure withInventory = { }
@@ -22,7 +21,7 @@ abstract class InventoryAwareTestBase {
                 node id: 'docker_test_node', image: 'infrastructor/ubuntu-sshd', username: USERNAME, password: PASSWORD
             }
 
-            closure(dockerNodes.launch(TIMEOUT))
+            closure(dockerNodes.launch())
             dockerNodes.shutdown()
          },
          { closure ->
@@ -30,7 +29,7 @@ abstract class InventoryAwareTestBase {
                 node id: 'docker_test_node', image: 'infrastructor/centos-sshd', username: USERNAME, password: PASSWORD
             }
 
-            closure(dockerNodes.launch(TIMEOUT))
+            closure(dockerNodes.launch())
             dockerNodes.shutdown()
          }]
     }

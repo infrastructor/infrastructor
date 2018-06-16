@@ -3,7 +3,7 @@ package io.infrastructor.core.inventory
 import groovy.transform.ToString
 import io.infrastructor.core.utils.FilteringUtils
 
-import static io.infrastructor.core.processing.ProvisioningContext.provision
+import static io.infrastructor.core.provisioning.ProvisioningContext.provision
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)

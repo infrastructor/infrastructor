@@ -1,21 +1,21 @@
 moduleName=core-extension-module
 moduleVersion=0.0.1
-extensionClasses=io.infrastructor.core.processing.actions.DirectoryActionMixin, \
-                 io.infrastructor.core.processing.actions.ApplyActionMixin, \
-                 io.infrastructor.core.processing.actions.FetchActionMixin, \
-                 io.infrastructor.core.processing.actions.FileActionMixin, \
-                 io.infrastructor.core.processing.actions.GroupActionMixin, \
-                 io.infrastructor.core.processing.actions.InsertBlockActionMixin, \
-                 io.infrastructor.core.processing.actions.ReplaceActionMixin, \
-                 io.infrastructor.core.processing.actions.ReplaceLineActionMixin, \
-                 io.infrastructor.core.processing.actions.RetryActionMixin, \
-                 io.infrastructor.core.processing.actions.ShellActionMixin, \
-                 io.infrastructor.core.processing.actions.TemplateActionMixin, \
-                 io.infrastructor.core.processing.actions.UploadActionMixin, \
-                 io.infrastructor.core.processing.actions.UserActionMixin, \
-                 io.infrastructor.core.processing.actions.WaitForPortActionMixin, \
-                 io.infrastructor.core.processing.provisioning.TaskMixin
+extensionClasses=io.infrastructor.core.provisioning.actions.DirectoryActionMixin, \
+                 io.infrastructor.core.provisioning.actions.ApplyActionMixin, \
+                 io.infrastructor.core.provisioning.actions.FetchActionMixin, \
+                 io.infrastructor.core.provisioning.actions.FileActionMixin, \
+                 io.infrastructor.core.provisioning.actions.GroupActionMixin, \
+                 io.infrastructor.core.provisioning.actions.InsertBlockActionMixin, \
+                 io.infrastructor.core.provisioning.actions.ReplaceActionMixin, \
+                 io.infrastructor.core.provisioning.actions.ReplaceLineActionMixin, \
+                 io.infrastructor.core.provisioning.actions.RetryActionMixin, \
+                 io.infrastructor.core.provisioning.actions.ShellActionMixin, \
+                 io.infrastructor.core.provisioning.actions.TemplateActionMixin, \
+                 io.infrastructor.core.provisioning.actions.UploadActionMixin, \
+                 io.infrastructor.core.provisioning.actions.UserActionMixin, \
+                 io.infrastructor.core.provisioning.actions.WaitForPortActionMixin, \
+                 io.infrastructor.core.provisioning.TaskMixin
 
 staticExtensionClasses=io.infrastructor.core.inventory.InlineInventoryMixin, \
                        io.infrastructor.core.inventory.FileInventoryMixin, \
-                       io.infrastructor.core.inventory.docker.InlineDockerInventoryMixin
+                       io.infrastructor.core.inventory.InlineDockerInventoryMixin

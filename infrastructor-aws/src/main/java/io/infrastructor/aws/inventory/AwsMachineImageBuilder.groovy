@@ -9,7 +9,7 @@ import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.*
 import static io.infrastructor.core.logging.ConsoleLogger.error
 import static io.infrastructor.core.logging.ConsoleLogger.info
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
-import static io.infrastructor.core.processing.ProvisioningContext.provision
+import static io.infrastructor.core.provisioning.ProvisioningContext.provision
 import static io.infrastructor.core.utils.ConnectionUtils.canConnectTo
 import static io.infrastructor.core.utils.RetryUtils.retry
 import static io.infrastructor.core.validation.ValidationHelper.validate

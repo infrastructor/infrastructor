@@ -93,7 +93,7 @@ class SshClient {
         def error  = new ByteArrayOutputStream()
         def input  = new ByteArrayInputStream()
         
-        public def execute() {
+        def execute() {
             try {
                 def result = [exitcode: -1, command: command]
             
