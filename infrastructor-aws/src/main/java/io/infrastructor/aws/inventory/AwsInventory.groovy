@@ -17,26 +17,26 @@ public class AwsInventory {
     def port = 22
     def tags = [:]
     def usePublicIp = false
-    
+
     public BasicInventory build() {
-        withTextStatus { statusLine -> 
+        withTextStatus { statusLine ->
             statusLine "> initializing aws inventory"
             def amazonEC2 = amazonEC2(awsAccessKeyId, awsAccessSecretKey, awsRegion)
 
             debug 'AwsInventory :: connecting to AWS to retrieve a list of EC2 instances'
             def awsNodes = AwsNodesBuilder.
-                fromEC2(amazonEC2).
-                filterByTags(tags).
-                usePublicHost(usePublicIp).
+                    fromEC2(amazonEC2).
+                    filterByTags(tags).
+                    usePublicHost(usePublicIp).
                     each {
                         it.username = owner.username
                         it.password = owner.password
-                        it.keyfile  = owner.keyfile
-                        it.port     = owner.port
+                        it.keyfile = owner.keyfile
+                        it.port = owner.port
                     }
-                                
+
             debug "AwsInventory :: inventory is ready [${awsNodes.nodes.size()} node]: "
-            awsNodes.nodes.each { debug( "Node: ${defColor(it.name)}: ${yellow(it as String)}") }
+            awsNodes.nodes.each { debug("Node: ${defColor(it.name)}: ${yellow(it as String)}") }
 
             return new BasicInventory(nodes: awsNodes.nodes)
         }
