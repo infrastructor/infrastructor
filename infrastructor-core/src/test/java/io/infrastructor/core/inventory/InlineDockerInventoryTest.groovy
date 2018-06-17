@@ -11,12 +11,12 @@ class InlineDockerInventoryTest {
         def inventory = inlineDockerInventory {
             node id: 'hostA', image: 'infrastructor/hostA', tags: [id: 'hostA'], username: 'root',   keyfile: 'resources/key.pem', password: 'hApass'
             node id: 'hostB', image: 'infrastructor/hostB', tags: [id: 'hostB'], username: 'devops', keyfile: 'resources/key.pem'
-            node id: 'hostC', image: 'infrastructor/hostC', username: 'devops', password: 'hCpass'
+            node id: 'hostC', image: 'infrastructor/hostC',                      username: 'devops', password: 'hCpass'
         }
         
         assert inventory.size() == 3
 
-        def hostA = inventory.find { it.id == 'hostA' }
+        def hostA = inventory.nodes.values().find { it.id == 'hostA' }
         
         assert hostA
         hostA.with {
@@ -27,7 +27,7 @@ class InlineDockerInventoryTest {
             assert tags['id'] == 'hostA'
         }
         
-        def hostB = inventory.find { it.id == 'hostB' }
+        def hostB = inventory.nodes.values().find { it.id == 'hostB' }
         assert hostB
         hostB.with {
             assert image == 'infrastructor/hostB'
@@ -37,7 +37,7 @@ class InlineDockerInventoryTest {
             assert tags['id'] == 'hostB'
         }
         
-        def hostC = inventory.find { it.id == 'hostC' }
+        def hostC = inventory.nodes.values().find { it.id == 'hostC' }
         assert hostC
         hostC.with {
             assert id == 'hostC'

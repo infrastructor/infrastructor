@@ -29,7 +29,7 @@ class FileInventory {
         configuration.addCompilationCustomizers(imports)
         configuration.setScriptBaseClass(FileInventoryScript.class.name)
         
-        def inventory = new Inventory()
+        def inventory = new BasicInventory()
         params << [inventory: inventory]
         def shell = new GroovyShell(new Binding(params), configuration)
         

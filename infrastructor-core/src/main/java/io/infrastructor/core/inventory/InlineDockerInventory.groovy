@@ -4,9 +4,9 @@ import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProg
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
-class InlineDockerInventory {
+class InlineDockerInventory implements ManagedInventory {
 
-    def nodes = []
+    def nodes = [:]
 
     def static inlineDockerInventory(Closure closure) {
         def dockerNodes = new InlineDockerInventory()
@@ -25,14 +25,18 @@ class InlineDockerInventory {
     def node(Map params, Closure closure) {
         def dockerNode = new DockerNode(params)
         dockerNode.with(closure)
-        nodes << validate(dockerNode)
+        nodes << [(dockerNode.id): validate(dockerNode)]
     }
 
-    def synchronized launch() {
-        def inventory = new Inventory()
+    Inventory provision(Closure closure) {
+        launch().provision(closure)
+    }
+
+    synchronized Inventory launch() {
+        def inventory = new BasicInventory()
         withTextStatus("> launching docker nodes") {
             withProgressStatus(nodes.size(), 'nodes launched') { progressLine ->
-                nodes.each {
+                nodes.values().each {
                     inventory << it.launch()
                     progressLine.increase()
                 }
@@ -42,10 +46,10 @@ class InlineDockerInventory {
         inventory
     }
 
-    def synchronized shutdown() {
+    synchronized void shutdown() {
         withTextStatus("> shutting down docker nodes") {
             withProgressStatus(nodes.size(), 'nodes terminated') { progressLine ->
-                nodes.each {
+                nodes.values().each {
                     it.shutdown()
                     progressLine.increase()
                 }
@@ -53,12 +57,28 @@ class InlineDockerInventory {
         }
     }
 
-    def size() {
-        nodes.size()
+    def inventory() {
+        def inventory = new BasicInventory()
+        nodes.values().each { inventory << it.asNode() }
+        inventory
     }
 
-    def find(Closure closure) {
-        nodes.find(closure)
+    int size() {
+        inventory().size()
+    }
+
+    Node find(Closure closure) {
+        inventory().find(closure)
+    }
+
+    @java.lang.Override
+    Node[] filter(Closure closure) {
+        inventory().filter(closure)
+    }
+
+    @java.lang.Override
+    Node getAt(String id) {
+        inventory().getAt(id)
     }
 }
 

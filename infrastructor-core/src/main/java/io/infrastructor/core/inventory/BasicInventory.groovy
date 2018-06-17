@@ -7,28 +7,29 @@ import static io.infrastructor.core.provisioning.ProvisioningContext.provision
 import static io.infrastructor.core.validation.ValidationHelper.validate
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
-class Inventory {
+class BasicInventory implements Inventory {
 
     def nodes = [:]
 
     void leftShift(Node node) {
-        nodes << [(node.id) : validate(node)]
+        nodes << [(node.id) : node]
     }
 
-    def provision(Closure closure) {
+    BasicInventory provision(Closure closure) {
+        nodes.values().each { validate (it) }
         provision(this, closure)
         this
     }
 
-    def size() {
+    int size() {
         nodes.size()
     }
 
-    def find(Closure closure) {
+    Node find(Closure closure) {
         nodes.values().find(closure)
     }
 
-    def filter(Closure closure) {
+    Node [] filter(Closure closure) {
         nodes.values().findAll { FilteringUtils.match(it.listTags(), closure) }
     }
 
