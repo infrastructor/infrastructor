@@ -7,7 +7,7 @@ import static io.infrastructor.core.logging.ConsoleLogger.info
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
-public class EC2 {
+class EC2 {
 
     def tags = [:]
     def parallel = 1

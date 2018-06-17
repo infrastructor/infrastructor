@@ -2,7 +2,6 @@ package io.infrastructor.core.provisioning
 
 import io.infrastructor.core.provisioning.actions.ActionExecutionException
 import io.infrastructor.core.provisioning.actions.NodeContext
-import io.infrastructor.core.utils.FilteringUtils
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TaskProgressLogger.withTaskProgressStatus
