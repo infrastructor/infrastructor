@@ -7,7 +7,7 @@ import io.infrastructor.core.inventory.BasicInventory
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 
-public class ManagedAwsInventory {
+class ManagedAwsInventory {
     
     def amazonEC2
     def amazonRoute53
@@ -15,7 +15,7 @@ public class ManagedAwsInventory {
     def ec2s = []
     def route53s = []
     
-    public ManagedAwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion) {
+    ManagedAwsInventory(def awsAccessKey, def awsSecretKey, def awsRegion) {
         this.amazonEC2     = AmazonEC2Utils.amazonEC2(awsAccessKey, awsSecretKey, awsRegion)
         this.amazonRoute53 = AmazonRoute53Utils.amazonRoute53(awsAccessKey, awsSecretKey, awsRegion)
     }
@@ -72,13 +72,13 @@ public class ManagedAwsInventory {
     }
     
     def getNodes() {
-        ec2s*.getInventory().flatten()
+        ec2s*.getInventory().flatten().collectEntries { [(it.id): it] }
     }
     
     def dry() {
         info "DRY: analyzing changes..."
         info sprintf('%20s %28s %22s  %s', [defColor('STATE'), defColor('INSTANCE ID'), defColor('PRIVATE IP'), defColor('NAME')])
-        getNodes().each {
+        getNodes().values().each {
             def coloredState
             switch (it.state) {
             case 'created':
