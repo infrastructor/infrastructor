@@ -9,7 +9,7 @@ public class ModeValidator implements IParameterValidator {
     def static final PART = 'PART'
     
     @Override
-    public void validate(String name, String value) throws ParameterException {
+    void validate(String name, String value) throws ParameterException {
         if (!(value?.toUpperCase() in [FULL, PART])) {
             throw new ParameterException("parameter '$name' should be '$FULL' or '$PART'")
         }

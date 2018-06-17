@@ -25,4 +25,3 @@ class CommandBuilder {
         builder.build()
     }
 }
-

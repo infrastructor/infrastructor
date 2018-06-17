@@ -4,18 +4,18 @@ import org.junit.Test
 
 import static io.infrastructor.core.inventory.InlineInventory.inlineInventory
 
-public class InlineInventoryTest {
+class InlineInventoryTest {
 
     @Test
-    public void mapLikeDeclaration() {
+    void mapLikeDeclaration() {
         def inventory = inlineInventory {
             node id: "idX", host: "10.0.0.1", port: 10000, username: "root", password: "infra", tags: [x: "t1", y: "t2"]
             node id: "idY", host: "10.0.0.2", port: 10000, username: "root", password: "infra"
         }
         
-        assert inventory.nodes.size() == 2
+        assert inventory.size() == 2
         
-        def idX = inventory.nodes.find {it.id == 'idX'}
+        def idX = inventory.find {it.id == 'idX'}
         assert idX
         idX.with {
             assert port == 10000
@@ -25,7 +25,7 @@ public class InlineInventoryTest {
             assert tags == [x: "t1", y: "t2"]
         }
         
-        def idY = inventory.nodes.find {it.id == 'idY'}
+        def idY = inventory.find {it.id == 'idY'}
         assert idY
         idY.with {
             assert port == 10000
@@ -36,7 +36,7 @@ public class InlineInventoryTest {
     }
     
     @Test
-    public void closureLikeDeclaration() {
+    void closureLikeDeclaration() {
         def inventory = inlineInventory {
             node {
                 id = "idX"
@@ -56,9 +56,9 @@ public class InlineInventoryTest {
             }
         }
         
-        assert inventory.nodes.size() == 2
+        assert inventory.size() == 2
         
-        def idX = inventory.nodes.find {it.id == 'idX'}
+        def idX = inventory.find {it.id == 'idX'}
         assert idX
         idX.with {
             assert port == 10000
@@ -68,7 +68,7 @@ public class InlineInventoryTest {
             assert tags == [x: "t1", y: "t2"]
         }
         
-        def idY = inventory.nodes.find {it.id == 'idY'}
+        def idY = inventory.find {it.id == 'idY'}
         assert idY
         idY.with {
             assert port == 10000
@@ -79,7 +79,7 @@ public class InlineInventoryTest {
     }
     
     @Test
-    public void combinedDeclaration() {
+    void combinedDeclaration() {
         def inventory = inlineInventory {
             node(id: "idX", host: "10.0.0.1") {
                 port = 10000
@@ -95,9 +95,9 @@ public class InlineInventoryTest {
             }
         }
         
-        assert inventory.nodes.size() == 2
+        assert inventory.size() == 2
         
-        def idX = inventory.nodes.find {it.id == 'idX'}
+        def idX = inventory.find {it.id == 'idX'}
         assert idX
         idX.with {
             assert port == 10000
@@ -107,7 +107,7 @@ public class InlineInventoryTest {
             assert tags == [x: "t1", y: "t2"]
         }
         
-        def idY = inventory.nodes.find {it.id == 'idY'}
+        def idY = inventory.find {it.id == 'idY'}
         assert idY
         idY.with {
             assert port == 10000

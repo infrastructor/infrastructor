@@ -2,7 +2,7 @@ package io.infrastructor.core.inventory
 
 class InlineInventory {
     
-    def inventory = new Inventory()
+    def inventory = new BasicInventory()
     
     def node(Map params) {
         node(params, {})

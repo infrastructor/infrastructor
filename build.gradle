@@ -6,13 +6,13 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.1'
     }
 }
-    
+
 apply plugin: 'base'
-    
+
 allprojects {
     group = 'io.infrastructor'
     version '0.2.0'
-    
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -24,10 +24,10 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
     apply plugin: 'maven-publish'
-    
+
     sourceCompatibility = '1.8'
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-    
+
     sourceSets {
         main {
             groovy {
@@ -40,7 +40,7 @@ subprojects {
             }
         }
     }
-    
+
     test {
         systemProperty "LOG_LEVEL", "2"
         systemProperty "ENABLE_DYNAMIC_LOGS", "false"
@@ -66,7 +66,7 @@ subprojects {
             from groovydoc
             classifier = 'groovydoc'
         }
-    
+
         publishing {
             publications {
                 allComponents(MavenPublication) {
@@ -76,10 +76,10 @@ subprojects {
                 }
             }
         }
-    
+
         bintray {
-            user = property('bintrayUser') 
-            key =  property('bintrayPass') 
+            user = property('bintrayUser')
+            key = property('bintrayPass')
             publications = ['allComponents']
             pkg {
                 repo = 'public'

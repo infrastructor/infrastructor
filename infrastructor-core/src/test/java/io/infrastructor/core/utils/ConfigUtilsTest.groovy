@@ -4,7 +4,7 @@ import org.junit.Test
 
 class ConfigUtilsTest {
     @Test
-    public void loadConfigFromFile() {
+    void loadConfigFromFile() {
         def conf = ConfigUtils.config("build/resources/test/config/test.conf")
         
         assert conf
@@ -14,7 +14,7 @@ class ConfigUtilsTest {
     
     
     @Test(expected = FileNotFoundException)
-    public void loadMissingConfigFromFile() {
+    void loadMissingConfigFromFile() {
         def conf = ConfigUtils.config("build/resources/test/config/missing.conf")
     }
 }

@@ -14,9 +14,9 @@ dependencies {
 
 processResources {
     filter ReplaceTokens, tokens: [
-            "application.version" : version,
-            "build.date"          : new Date().format("dd-MM-yyyy HH:mm"),
-            "build.revision"      : "git rev-parse HEAD".execute().text 
+            "application.version": version,
+            "build.date"         : new Date().format("dd-MM-yyyy HH:mm"),
+            "build.revision"     : "git rev-parse HEAD".execute().text
     ]
 }
 

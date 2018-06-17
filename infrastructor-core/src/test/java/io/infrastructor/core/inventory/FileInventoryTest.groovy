@@ -11,25 +11,25 @@ class FileInventoryTest {
     @Test
     void inlineDefinition() {
         def inventory = fileInventory(resource("inventory.groovy"))
-        assert inventory.nodes.size() == 2
+        assert inventory.size() == 2
     }
     
     @Test
     void mapLikeDefinitionWithASingleFile() {
         def inventory = fileInventory files: resource("inventory.groovy")
-        assert inventory.nodes.size() == 2
+        assert inventory.size() == 2
     }
     
     @Test
     void mapLikeDefinition() {
         def inventory = fileInventory files: [resource("inventory.groovy")]
-        assert inventory.nodes.size() == 2
+        assert inventory.size() == 2
     }
     
     @Test
     void multiFileInlineDefinition() {
         def inventory = fileInventory(resource("inventory.groovy"), resource("another.groovy"))
-        assert inventory.nodes.size() == 3
+        assert inventory.size() == 3
     }
     
     @Test
@@ -39,14 +39,14 @@ class FileInventoryTest {
             resource("another.groovy")
         ]
         
-        assert inventory.nodes.size() == 3
+        assert inventory.size() == 3
     }
     
     @Test
     void passingParametersToDefinition() {
         def COUNT = 5
         def inventory = fileInventory files: resource("parameterized.groovy"), params: [COUNT: COUNT]
-        assert inventory.nodes.size() == COUNT
+        assert inventory.size() == COUNT
     }
     
     @Test
@@ -61,7 +61,7 @@ class FileInventoryTest {
             }
         }
         
-        assert inventory.nodes.size() == 3
+        assert inventory.size() == 3
         assert counter == 3
     }
 }

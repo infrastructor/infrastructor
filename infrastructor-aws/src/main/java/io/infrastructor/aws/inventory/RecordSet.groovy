@@ -6,16 +6,16 @@ import static io.infrastructor.core.logging.ConsoleLogger.debug
 import static io.infrastructor.core.logging.ConsoleLogger.info
 
 class RecordSet {
-    
+
     def name
     def type
     def ttl
     def resources
     def usePublicIp
-    
+
     def apply(def amazonRoute53, def hostedZoneId, AwsNodes nodes) {
         info "route53 name '$name' - filtering nodes"
-        
+
         def target = nodes.filter(resources)
         info "route53 name '$name' - apply for nodes: ${target.nodes}"
 
@@ -28,23 +28,23 @@ class RecordSet {
                 debug "route53 name $name - update the record set with private IPs"
                 (target.nodes*.privateIp).each { records << new ResourceRecord(it) }
             }
-            
+
             ResourceRecordSet recordSet = new ResourceRecordSet(name, type)
             recordSet.setTTL(ttl)
             recordSet.setResourceRecords(records)
-            
+
             def changeRequest = new ChangeResourceRecordSetsRequest(
-                hostedZoneId, 
-                new ChangeBatch([new Change(ChangeAction.UPSERT, recordSet)])
+                    hostedZoneId,
+                    new ChangeBatch([new Change(ChangeAction.UPSERT, recordSet)])
             )
-            
+
             amazonRoute53.changeResourceRecordSets(changeRequest)
-            
+
         } else {
             info "route53 name $name - no instances have been found. trying to remove existing DNS record."
-            
+
             def result = amazonRoute53.listResourceRecordSets(new ListResourceRecordSetsRequest(hostedZoneId))
-            
+
             for (ResourceRecordSet resourceRecordSet : result.getResourceRecordSets()) {
                 debug "record set found '${resourceRecordSet.getName()}'"
                 if (resourceRecordSet.getName() == (name + '.')) {

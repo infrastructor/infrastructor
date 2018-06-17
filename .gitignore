@@ -6,10 +6,13 @@
 /infrastructor-core/.gradle/
 /infrastructor-core/.nb-gradle/
 /infrastructor-core/build/
+/infrastructor-core/out/
 /infrastructor-cli/.gradle/
 /infrastructor-cli/.nb-gradle/
 /infrastructor-cli/build/
-/infrastructor-core/infrastructor-cli/.nb-gradle/
-/infrastructor-aws/build/
+/infrastructor-cli/out/
 /infrastructor-aws/.nb-gradle/
+/infrastructor-aws/build/
+/infrastructor-aws/out/
 /.idea/
+/infrastructor.iml

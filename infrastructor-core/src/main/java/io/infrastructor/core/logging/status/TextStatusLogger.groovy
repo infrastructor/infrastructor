@@ -12,7 +12,7 @@ class TextStatusLogger {
         text
     }
     
-    public void setStatus(def text) {
+    void setStatus(def text) {
         this.text = text
         listener()
     }

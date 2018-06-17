@@ -37,7 +37,7 @@ class SshClient {
                     public boolean isEnabled(int level) { return true }
 
                     @Override
-                    public void log(int level, String message) { trace "jsch: $message" }
+                    void log(int level, String message) { trace "jsch: $message" }
                 })
     
             if (keyfile) jsch.addIdentity(keyfile)
@@ -93,7 +93,7 @@ class SshClient {
         def error  = new ByteArrayOutputStream()
         def input  = new ByteArrayInputStream()
         
-        public def execute() {
+        def execute() {
             try {
                 def result = [exitcode: -1, command: command]
             

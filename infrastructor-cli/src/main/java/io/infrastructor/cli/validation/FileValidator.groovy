@@ -5,7 +5,7 @@ import com.beust.jcommander.ParameterException
 
 public class FileValidator implements IParameterValidator {
     @Override
-    public void validate(String name, String value) throws ParameterException {
+    void validate(String name, String value) throws ParameterException {
         if (!new File(value).exists()) {
             throw new ParameterException("message: file does not exists, parameter: '$name', value: $value")
         }

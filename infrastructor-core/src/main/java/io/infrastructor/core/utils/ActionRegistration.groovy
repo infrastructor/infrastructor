@@ -1,7 +1,7 @@
 package io.infrastructor.core.utils
 
-import io.infrastructor.core.processing.actions.ApplyAction
-import io.infrastructor.core.processing.actions.NodeContext
+import io.infrastructor.core.provisioning.actions.ApplyAction
+import io.infrastructor.core.provisioning.actions.NodeContext
 
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
