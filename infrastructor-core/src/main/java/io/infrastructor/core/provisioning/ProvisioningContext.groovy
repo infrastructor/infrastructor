@@ -9,7 +9,7 @@ class ProvisioningContext {
 
     def static provision(def inventory, def context, Closure closure) {
         def ctx = new ProvisioningContext(inventory: inventory, context: context)
-        def clonned = closure.clone()
+        Closure clonned = closure.clone()
         clonned.delegate = ctx
         clonned(inventory)
     }

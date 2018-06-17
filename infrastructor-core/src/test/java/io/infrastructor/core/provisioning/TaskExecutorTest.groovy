@@ -10,9 +10,9 @@ class TaskExecutorTest {
     void runPlanWithAllNodes() {
         def collector = [] as Set
         inlineInventory {
-            node host: "testA", username: "dummy"
-            node host: "testB", username: "dummy"
-            node host: "testC", username: "dummy"
+            node id: "testA", host: "testA", username: "dummy"
+            node id: "testB", host: "testB", username: "dummy"
+            node id: "testC", host: "testC", username: "dummy"
         }.provision {
             task actions: {
                 collector << node.host
@@ -25,9 +25,9 @@ class TaskExecutorTest {
     void runPlanWithTagedNode() {
         def collector = [] as Set
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'a']
-            node host: "testB", username: "dummy", tags: [id: 'b']
-            node host: "testC", username: "dummy", tags: [id: 'c']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'a']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'b']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
             task filter: {'id:a'}, actions: {
                 collector << node.host
@@ -40,9 +40,9 @@ class TaskExecutorTest {
     void runPlanWithTagedNodes() {
         def collector = [] as Set
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'a']
-            node host: "testB", username: "dummy", tags: [id: 'b']
-            node host: "testC", username: "dummy", tags: [id: 'c']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'a']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'b']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
             task filter: {'id:a' || 'id:c'}, actions: {
                 collector << node.host
@@ -56,9 +56,9 @@ class TaskExecutorTest {
         def collector = ([] as Set).asSynchronized() 
         def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'a']
-            node host: "testB", username: "dummy", tags: [id: 'b']
-            node host: "testC", username: "dummy", tags: [id: 'c']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'a']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'b']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
             task filter: {'id:a' || 'id:c'}, parallel: 2, actions: {
                 collector << node.host
@@ -73,9 +73,9 @@ class TaskExecutorTest {
     void runPlanWithParallelism() {
         def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'a']
-            node host: "testB", username: "dummy", tags: [id: 'b']
-            node host: "testC", username: "dummy", tags: [id: 'c']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'a']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'b']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
             task parallel: 3, actions: {
                 threadIds << Thread.currentThread().id
@@ -88,9 +88,9 @@ class TaskExecutorTest {
     void runPlanWithParallelismNestedSyntax() {
         def threadIds = ([] as Set).asSynchronized() 
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'a']
-            node host: "testB", username: "dummy", tags: [id: 'b']
-            node host: "testC", username: "dummy", tags: [id: 'c']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'a']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'b']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
             task {
                 parallel = 3
@@ -106,9 +106,9 @@ class TaskExecutorTest {
     void runPlanWithASinlgeTagInClosure() {
         def collector = [] as Set
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'a']
-            node host: "testB", username: "dummy", tags: [id: 'b']
-            node host: "testC", username: "dummy", tags: [id: 'c']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'a']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'b']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
             task filter: {'id:b'}, actions: {
                 collector << node.host
@@ -122,9 +122,9 @@ class TaskExecutorTest {
     void runPlanWithASinlgeNegationTagInClosure() {
         def collector = [] as Set
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'a']
-            node host: "testB", username: "dummy", tags: [id: 'b']
-            node host: "testC", username: "dummy", tags: [id: 'c']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'a']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'b']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
             task filter: {!'id:b'}, actions: {
                 collector << node.host
@@ -138,9 +138,9 @@ class TaskExecutorTest {
     void runPlanWithADoubleNegationTagInClosure() {
         def collector = [] as Set
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'a']
-            node host: "testB", username: "dummy", tags: [id: 'b']
-            node host: "testC", username: "dummy", tags: [id: 'c']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'a']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'b']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'c']
         }.provision {
             task filter: { !'id:b' && !'id:a' }, actions: {
                 collector << node.host
@@ -154,9 +154,9 @@ class TaskExecutorTest {
     void runPlanWithAComplexTagFilteringExpression() {
         def collector = [] as Set
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [a: 'tag A', b: '1']
-            node host: "testB", username: "dummy", tags: [a: 'tag B', b: '2', c: '3']
-            node host: "testC", username: "dummy", tags: [a: 'tag C']
+            node id: "testA", host: "testA", username: "dummy", tags: [a: 'tag A', b: '1']
+            node id: "testB", host: "testB", username: "dummy", tags: [a: 'tag B', b: '2', c: '3']
+            node id: "testC", host: "testC", username: "dummy", tags: [a: 'tag C']
         }.provision {
             task filter: { 'a:tag C' || ('a:tag B' && !'c:3' && !'a:tag A') }, actions: {
                 collector << node.host
@@ -170,9 +170,9 @@ class TaskExecutorTest {
     void runPlanWithExpressionForNonNodes() {
         def collector = [] as Set
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'tag A']
-            node host: "testB", username: "dummy", tags: [id: 'tag B']
-            node host: "testC", username: "dummy", tags: [id: 'tag C']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'tag A']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'tag B']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'tag C']
         }.provision {
             task filter: { 'id:tag C' && 'id:tag Z' }, actions: {
                 collector << node.host
@@ -185,9 +185,9 @@ class TaskExecutorTest {
     void runActionsOnSuccess() {
         def collector = []
         inlineInventory {
-            node host: "testA", username: "dummy", tags: [id: 'tag A']
-            node host: "testB", username: "dummy", tags: [id: 'tag B']
-            node host: "testC", username: "dummy", tags: [id: 'tag C']
+            node id: "testA", host: "testA", username: "dummy", tags: [id: 'tag A']
+            node id: "testB", host: "testB", username: "dummy", tags: [id: 'tag B']
+            node id: "testC", host: "testC", username: "dummy", tags: [id: 'tag C']
         }.provision {
             task actions: {
                 collector << node.host

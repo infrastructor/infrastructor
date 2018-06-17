@@ -9,10 +9,10 @@ import static io.infrastructor.core.validation.ValidationHelper.validate
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 class Inventory {
 
-    def nodes = []
+    def nodes = [:]
 
     void leftShift(Node node) {
-        nodes << validate(node)
+        nodes << [(node.id) : validate(node)]
     }
 
     def provision(Closure closure) {
@@ -25,15 +25,15 @@ class Inventory {
     }
 
     def find(Closure closure) {
-        nodes.find(closure)
+        nodes.values().find(closure)
     }
 
     def filter(Closure closure) {
-        nodes.findAll { FilteringUtils.match(it.listTags(), closure) }
+        nodes.values().findAll { FilteringUtils.match(it.listTags(), closure) }
     }
 
     Node getAt(String id) {
-        nodes.find { it.id == id }
+        nodes[id]
     }
 }
 

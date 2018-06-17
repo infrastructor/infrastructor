@@ -51,6 +51,7 @@ class InventoryTest {
         assert inventory.size() == 2
 
         inventory << new Node(id: ID_Y, host: "10.0.0.3", username: "root")
-        assert inventory.size() == 3
+        assert inventory.size() == 2
+        assert inventory[ID_Y].host == "10.0.0.3"
     }
 }

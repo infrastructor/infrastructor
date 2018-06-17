@@ -52,5 +52,13 @@ class InlineDockerInventory {
             }
         }
     }
+
+    def size() {
+        nodes.size()
+    }
+
+    def find(Closure closure) {
+        nodes.find(closure)
+    }
 }
 
