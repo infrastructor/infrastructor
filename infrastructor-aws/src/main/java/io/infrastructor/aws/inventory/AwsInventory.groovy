@@ -6,7 +6,7 @@ import static io.infrastructor.aws.inventory.utils.AmazonEC2Utils.amazonEC2
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 
-public class AwsInventory {
+class AwsInventory {
 
     def awsAccessKeyId
     def awsAccessSecretKey
@@ -18,7 +18,7 @@ public class AwsInventory {
     def tags = [:]
     def usePublicIp = false
 
-    public BasicInventory build() {
+    BasicInventory build() {
         withTextStatus { statusLine ->
             statusLine "> initializing aws inventory"
             def amazonEC2 = amazonEC2(awsAccessKeyId, awsAccessSecretKey, awsRegion)
@@ -38,7 +38,7 @@ public class AwsInventory {
             debug "AwsInventory :: inventory is ready [${awsNodes.nodes.size()} node]: "
             awsNodes.nodes.each { debug("Node: ${defColor(it.name)}: ${yellow(it as String)}") }
 
-            return new BasicInventory(nodes: awsNodes.nodes)
+            return new BasicInventory(nodes: awsNodes.nodes.collectEntries { [(it.id): it] })
         }
     }
 
