@@ -20,7 +20,7 @@ class TaskProgressLogger {
         listener()
     }
     
-    public String statusLine() {
+    String statusLine() {
         def status = new StringBuilder()
         status << "> task: '$name', progress: $progress / ${nodes.size()} node|s" << "\n"
         nodes.each { node, nodeStatus ->
@@ -29,7 +29,7 @@ class TaskProgressLogger {
         return status
     }
     
-    public static void withTaskProgressStatus(def name, Closure closure) {
+    static void withTaskProgressStatus(def name, Closure closure) {
         def logger = new TaskProgressLogger(name: name)
         
         try {

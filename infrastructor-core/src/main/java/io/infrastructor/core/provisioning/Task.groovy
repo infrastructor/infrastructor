@@ -1,9 +1,11 @@
 package io.infrastructor.core.provisioning
 
+import io.infrastructor.core.logging.status.LightweightTaskProgressLogger
 import io.infrastructor.core.provisioning.actions.ActionExecutionException
 import io.infrastructor.core.provisioning.actions.NodeContext
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
+import static io.infrastructor.core.logging.status.LightweightTaskProgressLogger.withLightweightTaskProgressLogger
 import static io.infrastructor.core.logging.status.TaskProgressLogger.withTaskProgressStatus
 import static io.infrastructor.core.provisioning.ProvisioningContext.provision
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
@@ -23,33 +25,29 @@ class Task {
             
         info "${green("task: '${name}'")}"
             
-        def failedNodes = [].asSynchronized() 
-     
-        withTaskProgressStatus(name) { status -> 
-            
-            filtered.each { status.updateStatus(it.getLogName(), 'waiting') }
-            
+        def failedNodes = [].asSynchronized()
+
+        withLightweightTaskProgressLogger(name, filtered.size()) { LightweightTaskProgressLogger status ->
             debug "running task: $name with parallelism: $parallel on nodes: ${filtered.collect { it.getLogName() }}"
             
             executeParallel(filtered, parallel) { node -> 
                 try {
-                    status.updateStatus(node.getLogName(), "${blue("running")}")
-                    
+                    status.run()
+
                     def clonned = actions.clone()
                     clonned.delegate = new NodeContext(node: node)
                     clonned(node)
 
-                    status.updateStatus(node.getLogName(), "${green("done")}")
+                    status.done()
                 } catch (ActionExecutionException ex) {
                     error "FAILED - node.id: ${node.getLogName()}, $ex.message"
                     failedNodes << node
-                    status.updateStatus(node.getLogName(), "${red("failed")}")
+                    status.fail()
                 } catch (Exception ex) {
                     error "FAILED - node.id: ${node.getLogName()}, message: $ex.message"
                     failedNodes << node
-                    status.updateStatus(node.getLogName(), "${red("failed")}")
+                    status.fail()
                 } finally {
-                    status.increase()
                     node.disconnect()
                 }
             }
