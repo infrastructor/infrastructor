@@ -6,7 +6,6 @@ import io.infrastructor.core.provisioning.actions.NodeContext
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.LightweightTaskProgressLogger.withLightweightTaskProgressLogger
-import static io.infrastructor.core.logging.status.TaskProgressLogger.withTaskProgressStatus
 import static io.infrastructor.core.provisioning.ProvisioningContext.provision
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
@@ -22,7 +21,7 @@ class Task {
     def execute(def inventory) {
 
         def filtered = inventory.filter(filter)
-            
+
         info "${green("task: '${name}'")}"
             
         def failedNodes = [].asSynchronized()
@@ -63,4 +62,3 @@ class Task {
         info "${green("task: '$name', done on ${filtered.size()} node|s")}"
     }
 }
-

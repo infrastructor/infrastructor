@@ -1,5 +1,7 @@
 package io.infrastructor.core.logging.status
 
+import org.fusesource.jansi.AnsiString
+
 import java.util.concurrent.atomic.AtomicInteger
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
@@ -33,16 +35,22 @@ class LightweightTaskProgressLogger {
     }
 
     String statusLine() {
+        def taskStatus = new StringBuilder()
+        taskStatus << "[TASK] '$name'"
+
+        def nodesStatus = new StringBuilder()
+        nodesStatus << "[NODES] "
+        nodesStatus << "${bold(yellow('WAITING: ' + waiting))} "
+        nodesStatus << "${bold(blue('RUNNING: ' + running))} "
+        nodesStatus << "${bold(red('FAILED: ' + failed))} "
+        nodesStatus << "${bold(green('DONE: ' + done))}"
+
+        def plain = new AnsiString(nodesStatus.toString())
+
         def status = new StringBuilder()
-        status << "[TASK] '$name'"
-        status << "\n"
-        status << "[NODES] "
-        status << "${bold(yellow('waiting: ' + waiting))} "
-        status << "${bold(blue('running: ' + running))} "
-        status << "${bold(red('failed: ' + failed))} "
-        status << "${bold(green('done: ' + done))}"
-        status << "\n"
-        status << progressLine('<', '=', '-', '>', status.size() - 108, waiting + running + failed + done, failed + done)
+        status << taskStatus << "\n"
+        status << nodesStatus << "\n"
+        status << progressLine('<', '=', '-', '>', plain.length() - 4 - 8, waiting + running + failed + done, failed + done)
         status << "\n"
         return status
     }
@@ -50,7 +58,9 @@ class LightweightTaskProgressLogger {
     String progressLine(def start, def filled, def unfilled, def end, def size, def total, def progress) {
         int filledElements = (int) ((size / (double) total) * progress)
 
-        final StringBuilder builder = new StringBuilder(start)
+        def prercent = String.format("%6.0f", (((double) progress) / total) * 100)
+
+        final StringBuilder builder = new StringBuilder(prercent + '% ' + start)
 
         (0..filledElements).each { builder.append(filled) }
         (0..(size - filledElements)).each { builder.append(unfilled) }

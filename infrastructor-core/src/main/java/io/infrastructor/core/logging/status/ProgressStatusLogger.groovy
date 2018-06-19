@@ -12,7 +12,6 @@ class ProgressStatusLogger {
 
     def total = 0
     def progress = 0
-    def preffix = ""
     def status = ""
     def listener = {}
     
@@ -30,7 +29,7 @@ class ProgressStatusLogger {
     String statusLine() {
         int filledElements = (int) ((progressLineSize / (double) total) * progress)
 
-        final StringBuilder stringBuilder = new StringBuilder("$preffix <")
+        final StringBuilder stringBuilder = new StringBuilder("<")
 
         (0..filledElements).each { stringBuilder.append(FILLED_CHAR) }
         (0..(progressLineSize - filledElements)).each { stringBuilder.append(UNFILLED_CHAR) }
