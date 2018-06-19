@@ -16,19 +16,19 @@ class LightweightTaskProgressLogger {
     AtomicInteger failed = new AtomicInteger()
     AtomicInteger done = new AtomicInteger()
 
-    def synchronized run() {
+    def run() {
         waiting.decrementAndGet()
         running.incrementAndGet()
         listener()
     }
 
-    def synchronized fail() {
+    def fail() {
         running.decrementAndGet()
         failed.incrementAndGet()
         listener()
     }
 
-    def synchronized done() {
+    def done() {
         running.decrementAndGet()
         done.incrementAndGet()
         listener()
