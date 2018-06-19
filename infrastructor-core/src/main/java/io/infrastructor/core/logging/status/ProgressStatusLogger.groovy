@@ -26,7 +26,7 @@ class ProgressStatusLogger {
         listener()
     }
     
-    String statusLine() {
+    private String statusLine() {
         int filledElements = (int) ((progressLineSize / (double) total) * progress)
 
         final StringBuilder stringBuilder = new StringBuilder("<")
@@ -39,21 +39,6 @@ class ProgressStatusLogger {
         return stringBuilder.toString()
     }
 
-
-    String progressLine(def start, def filled, def unfilled, def end, def size, def total, def progress) {
-        int filledElements = (int) ((size / (double) total) * progress)
-
-        final StringBuilder builder = new StringBuilder(start)
-
-        (0..filledElements).each { builder.append(filled) }
-        (0..(size - filledElements)).each { builder.append(unfilled) }
-
-        builder.append(end)
-
-        return builder.toString()
-
-    }
-    
     static void withProgressStatus(def total, def status, Closure closure) {
         def progress = new ProgressStatusLogger(total: total, status: status)
         try {
