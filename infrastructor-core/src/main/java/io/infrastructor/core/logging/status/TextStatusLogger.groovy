@@ -8,7 +8,7 @@ class TextStatusLogger {
     def text
     def listener = {}
     
-    public String statusLine() {
+    String statusLine() {
         text
     }
     
@@ -17,11 +17,11 @@ class TextStatusLogger {
         listener()
     }
     
-    public static def withTextStatus(Closure closure) {
+    static def withTextStatus(Closure closure) {
         withTextStatus('', closure)
     }
     
-    public static def withTextStatus(String initial, Closure closure) {
+    static def withTextStatus(String initial, Closure closure) {
         def status = new TextStatusLogger(text: initial)
         try {
             addStatusLogger status

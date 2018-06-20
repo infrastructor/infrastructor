@@ -13,33 +13,33 @@ class ProgressStatusLogger {
     def total = 0
     def progress = 0
     def status = ""
-    def listener = {}
+    def listener = {} // notify on any state change
     
-    public synchronized int increase() {
+    synchronized int increase() {
         progress++
         listener()
         return progress
     }
     
-    public def setStatus(def status) {
+    def setStatus(def status) {
         this.status = status
         listener()
     }
     
-    public String statusLine() {
+    private String statusLine() {
         int filledElements = (int) ((progressLineSize / (double) total) * progress)
 
-        final StringBuilder stringBuilder = new StringBuilder("[")
+        final StringBuilder builder = new StringBuilder("<")
 
-        (0..filledElements).each { stringBuilder.append(FILLED_CHAR) }
-        (0..(progressLineSize - filledElements)).each { stringBuilder.append(UNFILLED_CHAR) }
+        (0..filledElements).each { builder.append(FILLED_CHAR) }
+        (0..(progressLineSize - filledElements)).each { builder.append(UNFILLED_CHAR) }
 
-        stringBuilder.append("] ").append(progress).append(" / ").append(total).append(" ").append(status)
+        builder.append("> ").append(progress).append(" / ").append(total).append(" ").append(status)
         
-        return stringBuilder.toString()
+        return builder.toString()
     }
-    
-    public static void withProgressStatus(def total, def status, Closure closure) {
+
+    static void withProgressStatus(def total, def status, Closure closure) {
         def progress = new ProgressStatusLogger(total: total, status: status)
         try {
             addStatusLogger progress

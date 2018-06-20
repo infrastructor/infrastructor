@@ -34,7 +34,7 @@ class InlineDockerInventory implements ManagedInventory {
 
     synchronized Inventory launch() {
         def inventory = new BasicInventory()
-        withTextStatus("> launching docker nodes") {
+        withTextStatus("[DOCKER] launching nodes") {
             withProgressStatus(nodes.size(), 'nodes launched') { progressLine ->
                 nodes.values().each {
                     inventory << it.launch()
@@ -47,7 +47,7 @@ class InlineDockerInventory implements ManagedInventory {
     }
 
     synchronized void shutdown() {
-        withTextStatus("> shutting down docker nodes") {
+        withTextStatus("[DOCKER] shutting down nodes") {
             withProgressStatus(nodes.size(), 'nodes terminated') { progressLine ->
                 nodes.values().each {
                     it.shutdown()

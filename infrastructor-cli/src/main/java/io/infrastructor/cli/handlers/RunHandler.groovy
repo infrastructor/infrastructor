@@ -57,10 +57,10 @@ public class RunHandler extends LoggingAwareHandler {
             
             def shell = groovyShell(settings)
             files.each { 
-                info   "${bold(blue("running script: $it"))}"
-                status "> running script: $it"
+                info   "${blue("running file: '$it'")}"
+                status "[FILE] '$it'"
                 shell.evaluate(new File(it))
-                info   "${bold(blue("running script: $it - done"))}"
+                info   "${blue("file: '$it' is done")}"
             }
             
             status "> execution complete!"

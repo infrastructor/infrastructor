@@ -8,10 +8,10 @@ import static org.fusesource.jansi.Ansi.ansi
 
 class ConsoleLogger {
 
-    public static final int ERROR = 1
-    public static final int INFO  = 2
-    public static final int DEBUG = 3
-    public static final int TRACE = 4
+    static final int ERROR = 1
+    static final int INFO  = 2
+    static final int DEBUG = 3
+    static final int TRACE = 4
     
     def static statusPrinted = 0
     def static statusLoggers = []
@@ -80,25 +80,25 @@ class ConsoleLogger {
     }
 
     
-    public static void trace(String message) {
+    static void trace(String message) {
         if (TRACE <= logLevel()) {
             printLine("[TRACE] " + defColor(message))
         }
     }
     
-    public static void debug(String message) {
+    static void debug(String message) {
         if (DEBUG <= logLevel()) {
             printLine "${yellow("[DEBUG]")} $message"
         }
     }
 
-    public static void info(String message) {
+    static void info(String message) {
         if (INFO <= logLevel()) {
             printLine "${blue("[INFO]")} $message"
         }
     }
 
-    public static void error(String message) {
+    static void error(String message) {
         if (ERROR <= logLevel()) {
             printLine red("[ERROR] $message")
         }
