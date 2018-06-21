@@ -22,12 +22,11 @@ class ManagedAwsInventory {
 
     def ec2(Map params, Closure closure) {
         withTextStatus { statusLine ->
-            statusLine '> initializing ec2 managed set'
+            statusLine '[AWS] initializing EC2 managed set'
             def ec2 = new EC2(params)
             ec2.with(closure)
             ec2.initialize(amazonEC2)
             ec2s << ec2
-            statusLine '> initializing ec2 managed set done'
         }
     }
 
@@ -54,19 +53,19 @@ class ManagedAwsInventory {
 
     def provision(Closure closure = {}) {
         withTextStatus { statusLine ->
-            statusLine '> stage: creating aws instances'
+            statusLine '[AWS] creating aws instances'
             ec2s*.createInstances(amazonEC2)
 
-            statusLine '> stage: updating aws instances'
+            statusLine '[AWS] updating aws instances'
             ec2s*.updateInstances(amazonEC2)
 
-            statusLine '> stage: provisioning aws instances'
+            statusLine '[AWS] provisioning aws instances'
             new BasicInventory(nodes: getNodes()).provision(closure)
 
-            statusLine '> stage: removing aws instances'
+            statusLine '[AWS] removing aws instances'
             ec2s*.removeInstances(amazonEC2)
 
-            statusLine '> stage: updating route53 records'
+            statusLine '[AWS] updating route53 records'
             route53s*.apply(amazonEC2, amazonRoute53)
         }
     }
