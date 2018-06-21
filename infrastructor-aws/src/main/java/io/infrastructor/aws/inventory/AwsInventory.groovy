@@ -20,7 +20,7 @@ class AwsInventory {
 
     BasicInventory build() {
         withTextStatus { statusLine ->
-            statusLine "> initializing aws inventory"
+            statusLine "[AWS] initializing inventory"
             def amazonEC2 = amazonEC2(awsAccessKeyId, awsAccessSecretKey, awsRegion)
 
             debug 'AwsInventory :: connecting to AWS to retrieve a list of EC2 instances'
