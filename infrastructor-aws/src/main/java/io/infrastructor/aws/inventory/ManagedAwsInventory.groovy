@@ -72,7 +72,7 @@ class ManagedAwsInventory {
     }
 
     def getNodes() {
-        ec2s*.getInventory().flatten().collectEntries { [(it.id): it] }
+        ec2s*.getInventory().flatten().collectEntries { [(it.name): it] }
     }
 
     def dry() {
