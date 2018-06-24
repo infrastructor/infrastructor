@@ -21,7 +21,7 @@ class CryptoUtils {
         new SecretKeySpec(Arrays.copyOf(keyBytes, 16), ALGORITHM)
     }
     
-    public static String encryptFull(String key, byte [] data) {
+    static String encryptFull(String key, byte [] data) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, prepareKey(key))
@@ -33,7 +33,7 @@ class CryptoUtils {
         }
     }
 
-    public static byte [] decryptFull(String key, String data) {
+    static byte [] decryptFull(String key, String data) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM)
             cipher.init(Cipher.DECRYPT_MODE, prepareKey(key))
@@ -44,12 +44,12 @@ class CryptoUtils {
         }
     }
     
-    public static String encryptPart(String key, String template, def bindings = [:]) {
+    static String encryptPart(String key, String template, def bindings = [:]) {
         bindings.encrypt = { "\${decrypt('${encryptFull(key, it.getBytes())}')}" }
         new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
     
-    public static String decryptPart(String key, String template, def bindings = [:]) {
+    static String decryptPart(String key, String template, def bindings = [:]) {
         bindings.decrypt = { "${new String(decryptFull(key, it))}" }
         new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
