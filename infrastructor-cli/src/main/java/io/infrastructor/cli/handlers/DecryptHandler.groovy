@@ -5,6 +5,7 @@ import groovy.io.FileType
 import groovy.time.TimeCategory
 import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
+import io.infrastructor.core.utils.CryptoUtils
 import io.infrastructor.core.utils.CryptoUtilsException
 
 import static io.infrastructor.core.utils.CryptoUtils.*
@@ -56,7 +57,7 @@ class DecryptHandler extends LoggingAwareHandler {
                 file.isDirectory() ? file.eachFileRecurse (FileType.FILES) { toDecrypt << it } : toDecrypt << file
             }
         
-            info "found ${toDecrypt.size()} file|s to decrypt"
+            info "found ${toDecrypt.size()} file|s"
             
             withProgressStatus(toDecrypt.size(), 'file|s processed')  { progressLine ->
                 toDecrypt.each { 
@@ -85,12 +86,36 @@ class DecryptHandler extends LoggingAwareHandler {
     }
     
     def decrypt(def file) {
-        def decrypted = (mode == FULL) ? decryptFull(password, file.text) : decryptPart(password, file.text)
-            
+        def decrypted
+
+        if (mode == FULL) {
+            def (
+            String tool,
+            String algorithm,
+            String encoding,
+            String keyHash
+            ) = parseEncrypted(file.text)
+
+            if (tool == CryptoUtils.TOOL && algorithm == CryptoUtils.ALGORITHM && encoding == CryptoUtils.OUTPUT_ENCODING) {
+                // file was encrypted, checking the key hash
+                if (toBase64(sha256(sha256(toBytes(password)))) == keyHash) {
+                    decrypted = decryptFull(password, file.text)
+                } else {
+                    info "${yellow('encrypted with a different key:')} '${file.getCanonicalPath()}'"
+                    return
+                }
+            } else {
+                // file was not encrypted, skipping
+                info "${yellow('uncrypted file:')} '${file.getCanonicalPath()}'"
+                return
+            }
+        } else {
+            decrypted = decryptPart(password, file.text)
+        }
+
         def output = new FileOutputStream(file, false)
         output.withCloseable { it << decrypted }
-            
-        info "${green('decrypted:')} ${file.getCanonicalPath()}"
+        info "${green('decrypted:')} '${file.getCanonicalPath()}'"
     }
 }
 

@@ -5,6 +5,7 @@ import groovy.io.FileType
 import groovy.time.TimeCategory
 import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
+import io.infrastructor.core.utils.CryptoUtils
 
 import static io.infrastructor.core.utils.CryptoUtils.*
 import static io.infrastructor.cli.validation.ModeValidator.*
@@ -54,7 +55,7 @@ class EncryptHandler extends LoggingAwareHandler {
                 file.isDirectory() ? file.eachFileRecurse (FileType.FILES) { toEncrypt << it } : toEncrypt << file
             }
         
-            info "found ${toEncrypt.size()} file|s to encrypt"
+            info "found ${toEncrypt.size()} file|s"
             
             withProgressStatus(toEncrypt.size(), 'file|s processed')  { progressLine ->
                 toEncrypt.each { 
@@ -72,11 +73,34 @@ class EncryptHandler extends LoggingAwareHandler {
     }
     
     def encrypt(def file) {
+
+        if (mode == FULL) {
+            // check if the file has already been encrypted
+            def (
+                String tool,
+                String algorithm,
+                String encoding,
+                String keyHash
+            ) = parseEncrypted(file.text)
+
+            if (tool == CryptoUtils.TOOL && algorithm == CryptoUtils.ALGORITHM && encoding == CryptoUtils.OUTPUT_ENCODING) {
+                // file has already been encrypted
+                if (toBase64(sha256(sha256(toBytes(password)))) == keyHash) {
+                    info "${green('already encrypted:')} '${file.getCanonicalPath()}'"
+                } else {
+                    info "${yellow('already encrypted with a different key:')} '${file.getCanonicalPath()}'"
+                }
+
+                return
+            }
+        }
+
+        // encrypt an unencrypted file
         def encrypted = (mode == FULL) ? encryptFull(password, file.bytes) : encryptPart(password, file.text)
 
         def output = new FileOutputStream(file, false)
         output.withCloseable { it << encrypted }
-        
-        info "${green('encrypted:')} ${file.getCanonicalPath()}"
+
+        info "${green('encrypted:')} '${file.getCanonicalPath()}'"
     }
 }

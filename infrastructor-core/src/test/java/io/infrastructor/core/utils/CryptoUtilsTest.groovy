@@ -12,8 +12,6 @@ class CryptoUtilsTest {
     @Test
     void fullEncryptionAndDecryption() {
         def encrypted = CryptoUtils.encryptFull(KEY, DATA.getBytes(ENCODING))
-        println encrypted
-
         assert encrypted.startsWith('INFRASTRUCTOR:AES/GCM/PKCS5Padding:BASE64:OIEhnQh92cY0Nz/TPfozostr/GxSC2S4u2DvLOtTSuc=:')
 
         byte [] decrypted = CryptoUtils.decryptFull(KEY, encrypted)
