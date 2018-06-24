@@ -12,7 +12,7 @@ import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
 
-public class EncryptHandler extends LoggingAwareHandler {
+class EncryptHandler extends LoggingAwareHandler {
     
     private String password
 
@@ -48,7 +48,7 @@ public class EncryptHandler extends LoggingAwareHandler {
         info "${blue('starting encryption with mode ' + mode)}"
         
         withTextStatus { status ->
-            status "> collecting files to encrypt"
+            status "[ENCRYPT] collecting files to encrypt"
             
             files.collect { new File(it) }.each { file -> 
                 file.isDirectory() ? file.eachFileRecurse (FileType.FILES) { toEncrypt << it } : toEncrypt << file
@@ -58,13 +58,13 @@ public class EncryptHandler extends LoggingAwareHandler {
             
             withProgressStatus(toEncrypt.size(), 'file|s processed')  { progressLine ->
                 toEncrypt.each { 
-                    status "> encrypting: $it.canonicalPath"
+                    status "[ENCRYPT] encrypting: $it.canonicalPath"
                     encrypt(it) 
                     progressLine.increase()
                 }
             }
             
-            status "> encryption is done"
+            status "[ENCRYPT] encryption is done"
         }
         
         def duration = TimeCategory.minus(new Date(), timeStart)

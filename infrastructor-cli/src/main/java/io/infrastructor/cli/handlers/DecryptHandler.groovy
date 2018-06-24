@@ -50,7 +50,7 @@ class DecryptHandler extends LoggingAwareHandler {
         info "${blue('starting decryption with mode ' + mode)}"
         
         withTextStatus { status ->
-            status "> collecting files to decrypt"
+            status "[DECRYPT] collecting files to decrypt"
             
             files.collect { new File(it) }.each { file -> 
                 file.isDirectory() ? file.eachFileRecurse (FileType.FILES) { toDecrypt << it } : toDecrypt << file
@@ -61,7 +61,7 @@ class DecryptHandler extends LoggingAwareHandler {
             withProgressStatus(toDecrypt.size(), 'file|s processed')  { progressLine ->
                 toDecrypt.each { 
                     try {
-                        status "> decrypting: $it.canonicalPath"
+                        status "[DECRYPT] decrypting: $it.canonicalPath"
                         decrypt(it) 
                     } catch (CryptoUtilsException ex) {
                         error "decryption failed: ${it.canonicalPath}"
@@ -71,7 +71,7 @@ class DecryptHandler extends LoggingAwareHandler {
                 }
             }
             
-            status "> encryption is done"
+            status "[DECRYPT] encryption is done"
         }
         
         def duration = TimeCategory.minus(new Date(), timeStart)
