@@ -1,5 +1,7 @@
 package io.infrastructor.core.utils
 
+import groovy.text.SimpleTemplateEngine
+
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -106,5 +108,47 @@ class CryptoUtils2 {
             def body = data.substring(matcher.end())
             return [*header, body]
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    static String decryptString(String key, String data, String ivBase64) {
+        try {
+            final Cipher cipher = Cipher.getInstance(ALGORITHM)
+            final SecretKeySpec keySpec = prepareKey(key)
+            final GCMParameterSpec parameterSpec = new GCMParameterSpec(128, fromBase64(ivBase64))
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
+
+            return new String(cipher.doFinal(fromBase64(data)), ENCODING)
+        } catch (Exception ex) {
+            throw new CryptoUtilsException("unable to decrypt, did you provide encrypted data?", ex)
+        }
+    }
+
+    static List encryptString(String key, String data) {
+        try {
+            final Cipher cipher = Cipher.getInstance(ALGORITHM)
+            final SecretKeySpec secretKeySpec = prepareKey(key)
+            final GCMParameterSpec parameterSpec = prepareParameterSpec()
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, parameterSpec)
+
+            return [toBase64(cipher.doFinal(toBytes(data))), toBase64(parameterSpec.getIV())]
+        } catch (Exception ex) {
+            throw new CryptoUtilsException("unable to encrypt data", ex)
+        }
+    }
+
+    static String decryptPart(String key, String template, def bindings = [:]) {
+        bindings.decrypt = { data, iv -> "${decryptString(key, data, iv)}" }
+        new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
+    }
+
+    static String encryptPart(String key, String template, def bindings = [:]) {
+        bindings.encrypt = { data ->
+            def (encrypted, ivBase64) = encryptString(key, data)
+            "\${decrypt('$encrypted', '$ivBase64')}"
+        }
+
+        new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
 }
