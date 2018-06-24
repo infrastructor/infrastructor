@@ -7,7 +7,7 @@ import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
 import io.infrastructor.core.utils.CryptoUtilsException
 
-import static io.infrastructor.core.utils.CryptoUtils2.*
+import static io.infrastructor.core.utils.CryptoUtils.*
 import static io.infrastructor.cli.validation.ModeValidator.*
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus

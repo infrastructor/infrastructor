@@ -4,8 +4,8 @@ import groovy.text.SimpleTemplateEngine
 
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.core.utils.CryptoUtils2.decryptFull
-import static io.infrastructor.core.utils.CryptoUtils2.decryptPart
+import static io.infrastructor.core.utils.CryptoUtils.decryptFull
+import static io.infrastructor.core.utils.CryptoUtils.decryptPart
 
 class TemplateAction {
     

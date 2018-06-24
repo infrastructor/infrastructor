@@ -1,6 +1,6 @@
 package io.infrastructor.core.provisioning.actions
 
-import static io.infrastructor.core.utils.CryptoUtils2.decryptFull
+import static io.infrastructor.core.utils.CryptoUtils.decryptFull
 
 import javax.validation.constraints.NotNull
 
