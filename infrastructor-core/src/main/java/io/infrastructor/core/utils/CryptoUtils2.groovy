@@ -110,9 +110,7 @@ class CryptoUtils2 {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    static String decryptString(String key, String data, String ivBase64) {
+    static String decryptString(String key, String ivBase64, String data) {
         try {
             final Cipher cipher = Cipher.getInstance(ALGORITHM)
             final SecretKeySpec keySpec = prepareKey(key)
@@ -139,7 +137,7 @@ class CryptoUtils2 {
     }
 
     static String decryptPart(String key, String template, def bindings = [:]) {
-        bindings.decrypt = { data, iv -> "${decryptString(key, data, iv)}" }
+        bindings.decrypt = { data, iv -> "${decryptString(key, iv, data)}" }
         new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
 

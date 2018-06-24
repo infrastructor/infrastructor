@@ -6,15 +6,15 @@ import static io.infrastructor.core.utils.CryptoUtils2.ENCODING
 
 class CryptoUtils2Test {
 
-    final String DATA = "this is a simple test"
-    final String KEY  = "mykey"
+    final String DATA = "secret message"
+    final String KEY  = "secret"
 
     @Test
     void fullEncryptionAndDecryption() {
         def encrypted = CryptoUtils2.encryptFull(KEY, DATA.getBytes(ENCODING))
-        assert encrypted.startsWith('INFRASTRUCTOR:AES/GCM/PKCS5Padding:BASE64:U0rHm3V3ZSsbJgFjbg3r0Q8FjKjeSUMDTbUm5kQ7Uig=:')
-
         println encrypted
+
+        assert encrypted.startsWith('INFRASTRUCTOR:AES/GCM/PKCS5Padding:BASE64:OIEhnQh92cY0Nz/TPfozostr/GxSC2S4u2DvLOtTSuc=:')
 
         byte [] decrypted = CryptoUtils2.decryptFull(KEY, encrypted)
         assert DATA == new String(decrypted, ENCODING)
@@ -23,7 +23,7 @@ class CryptoUtils2Test {
     @Test
     void decryptPart() {
         def template = '''
-            message: "${decrypt('sRZaURW0vDfilMlMcTjLsTobJbq/HZrS3N3KU4fkQp5z2o0MqQ==', 'fZe0EXxZyKzAxPjF')}"
+            message: "${decrypt('Xi4Hwkd4apQSlRnAX/iJpNMRofIxay7rmhGWiQmc', '8WJJgQSAyHaFD3Ot')}"
         '''
         assert CryptoUtils2.decryptPart(KEY, template).contains(DATA)
     }

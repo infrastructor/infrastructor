@@ -1,6 +1,6 @@
 package io.infrastructor.core.provisioning.actions
 
-import io.infrastructor.core.utils.CryptoUtils
+import static io.infrastructor.core.utils.CryptoUtils2.decryptFull
 
 import javax.validation.constraints.NotNull
 
@@ -43,7 +43,7 @@ class UploadAction {
     
     def upload(def node, def local, def remote) {
         if (decryptionKey) {
-            byte [] decrypted = CryptoUtils.decryptFull(decryptionKey as String, new File(local).text)
+            byte [] decrypted = decryptFull(decryptionKey as String, new File(local).text)
             node.writeFile(remote, new ByteArrayInputStream(decrypted), user)
         } else {
             node.writeFile(remote, new FileInputStream(local), user)
