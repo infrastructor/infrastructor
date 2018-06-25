@@ -167,7 +167,6 @@ class TemplateActionTest extends InventoryAwareTestBase {
                     template {
                         source = 'build/resources/test/encrypted_full.tmpl'
                         target = '/tmp/test.txt'
-                        bindings = [message: "simple!"]
                         mode = '644'
                         decryptionKey = 'secret'
                         decryptionMode = FULL
@@ -177,7 +176,6 @@ class TemplateActionTest extends InventoryAwareTestBase {
 
                     assert result.exitcode == 0
                     assert result.output.find(/secret message/)
-                    assert result.output.find(/simple!/)
                 }
             }
         }

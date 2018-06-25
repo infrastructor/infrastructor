@@ -5,6 +5,7 @@ import groovy.io.FileType
 import groovy.time.TimeCategory
 import io.infrastructor.cli.validation.FileValidator
 import io.infrastructor.cli.validation.ModeValidator
+import io.infrastructor.core.utils.CryptoUtils
 import io.infrastructor.core.utils.CryptoUtilsException
 
 import static io.infrastructor.core.utils.CryptoUtils.*
@@ -13,7 +14,7 @@ import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
 
-public class DecryptHandler extends LoggingAwareHandler {
+class DecryptHandler extends LoggingAwareHandler {
     
     private String password
     
@@ -50,18 +51,18 @@ public class DecryptHandler extends LoggingAwareHandler {
         info "${blue('starting decryption with mode ' + mode)}"
         
         withTextStatus { status ->
-            status "> collecting files to decrypt"
+            status "[DECRYPT] collecting files to decrypt"
             
             files.collect { new File(it) }.each { file -> 
                 file.isDirectory() ? file.eachFileRecurse (FileType.FILES) { toDecrypt << it } : toDecrypt << file
             }
         
-            info "found ${toDecrypt.size()} file|s to decrypt"
+            info "found ${toDecrypt.size()} file|s"
             
             withProgressStatus(toDecrypt.size(), 'file|s processed')  { progressLine ->
                 toDecrypt.each { 
                     try {
-                        status "> decrypting: $it.canonicalPath"
+                        status "[DECRYPT] decrypting: $it.canonicalPath"
                         decrypt(it) 
                     } catch (CryptoUtilsException ex) {
                         error "decryption failed: ${it.canonicalPath}"
@@ -71,7 +72,7 @@ public class DecryptHandler extends LoggingAwareHandler {
                 }
             }
             
-            status "> encryption is done"
+            status "[DECRYPT] encryption is done"
         }
         
         def duration = TimeCategory.minus(new Date(), timeStart)
@@ -84,13 +85,37 @@ public class DecryptHandler extends LoggingAwareHandler {
         }
     }
     
-    def decrypt(def file) {
-        def decrypted = (mode == FULL) ? decryptFull(password, file.text) : decryptPart(password, file.text)
-            
+    def decrypt(File file) {
+        def decrypted
+
+        if (mode == FULL) {
+            def (
+            String tool,
+            String algorithm,
+            String encoding,
+            String keyHash
+            ) = parse(file.text)
+
+            if (tool == CryptoUtils.TOOL && algorithm == CryptoUtils.ALGORITHM && encoding == CryptoUtils.OUTPUT_ENCODING) {
+                // file was encrypted, checking the key hash
+                if (encryptionKeyHash(password) == keyHash) {
+                    decrypted = decryptFull(password, file.text)
+                } else {
+                    info "${yellow('encrypted with a different key:')} '${file.getCanonicalPath()}'"
+                    return
+                }
+            } else {
+                // file was not encrypted, skipping
+                info "${yellow('uncrypted file:')} '${file.getCanonicalPath()}'"
+                return
+            }
+        } else {
+            decrypted = decryptPart(password, file.text)
+        }
+
         def output = new FileOutputStream(file, false)
         output.withCloseable { it << decrypted }
-            
-        info "${green('decrypted:')} ${file.getCanonicalPath()}"
+        info "${green('decrypted:')} '${file.getCanonicalPath()}'"
     }
 }
 

@@ -130,7 +130,6 @@ class UploadTest extends InventoryAwareTestBase {
         }
     }
     
-    
     @Test
     void decryptAndUploadFileToRemoteHost() {
         withInventory { inventory ->

@@ -2,7 +2,7 @@ package io.infrastructor.cli.handlers
 
 import org.junit.Test
 
-public class DecryptHandlerTest {
+class DecryptHandlerTest {
     
     @Test
     void decryptFull() {
@@ -15,10 +15,10 @@ public class DecryptHandlerTest {
     @Test
     void decryptPart() {
         def file = 'build/resources/test/decryption/template.txt'
-        DecryptHandler handler = new DecryptHandler(files: [file], password: 'test', mode: 'PART')
+        DecryptHandler handler = new DecryptHandler(files: [file], password: 'secret', mode: 'PART')
         handler.execute()
         def text = new File(file).text
-        assert "message: simple\ntest\n" == text
+        assert "message: secret message" == text
     }
 }
 
