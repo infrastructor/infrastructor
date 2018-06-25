@@ -81,7 +81,7 @@ class EncryptHandler extends LoggingAwareHandler {
                 String algorithm,
                 String encoding,
                 String keyHash
-            ) = parseEncrypted(file.text)
+            ) = parse(file.text)
 
             if (tool == CryptoUtils.TOOL && algorithm == CryptoUtils.ALGORITHM && encoding == CryptoUtils.OUTPUT_ENCODING) {
                 // file has already been encrypted
@@ -96,7 +96,7 @@ class EncryptHandler extends LoggingAwareHandler {
         }
 
         // encrypt an unencrypted file
-        def encrypted = (mode == FULL) ? encryptFull(password, file.bytes) : encryptPart(password, file.text)
+        String encrypted = (mode == FULL) ? encryptFull(password, file.bytes)[0] : encryptPart(password, file.text)
 
         def output = new FileOutputStream(file, false)
         output.withCloseable { it << encrypted }

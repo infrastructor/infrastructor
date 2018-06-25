@@ -94,7 +94,7 @@ class DecryptHandler extends LoggingAwareHandler {
             String algorithm,
             String encoding,
             String keyHash
-            ) = parseEncrypted(file.text)
+            ) = parse(file.text)
 
             if (tool == CryptoUtils.TOOL && algorithm == CryptoUtils.ALGORITHM && encoding == CryptoUtils.OUTPUT_ENCODING) {
                 // file was encrypted, checking the key hash
