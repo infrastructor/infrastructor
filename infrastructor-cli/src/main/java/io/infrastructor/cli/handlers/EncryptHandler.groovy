@@ -12,6 +12,9 @@ import static io.infrastructor.cli.validation.ModeValidator.*
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.TextStatusLogger.withTextStatus
 import static io.infrastructor.core.logging.status.ProgressStatusLogger.withProgressStatus
+import static io.infrastructor.core.utils.CryptoUtils.ALGORITHM
+import static io.infrastructor.core.utils.CryptoUtils.OUTPUT_ENCODING
+import static io.infrastructor.core.utils.CryptoUtils.TOOL
 
 class EncryptHandler extends LoggingAwareHandler {
     
@@ -72,7 +75,7 @@ class EncryptHandler extends LoggingAwareHandler {
         printLine "\n${green('EXECUTION COMPLETE')} in $duration"
     }
     
-    def encrypt(def file) {
+    def encrypt(File file) {
 
         if (mode == FULL) {
             // check if the file has already been encrypted
@@ -83,14 +86,13 @@ class EncryptHandler extends LoggingAwareHandler {
                 String keyHash
             ) = parse(file.text)
 
-            if (tool == CryptoUtils.TOOL && algorithm == CryptoUtils.ALGORITHM && encoding == CryptoUtils.OUTPUT_ENCODING) {
+            if (tool == TOOL && algorithm == ALGORITHM && encoding == OUTPUT_ENCODING) {
                 // file has already been encrypted
-                if (toBase64(sha256(sha256(toBytes(password)))) == keyHash) {
+                if (encryptionKeyHash(password) == keyHash) {
                     info "${green('already encrypted:')} '${file.getCanonicalPath()}'"
                 } else {
                     info "${yellow('already encrypted with a different key:')} '${file.getCanonicalPath()}'"
                 }
-
                 return
             }
         }
@@ -103,4 +105,5 @@ class EncryptHandler extends LoggingAwareHandler {
 
         info "${green('encrypted:')} '${file.getCanonicalPath()}'"
     }
+
 }

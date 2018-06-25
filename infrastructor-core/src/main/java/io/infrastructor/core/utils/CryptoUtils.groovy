@@ -147,4 +147,8 @@ class CryptoUtils {
             return [*header, body]
         }
     }
+
+    static encryptionKeyHash(String key) {
+        toBase64(sha256(sha256(toBytes(key))))
+    }
 }

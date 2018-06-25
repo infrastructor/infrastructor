@@ -85,7 +85,7 @@ class DecryptHandler extends LoggingAwareHandler {
         }
     }
     
-    def decrypt(def file) {
+    def decrypt(File file) {
         def decrypted
 
         if (mode == FULL) {
@@ -98,7 +98,7 @@ class DecryptHandler extends LoggingAwareHandler {
 
             if (tool == CryptoUtils.TOOL && algorithm == CryptoUtils.ALGORITHM && encoding == CryptoUtils.OUTPUT_ENCODING) {
                 // file was encrypted, checking the key hash
-                if (toBase64(sha256(sha256(toBytes(password)))) == keyHash) {
+                if (encryptionKeyHash(password) == keyHash) {
                     decrypted = decryptFull(password, file.text)
                 } else {
                     info "${yellow('encrypted with a different key:')} '${file.getCanonicalPath()}'"
