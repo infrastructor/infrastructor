@@ -50,7 +50,7 @@ class LightweightTaskProgressLogger {
         def status = new StringBuilder()
         status << taskStatus << "\n"
         status << nodesStatus << "\n"
-        status << progressLine('<', '=', '-', '>', plain.length() - 4 - 8, waiting + running + failed + done, failed + done)
+        status << progressLine('<', '=', '-', '>', plain.length() - 10, waiting + running + failed + done, failed + done)
         status << "\n"
         return status
     }
@@ -58,12 +58,11 @@ class LightweightTaskProgressLogger {
     String progressLine(def start, def filled, def unfilled, def end, def size, def total, def progress) {
         int filledElements = (int) ((size / (double) total) * progress)
 
-        def prercent = String.format("%6.0f", (((double) progress) / total) * 100)
-
+        final String prercent = String.format("%6.0f", (((double) progress) / total) * 100)
         final StringBuilder builder = new StringBuilder(prercent + '% ' + start)
 
-        (0..filledElements).each { builder.append(filled) }
-        (0..(size - filledElements)).each { builder.append(unfilled) }
+        for(int i = 0; i < filledElements; i++) { builder.append(filled) }
+        for(int i = 0; i < size - filledElements; i++) { builder.append(unfilled) }
 
         builder.append(end)
 
