@@ -1,6 +1,8 @@
 package io.infrastructor.aws.inventory
 
 import com.amazonaws.services.ec2.AmazonEC2
+import io.infrastructor.core.inventory.BasicInventory
+import io.infrastructor.core.inventory.Inventory
 
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
@@ -91,7 +93,11 @@ class AwsMachineImageBuilder {
             info "configuring the base EC2 instance '$awsNode.id'"
 
             statusLine "$STATUS_HEADER configuring the instance"
-            provision([awsNode], closure)
+
+            Inventory inventory = new BasicInventory()
+            inventory << awsNode
+
+            provision(inventory, closure)
 
             info "stopping the base EC2 instance '$awsNode.id'"
 
