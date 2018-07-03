@@ -21,6 +21,7 @@ class DockerNode {
     def username
     def password
     def keyfile
+    def keypass
     Map tags = [:]
     Map metadata = [:]
 
@@ -68,6 +69,7 @@ class DockerNode {
                 username: username,
                 password: password,
                 keyfile: keyfile,
+                keypass: keypass,
                 tags: tags,
                 metadata: metadata,
                 stopOnError: false

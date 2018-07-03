@@ -2,6 +2,7 @@ package io.infrastructor.core.inventory
 
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
+import com.jcraft.jsch.KeyPair
 import com.jcraft.jsch.Logger
 import com.jcraft.jsch.Session
 import groovy.transform.ToString
@@ -13,10 +14,11 @@ import static io.infrastructor.core.logging.ConsoleLogger.trace
 class SshClient {
     
     private def port = 22
-    private def host
-    private def username
-    private def password
-    private def keyfile
+    private String host
+    private String username
+    private String password
+    private String keyfile
+    private String keypass = ''
     
     private Session session
     
@@ -32,6 +34,7 @@ class SshClient {
         if (!isConnected()) {
             JSch jsch = new JSch()
             JSch.setConfig("StrictHostKeyChecking", "no")
+
             JSch.setLogger(new Logger() {
                     @Override
                     public boolean isEnabled(int level) { return true }
@@ -39,9 +42,8 @@ class SshClient {
                     @Override
                     void log(int level, String message) { trace "jsch: $message" }
                 })
-    
-            if (keyfile) jsch.addIdentity(keyfile)
-        
+
+            if (keyfile) { jsch.addIdentity(keyfile, keypass.getBytes()) }
             session = jsch.getSession(username, host, port)
             if (password) session.setPassword(password)
             session.setServerAliveInterval(5000)
