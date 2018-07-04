@@ -21,6 +21,7 @@ class Node {
     def username
     def password
     def keyfile
+    def keypass
     Map tags = [:]
     Map metadata = [:]
     
@@ -30,7 +31,7 @@ class Node {
     
     def connect() {
         if (!client?.isConnected()) {
-            client = sshClient(host: host, port: port, username: username, password: password, keyfile: keyfile)
+            client = sshClient(host: host, port: port, username: username, password: password, keyfile: keyfile, keypass: keypass)
             retry(5, 2000) { 
                 debug "connecting to node: ${getLogName()}, host: $host, port: $port"
                 client.connect() 
