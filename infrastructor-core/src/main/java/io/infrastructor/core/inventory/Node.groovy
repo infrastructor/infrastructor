@@ -59,52 +59,64 @@ class Node {
         return lastResult
     }
 
-    def readFile(def file, def output, def user = '') {
+    def readFile(def file, def output, def user = '', def sudopass = '') {
         execute output: output, command: CMD {
-            add user, "sudo -s -u $user"
+            add sudopass, "echo $sudopass |"
+            add sudopass || user, "sudo -S"
+            add user, "-u $user"
             add "cat '$file'"
         } 
     }
     
-    def writeFile(def target, def input, def user = '') {
+    def writeFile(def target, def input, def user = '', def sudopass = '') {
         execute command: CMD {
-            add user, "sudo -s -u $user"
+            add sudopass, "echo $sudopass |"
+            add sudopass || user, "sudo -S"
+            add user, "-u $user"
             add "sh -c \"dirname '$target' | xargs -I '{}' mkdir -p '{}'\""
         }
             
         execute input: input, command: CMD {
             add "cat | "
-            add user, "sudo -s -u $user"
+            add sudopass, "echo $sudopass |"
+            add sudopass || user, "sudo -S"
+            add user, "-u $user"
             add "tee '$target'"
         }
     }
     
-    def writeText(def target, def content, def user = '') {
-        writeFile(target, new ByteArrayInputStream(content.getBytes()), user)
+    def writeText(def target, def content, def user = '', def sudopass = '') {
+        writeFile(target, new ByteArrayInputStream(content.getBytes()), user, sudopass)
     }
     
-    def updateOwner(def target, def owner, def user = '') {
+    def updateOwner(def target, def owner, def user = '', def sudopass) {
         if (owner) { 
             execute command: CMD {
-                add user, "sudo -s -u $user"
+                add sudopass, "echo $sudopass |"
+                add sudopass || user, "sudo -S"
+                add user, "-u $user"
                 add "chown $owner: $target"
             }
         }
     }
     
-    def updateGroup(def target, def group, def user = '') {
+    def updateGroup(def target, def group, def user = '', def sudopass = '') {
         if (group) { 
             execute command: CMD {
-                add user, "sudo -s -u $user"
+                add sudopass, "echo $sudopass |"
+                add sudopass || user, "sudo -S"
+                add user, "-u $user"
                 add "chown :$group $target"
             }
         }
     }
     
-    def updateMode(def target, def mode, def user = '') {
+    def updateMode(def target, def mode, def user = '', def sudopass) {
         if (mode) { 
             execute command: CMD {
-                add user, "sudo -s -u $user"
+                add sudopass, "echo $sudopass |"
+                add sudopass || user, "sudo -S"
+                add user, "-u $user"
                 add "chmod $mode $target"
             }
         }

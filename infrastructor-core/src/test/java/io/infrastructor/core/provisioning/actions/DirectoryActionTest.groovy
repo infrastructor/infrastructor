@@ -3,6 +3,8 @@ package io.infrastructor.core.provisioning.actions
 import io.infrastructor.core.inventory.InventoryAwareTestBase
 import org.junit.Test
 
+import static io.infrastructor.core.inventory.InlineDockerInventory.inlineDockerInventory
+
 class DirectoryActionTest extends InventoryAwareTestBase {
     
     @Test
@@ -23,7 +25,8 @@ class DirectoryActionTest extends InventoryAwareTestBase {
             }
         }
     }
-    
+
+
     @Test
     void createDirectoryAsDevopsWithSudo() {
         withInventory { inventory ->
@@ -38,6 +41,31 @@ class DirectoryActionTest extends InventoryAwareTestBase {
                     assert result.output.contains("drw------")
                 }
             }
+        }
+    }
+
+    @Test
+    void createDirectoryAsSudopsWithSudoAndPassword() {
+
+        def inventory = inlineDockerInventory {
+            node image: 'infrastructor/ubuntu-sshd:0.0.3', username: 'sudops', password: 'sudops'
+        }
+
+        try {
+            def result = ''
+            inventory.launch().provision {
+                task actions: {
+                    // execute
+                    directory user: 'root', sudopass: 'sudops', target: '/etc/simple', owner: 'sudops', group: 'sudops', mode: '0600'
+                    result = shell("ls -dalh /etc/simple")
+                }
+            }
+            // assert
+            assert result.output.contains("simple")
+            assert result.output.contains("sudops sudops")
+            assert result.output.contains("drw------")
+        } finally {
+            inventory.shutdown()
         }
     }
     

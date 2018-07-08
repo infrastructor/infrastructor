@@ -12,18 +12,21 @@ class DirectoryAction {
     def group
     def mode = '644'
     def user
+    def sudopass
 
     def execute(def node) {
         def cmd = CMD {
-            add user, "sudo -s -u $user"
+            add sudopass, "echo $sudopass |"
+            add sudopass || user, "sudo -S"
+            add user, "-u $user"
             add "mkdir"
             add mode, "-m $mode"
             add "-p $target"
         }
         
         node.execute command: cmd
-        node.updateOwner(target, owner, user)
-        node.updateGroup(target, group, user)
+        node.updateOwner(target, owner, user, sudopass)
+        node.updateGroup(target, group, user, sudopass)
         node.lastResult
     }
 }

@@ -13,6 +13,16 @@ class CommandBuilder {
         if (condition) { add part }
         this
     }
+
+    def add(def condition, def part, def elsePart) {
+        if (condition) {
+            add part
+        }
+        else {
+            add elsePart
+        }
+        this
+    }
     
     def build() {
         command.join(' ') 

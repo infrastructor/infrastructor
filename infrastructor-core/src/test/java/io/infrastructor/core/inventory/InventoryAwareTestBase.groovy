@@ -10,6 +10,7 @@ abstract class InventoryAwareTestBase {
 
     def static USERNAME = 'devops'
     def static PASSWORD = 'devops'
+    def static IMAGE_VERSION = '0.0.3'
 
     @Parameterized.Parameter
     public Closure withInventory = {}
@@ -18,7 +19,7 @@ abstract class InventoryAwareTestBase {
     def static inventory() {
         [{ closure ->
             def dockerNodes = inlineDockerInventory {
-                node id: 'docker_test_node', image: 'infrastructor/ubuntu-sshd:0.0.2', username: USERNAME, password: PASSWORD
+                node id: 'docker_test_node', image: "infrastructor/ubuntu-sshd:$IMAGE_VERSION", username: USERNAME, password: PASSWORD
             }
             try {
                 closure(dockerNodes.launch())
@@ -28,7 +29,7 @@ abstract class InventoryAwareTestBase {
          },
          { closure ->
              def dockerNodes = inlineDockerInventory {
-                 node id: 'docker_test_node', image: 'infrastructor/centos-sshd:0.0.2', username: USERNAME, password: PASSWORD
+                 node id: 'docker_test_node', image: "infrastructor/centos-sshd:$IMAGE_VERSION", username: USERNAME, password: PASSWORD
              }
 
              try {

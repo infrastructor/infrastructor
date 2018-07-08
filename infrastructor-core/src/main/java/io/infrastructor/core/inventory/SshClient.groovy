@@ -40,7 +40,7 @@ class SshClient {
                     public boolean isEnabled(int level) { return true }
 
                     @Override
-                    void log(int level, String message) { println "jsch: $message" }
+                    void log(int level, String message) { trace "jsch: $message" }
                 })
 
             if (keyfile) { jsch.addIdentity(keyfile, keypass.getBytes()) }
