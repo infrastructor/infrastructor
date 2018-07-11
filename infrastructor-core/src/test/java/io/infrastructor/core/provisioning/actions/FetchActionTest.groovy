@@ -10,7 +10,7 @@ class FetchActionTest extends InventoryAwareTestBase {
     @Test
     void fetchFileFromRemoteHost() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -34,7 +34,7 @@ class FetchActionTest extends InventoryAwareTestBase {
     @Test
     void fetchFileFromRemoteHostWithoutPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -59,7 +59,7 @@ class FetchActionTest extends InventoryAwareTestBase {
     @Test
     void fetchFileFromRemoteHostWithPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -83,7 +83,7 @@ class FetchActionTest extends InventoryAwareTestBase {
         
     @Test(expected = TaskExecutionException)
     void fetchFileWithEmptyArguments() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     fetch { user = 'root' }

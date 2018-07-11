@@ -8,7 +8,7 @@ class NodeConnectionTest extends InventoryAwareTestBase {
     @Test
     void useSshKeyToConnectToNode() {
         def result = [:]
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     result = shell(user: 'root', command: "echo 'test!'")
@@ -21,7 +21,7 @@ class NodeConnectionTest extends InventoryAwareTestBase {
     @Test
     void useSshPasswordToConnectToNode() {
         def result = [:]
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     result = shell("echo 'test!'")

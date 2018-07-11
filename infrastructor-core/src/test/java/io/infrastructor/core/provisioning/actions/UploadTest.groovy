@@ -7,7 +7,7 @@ class UploadTest extends InventoryAwareTestBase {
     
     @Test
     void uploadAFileToRemoteHost() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     user user: 'root', name: 'test'
@@ -30,7 +30,7 @@ class UploadTest extends InventoryAwareTestBase {
     
     @Test
     void uploadAFileToADeepFolder() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     user user: 'root', name: 'test'
@@ -53,7 +53,7 @@ class UploadTest extends InventoryAwareTestBase {
     
     @Test
     void uploadAFileToRemoteHostWithoutPermissions() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
@@ -69,7 +69,7 @@ class UploadTest extends InventoryAwareTestBase {
     
     @Test
     void uploadAFileToRemoteHostWithSudo() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
@@ -87,7 +87,7 @@ class UploadTest extends InventoryAwareTestBase {
     
     @Test
     void uploadFileWithUnknownOwner() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execute
@@ -102,7 +102,7 @@ class UploadTest extends InventoryAwareTestBase {
  
     @Test
     void uploadFileWithUnknownGroup() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execute
@@ -117,7 +117,7 @@ class UploadTest extends InventoryAwareTestBase {
     
     @Test
     void uploadFileWithInvalidMode() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execute
@@ -132,7 +132,7 @@ class UploadTest extends InventoryAwareTestBase {
     
     @Test
     void decryptAndUploadFileToRemoteHost() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {

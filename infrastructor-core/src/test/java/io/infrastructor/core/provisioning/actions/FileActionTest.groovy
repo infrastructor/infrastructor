@@ -7,7 +7,7 @@ class FileActionTest extends InventoryAwareTestBase {
    
     @Test
     void writeAContentToAFileOnRemoteServerWithSudo() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // setup
@@ -38,7 +38,7 @@ class FileActionTest extends InventoryAwareTestBase {
     
     @Test
     void writeAFileOnRemoteServerWithoutSudo() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execution
@@ -55,7 +55,7 @@ class FileActionTest extends InventoryAwareTestBase {
     
     @Test
     void writeAFileOnRemoteServerAsRoot() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execution
@@ -74,7 +74,7 @@ class FileActionTest extends InventoryAwareTestBase {
     
     @Test
     void createFileWithUnknownOwner() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = file user: 'root', target: '/etc/simple', content: "simple", owner: 'doesnotexist'
@@ -86,7 +86,7 @@ class FileActionTest extends InventoryAwareTestBase {
  
     @Test
     void createFileWithUnknownGroup() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = file user: 'root', target: '/etc/simple', content: "simple", group: 'doesnotexist'
@@ -98,7 +98,7 @@ class FileActionTest extends InventoryAwareTestBase {
     
     @Test
     void createFileWithInvalidMode() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = file user: 'root', target: '/etc/simple', content: "simple", mode: '8888'

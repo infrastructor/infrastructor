@@ -11,7 +11,7 @@ class ActionRegistrationTest extends InventoryAwareTestBase {
     @Test
     void loadAndRegisterAnExternalAction() {
         def result = [:]
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 action name: 'createDirectory', file: 'build/resources/test/apply_action/directory.groovy'
 
@@ -28,7 +28,7 @@ class ActionRegistrationTest extends InventoryAwareTestBase {
     @Test
     void registerALocalAction() {
         def result = [:]
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 action name: 'mydirectory', closure: { params -> shell "mkdir $params.name" }
 
@@ -45,7 +45,7 @@ class ActionRegistrationTest extends InventoryAwareTestBase {
     @Test
     void registerALocalActionWithMultilineParams() {
         def result = [:]
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 action name: 'createFile', closure: { params ->
                     file {
@@ -70,7 +70,7 @@ class ActionRegistrationTest extends InventoryAwareTestBase {
     @Test
     void registerALocalActionWithMultilineMixedParams() {
         def result = [:]
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 action name: 'createFile', closure: { params ->
                     file {
@@ -94,7 +94,7 @@ class ActionRegistrationTest extends InventoryAwareTestBase {
     @Test
     void registerALocalActionWithoutParameters() {
         def result = [:]
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 action name: 'mydirectory', closure: { shell "mkdir ~/simple" }
 
@@ -112,7 +112,7 @@ class ActionRegistrationTest extends InventoryAwareTestBase {
     void reRegisterAnExistingAction() {
         def result = [:]
 
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 action name: 'mydirectory', closure: { shell "mkdir ~/simple" }
                 action name: 'mydirectory', closure: { shell "mkdir ~/another" }
@@ -135,7 +135,7 @@ class ActionRegistrationTest extends InventoryAwareTestBase {
             shell "mkdir ~/simple"
         }
 
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     mydirectory()

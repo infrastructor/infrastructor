@@ -8,7 +8,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     @Test
     void singleLineShellAction() {
         def result = [:]
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'simpleShellAction', actions: {
                     result = shell {
@@ -25,7 +25,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     void multilineShellAction() {
         def result = [:]
 
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'simpleShellAction', actions: {
                     result = shell {
@@ -47,7 +47,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     void multilineRestrictedShellActionWithoutSudo() {
         def result = [:]
 
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'simpleShellAction', actions: {
                     result = shell {
@@ -67,7 +67,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     void multilineRestrictedShellActionWithSudo() {
         def result = [:]
 
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'simpleShellAction', actions: {
                     result = shell {
@@ -87,7 +87,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     void multilineShellActionWithErrorScript() {
         def result = [:]
 
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'simpleShellAction', actions: {
                     result = shell command: """ 
@@ -104,7 +104,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     void singlelineShellActionWithUserSwitch() {
         def result = [:]
 
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'create test user', actions: {
                     user user: 'root', name: 'test', uid: 1002, home: '/home/test', shell: '/bin/bash'
@@ -124,7 +124,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     void multilineShellActionWithUserSwitch() {
         def result = [:]
 
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'run an action as test user', actions: {
                     user name: 'test', user: 'root'

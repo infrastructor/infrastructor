@@ -9,8 +9,8 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     
     @Test
     void createDirectoryAsRoot() {
-        withInventory { inventory ->
-            inventory.provision {
+        withUser('devops') {
+            it.provision {
                 task actions: {
                     // execute
                     user  user: 'root', name: "testuser"
@@ -29,7 +29,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test
     void createDirectoryAsDevopsWithSudo() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execute
@@ -46,32 +46,25 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test
     void createDirectoryAsSudopsWithSudoAndPassword() {
+        def result = ''
 
-        def inventory = inlineDockerInventory {
-            node image: 'infrastructor/ubuntu-sshd:0.0.3', username: 'sudops', password: 'sudops'
-        }
-
-        try {
-            def result = ''
-            inventory.launch().provision {
+        withUser('sudops') { inventory ->
+            inventory.provision {
                 task actions: {
-                    // execute
-                    directory user: 'root', sudopass: 'sudops', target: '/etc/simple', owner: 'sudops', group: 'sudops', mode: '0600'
+                    directory user: 'root', sudopass: 'sudops', target: '/etc/simple', owner: 'sudops', group: 'sudops', mode: '600'
                     result = shell("ls -dalh /etc/simple")
                 }
             }
-            // assert
-            assert result.output.contains("simple")
-            assert result.output.contains("sudops sudops")
-            assert result.output.contains("drw------")
-        } finally {
-            inventory.shutdown()
         }
+
+        assert result.output.contains("simple")
+        assert result.output.contains("sudops sudops")
+        assert result.output.contains("drw------")
     }
     
     @Test
     void createNestedDirectories() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execute
@@ -104,7 +97,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test
     void createDirectoryAsDevopsWithoutSudo() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = directory target: '/etc/simple'
@@ -116,7 +109,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     
     @Test
     void createDirectoryWithUnknownOwner() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execute
@@ -131,7 +124,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
  
     @Test
     void createDirectoryWithUnknownGroup() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execute
@@ -146,7 +139,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     
     @Test
     void createDirectoryWithInvalidMode() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = directory user: 'root', target: '/etc/simple', mode: '8888'
@@ -158,7 +151,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     
     @Test
     void createDirectoryWithEmptyMode() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     assert directory(user: 'root', target: '/etc/simple/test1', mode: '').exitcode == 0

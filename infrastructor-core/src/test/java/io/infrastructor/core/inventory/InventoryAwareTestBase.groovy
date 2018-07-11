@@ -10,32 +10,32 @@ abstract class InventoryAwareTestBase {
 
     def static USERNAME = 'devops'
     def static PASSWORD = 'devops'
-    def static IMAGE_VERSION = '0.0.3'
+    def static UBUNTU_IMAGE = 'infrastructor/ubuntu-sshd:0.0.3'
+    def static CENTOS_IMAGE = 'infrastructor/centos-sshd:0.0.3'
 
     @Parameterized.Parameter
-    public Closure withInventory = {}
+    public Closure withUser = { user, closure -> }
 
     @Parameterized.Parameters
     def static inventory() {
-        [{ closure ->
-            def dockerNodes = inlineDockerInventory {
-                node id: 'docker_test_node', image: "infrastructor/ubuntu-sshd:$IMAGE_VERSION", username: USERNAME, password: PASSWORD
+        [{ user, closure ->
+            def inventory = inlineDockerInventory {
+                node id: 'test_node', image: UBUNTU_IMAGE, username: user, password: user
             }
             try {
-                closure(dockerNodes.launch())
+                closure(inventory.launch())
             } finally {
-                dockerNodes.shutdown()
+                inventory.shutdown()
             }
          },
-         { closure ->
-             def dockerNodes = inlineDockerInventory {
-                 node id: 'docker_test_node', image: "infrastructor/centos-sshd:$IMAGE_VERSION", username: USERNAME, password: PASSWORD
+         { user, closure ->
+             def inventory = inlineDockerInventory {
+                 node id: 'test_node', image: CENTOS_IMAGE, username: user, password: user
              }
-
              try {
-                 closure(dockerNodes.launch())
+                 closure(inventory.launch())
              } finally {
-                 dockerNodes.shutdown()
+                 inventory.shutdown()
              }
          }]
     }

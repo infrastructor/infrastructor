@@ -7,7 +7,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
 
     @Test
     void generateAFileOnRemoteServer() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // setup
@@ -40,7 +40,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void generateAFileOnRemoteServerWithEmptyBindings() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -61,7 +61,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
 
     @Test
     void createADeepFolderBeforeTemplateUpload() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     // execution
@@ -81,7 +81,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void templateWithUnknownOwner() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = template {
@@ -100,7 +100,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void templateWithUnknownGroup() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = template {
@@ -119,7 +119,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void templateWithInvalidMode() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     def result = template {
@@ -138,7 +138,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void templateWithEncryptedValues() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -161,7 +161,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void templateWithFullyEncryptedContent() {
-        withInventory { inventory ->
+        withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     template {
