@@ -1,6 +1,7 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class InsertBlockTest extends InventoryAwareTestBase {
@@ -67,7 +68,7 @@ class InsertBlockTest extends InventoryAwareTestBase {
         }
     } 
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void insertBlockWithoutPermissions() {
         withUser('devops') { inventory ->
             inventory.provision {
@@ -81,92 +82,79 @@ class InsertBlockTest extends InventoryAwareTestBase {
                         mode = '0600'
                     }
 
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "line 0\n"
                         position = END
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/Permission denied/)
                 }
             }
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void insertBlockToUnexistedFileReturnError() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "line 0\n"
                         position = END
-                    }.exitcode != 0
+                    }
                 }
             }
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void insertBlockWithUnknownOwner() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
 
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "dummy"
                         position = END
                         owner = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid spec/)
                 }
             }
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void insertBlockWithUnknownGroup() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
 
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "dummy"
                         position = END
                         group = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid group/)
                 }
             }
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void insertBlockWithInvalidMode() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
-
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "dummy"
                         position = END
                         mode = '888'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid mode/)
                 }
             }
         }

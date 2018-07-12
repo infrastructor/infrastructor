@@ -1,6 +1,7 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class ShellActionTest extends InventoryAwareTestBase {
@@ -32,7 +33,7 @@ class ShellActionTest extends InventoryAwareTestBase {
                         command = """ 
                         echo 'simple message!'
                         echo 'another message!'
-                    """
+                        """
                     }
 
                 }
@@ -43,24 +44,20 @@ class ShellActionTest extends InventoryAwareTestBase {
         assert result.output.contains('another message!')
     }
 
-    @Test
+    @Test(expected = TaskExecutionException)
     void multilineRestrictedShellActionWithoutSudo() {
-        def result = [:]
 
         withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'simpleShellAction', actions: {
-                    result = shell {
+                    shell {
                         command = """ 
                         mkdir /etc/test
-                    """
+                        """
                     }
                 }
             }
         }
-
-        assert result.exitcode == 1
-        assert result.error.contains("Permission denied")
     }
 
     @Test
@@ -73,7 +70,7 @@ class ShellActionTest extends InventoryAwareTestBase {
                     result = shell {
                         command = """ 
                         mkdir /etc/test
-                    """
+                        """
                         user = 'root'
                     }
                 }
@@ -83,21 +80,17 @@ class ShellActionTest extends InventoryAwareTestBase {
         assert result.exitcode == 0
     }
 
-    @Test
+    @Test(expected = TaskExecutionException)
     void multilineShellActionWithErrorScript() {
-        def result = [:]
-
         withUser('devops') { inventory ->
             inventory.provision {
                 task name: 'simpleShellAction', actions: {
-                    result = shell command: """ 
+                    shell command: """ 
                         this script can not be executed
                     """
                 }
             }
         }
-
-        assert result.exitcode != 0
     }
 
     @Test

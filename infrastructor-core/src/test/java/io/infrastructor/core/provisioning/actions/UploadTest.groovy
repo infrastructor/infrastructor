@@ -1,6 +1,7 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class UploadTest extends InventoryAwareTestBase {
@@ -51,17 +52,15 @@ class UploadTest extends InventoryAwareTestBase {
         }
     } 
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void uploadAFileToRemoteHostWithoutPermissions() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = upload {
+                    upload {
                         source = 'build/resources/test/fileupload.txt'
                         target = '/fileupload.txt'
                     }
-
-                    assert result.exitcode != 0
                 }
             }
         }
@@ -85,46 +84,34 @@ class UploadTest extends InventoryAwareTestBase {
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void uploadFileWithUnknownOwner() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    // execute
-                    def result = upload source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', owner: 'doesnotexist'
-
-                    // assert
-                    assert result.exitcode != 0
+                    upload source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', owner: 'doesnotexist'
                 }
             }
         }
     }
  
-    @Test
+    @Test(expected = TaskExecutionException)
     void uploadFileWithUnknownGroup() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    // execute
-                    def result = upload user: 'root', source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', group: 'doesnotexist'
-
-                    // assert
-                    assert result.exitcode != 0
+                    upload user: 'root', source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', group: 'doesnotexist'
                 }
             }
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void uploadFileWithInvalidMode() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    // execute
-                    def result = upload user: 'root', source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', mode: '8888'
-
-                    // assert
-                    assert result.exitcode != 0
+                    upload user: 'root', source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', mode: '8888'
                 }
             }
         }

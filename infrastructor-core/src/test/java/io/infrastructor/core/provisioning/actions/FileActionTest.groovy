@@ -1,6 +1,7 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class FileActionTest extends InventoryAwareTestBase {
@@ -36,7 +37,7 @@ class FileActionTest extends InventoryAwareTestBase {
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void writeAFileOnRemoteServerWithoutSudo() {
         withUser('devops') { inventory ->
             inventory.provision {
@@ -46,8 +47,6 @@ class FileActionTest extends InventoryAwareTestBase {
                         content = 'message'
                         target = '/test.txt'
                     }
-                    // assertion
-                    assert result.exitcode != 0
                 }
             }
         }
@@ -72,37 +71,34 @@ class FileActionTest extends InventoryAwareTestBase {
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void createFileWithUnknownOwner() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = file user: 'root', target: '/etc/simple', content: "simple", owner: 'doesnotexist'
-                    assert result.exitcode != 0
+                    file user: 'root', target: '/etc/simple', content: "simple", owner: 'doesnotexist'
                 }
             }
         }
     }
  
-    @Test
+    @Test(expected = TaskExecutionException)
     void createFileWithUnknownGroup() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = file user: 'root', target: '/etc/simple', content: "simple", group: 'doesnotexist'
-                    assert result.exitcode != 0
+                    file user: 'root', target: '/etc/simple', content: "simple", group: 'doesnotexist'
                 }
             }
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void createFileWithInvalidMode() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = file user: 'root', target: '/etc/simple', content: "simple", mode: '8888'
-                    assert result.exitcode != 0
+                    file user: 'root', target: '/etc/simple', content: "simple", mode: '8888'
                 }
             }
         }

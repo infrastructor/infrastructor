@@ -31,7 +31,7 @@ class FetchActionTest extends InventoryAwareTestBase {
         assert new File(resultFile).text == 'message'
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void fetchFileFromRemoteHostWithoutPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
         withUser('devops') { inventory ->
@@ -49,8 +49,6 @@ class FetchActionTest extends InventoryAwareTestBase {
                         source = '/test.txt'
                         target = resultFile
                     }
-
-                    assert result.exitcode != 0
                 }
             }
         }
@@ -91,4 +89,31 @@ class FetchActionTest extends InventoryAwareTestBase {
             }
         }
     }
+
+//    @Test
+//    void fetchFileFromRemoteHostWithSudopass() {
+//        def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
+//        withUser('sudops') { inventory ->
+//            inventory.provision {
+//                task actions: {
+//                    file {
+//                        content = 'message'
+//                        target = '/test.txt'
+//                        owner = 'root'
+//                        mode = '0600'
+//                        user = 'sudops'
+//                        sudopass = 'sudops'
+//                    }
+//                    def result = fetch {
+//                        source = '/test.txt'
+//                        target = resultFile
+//                        user = 'sudops'
+//                        sudopass = 'sudops'
+//                    }
+//                    assert result.exitcode == 0
+//                }
+//                assert new File(resultFile).text == 'message'
+//            }
+//        }
+//    }
 }

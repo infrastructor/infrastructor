@@ -1,7 +1,6 @@
 package io.infrastructor.core.inventory
 
 import com.jcraft.jsch.JSchException
-import com.jcraft.jsch.KeyPair
 import org.junit.Test
 
 import static io.infrastructor.core.inventory.InlineDockerInventory.inlineDockerInventory

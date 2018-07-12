@@ -4,6 +4,7 @@ import io.infrastructor.core.inventory.InventoryAwareTestBase
 import org.junit.Test
 
 class UploadFolderTest extends InventoryAwareTestBase {
+
     @Test
     void uploadFolderContentToRemoteHost() {
         withUser('devops') { inventory ->
@@ -44,11 +45,7 @@ class UploadFolderTest extends InventoryAwareTestBase {
                     assert result.exitcode == 0
 
                     shell("ls /opt/test/").output.with {
-                        assert find(/file.exta/) && !find(/file.extb/)
-                    }
-
-                    shell("ls /opt/test/nested").output.with {
-                        assert !find(/file.exta/) && !find(/file.extb/)
+                        assert find(/file.exta/) && !find(/file.extb/) && !find(/nested/)
                     }
                 }
             }

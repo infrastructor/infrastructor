@@ -1,6 +1,7 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class ReplaceActionTest extends InventoryAwareTestBase {
@@ -67,28 +68,25 @@ class ReplaceActionTest extends InventoryAwareTestBase {
         }
     }
 
-    @Test
+    @Test(expected = TaskExecutionException)
     void replaceBlockWithUnknownOwner() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
 
-                    def result = replace {
+                    replace {
                         target = '/tmp/test.txt'
                         regexp = /dummy/
                         content = "another"
                         owner = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid spec/)
                 }
             }
         }
     }
 
-    @Test
+    @Test(expected = TaskExecutionException)
     void replaceBlockWithUnknownGroup() {
         withUser('devops') { inventory ->
             inventory.provision {
@@ -109,22 +107,18 @@ class ReplaceActionTest extends InventoryAwareTestBase {
         }
     }
 
-    @Test
+    @Test(expected = TaskExecutionException)
     void replaceBlockWithInvalidMode() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
-
-                    def result = replace {
+                    replace {
                         target = '/tmp/test.txt'
                         regexp = /dummy/
                         content = "another"
                         mode = '888'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid mode/)
                 }
             }
         }

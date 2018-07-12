@@ -1,6 +1,7 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class TemplateActionTest extends InventoryAwareTestBase {
@@ -51,8 +52,6 @@ class TemplateActionTest extends InventoryAwareTestBase {
                     }
 
                     // assertion
-                    def result = shell user: 'root', command: "ls -alh /test.txt"
-
                     assert shell(user: 'root', command: "cat /test.txt").output.contains("simple")
                 }
             }
@@ -79,58 +78,49 @@ class TemplateActionTest extends InventoryAwareTestBase {
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void templateWithUnknownOwner() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = template {
+                    template {
                         source = 'build/resources/test/test.tmpl'
                         target = '/tmp/test.txt'
                         bindings = [message: "simple!"]
                         owner = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid spec/)
                 }
             }
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void templateWithUnknownGroup() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = template {
+                    template {
                         source = 'build/resources/test/test.tmpl'
                         target = '/tmp/test.txt'
                         bindings = [message: "simple!"]
                         group = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid group/)
                 }
             }
         }
     }
     
-    @Test
+    @Test(expected = TaskExecutionException)
     void templateWithInvalidMode() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = template {
+                    template {
                         source = 'build/resources/test/test.tmpl'
                         target = '/tmp/test.txt'
                         bindings = [message: "simple!"]
                         mode = '888'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid mode/)
                 }
             }
         }
