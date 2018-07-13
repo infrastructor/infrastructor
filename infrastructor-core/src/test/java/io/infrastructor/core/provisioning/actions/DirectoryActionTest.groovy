@@ -7,48 +7,47 @@ import org.junit.Test
 import static io.infrastructor.core.inventory.InlineDockerInventory.inlineDockerInventory
 
 class DirectoryActionTest extends InventoryAwareTestBase {
-    
+
     @Test
-    void createDirectoryAsRoot() {
+    void "create a directory as root"() {
+        def result
         withUser('devops') {
             it.provision {
                 task actions: {
-                    // execute
-                    user  user: 'root', name: "testuser"
+                    user user: 'root', name: "testuser"
                     group user: 'root', name: "testgroup"
                     directory user: 'root', target: '/var/simple', owner: 'testuser', group: 'testgroup', mode: '0600'
-                    // assert
-                    def result = shell user: 'root', command: "ls -dalh /var/simple"
-                    assert result.output.contains("simple")
-                    assert result.output.contains("testuser testgroup")
-                    assert result.output.contains("drw------")
+                    result = shell user: 'root', command: "ls -dalh /var/simple"
                 }
             }
         }
+
+        assert result.output.contains("simple")
+        assert result.output.contains("testuser testgroup")
+        assert result.output.contains("drw------")
     }
 
 
     @Test
-    void createDirectoryAsDevopsWithSudo() {
+    void "create a directory as devops with sudo"() {
+        def result
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
-                    // execute
                     directory user: 'root', target: '/etc/simple', owner: 'devops', group: 'devops', mode: '0600'
-                    // assert
-                    def result = shell("ls -dalh /etc/simple")
-                    assert result.output.contains("simple")
-                    assert result.output.contains("devops devops")
-                    assert result.output.contains("drw------")
+                    result = shell("ls -dalh /etc/simple")
                 }
             }
         }
+
+        assert result.output.contains("simple")
+        assert result.output.contains("devops devops")
+        assert result.output.contains("drw------")
     }
 
     @Test
-    void createDirectoryAsSudopsWithSudoAndPassword() {
-        def result = ''
-
+    void "create a directory as sudops with sudo and a password"() {
+        def result
         withUser('sudops') { inventory ->
             inventory.provision {
                 task actions: {
@@ -63,10 +62,20 @@ class DirectoryActionTest extends InventoryAwareTestBase {
         assert result.output.contains("drw------")
     }
 
-    @Test
-    void createDirectoryAsDevopsWithoutPassword() {
-        def result = ''
+    @Test(expected = TaskExecutionException)
+    void "create a directory as sudops with sudo and a wrong password"() {
+        withUser('sudops') { inventory ->
+            inventory.provision {
+                task actions: {
+                    directory user: 'root', sudopass: 'wrong', target: '/etc/simple', owner: 'sudops', group: 'sudops', mode: '600'
+                }
+            }
+        }
+    }
 
+    @Test
+    void "create a directory as devops without any password"() {
+        def result
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
@@ -80,9 +89,9 @@ class DirectoryActionTest extends InventoryAwareTestBase {
         assert result.output.contains("sudops sudops")
         assert result.output.contains("drw------")
     }
-    
+
     @Test
-    void createNestedDirectories() {
+    void "create nested directories"() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
@@ -115,7 +124,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     }
 
     @Test(expected = TaskExecutionException)
-    void createDirectoryAsDevopsWithoutSudo() {
+    void "create a directory as devops without sudo"() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
@@ -124,9 +133,9 @@ class DirectoryActionTest extends InventoryAwareTestBase {
             }
         }
     }
-    
+
     @Test(expected = TaskExecutionException)
-    void createDirectoryWithUnknownOwner() {
+    void "create a directory with an unknown owner"() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
@@ -135,9 +144,9 @@ class DirectoryActionTest extends InventoryAwareTestBase {
             }
         }
     }
- 
+
     @Test(expected = TaskExecutionException)
-    void createDirectoryWithUnknownGroup() {
+    void "create a directory with an unknown group"() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
@@ -146,9 +155,9 @@ class DirectoryActionTest extends InventoryAwareTestBase {
             }
         }
     }
-    
+
     @Test(expected = TaskExecutionException)
-    void createDirectoryWithInvalidMode() {
+    void "create a directory with an invalid mode"() {
         withUser('devops') { inventory ->
             inventory.provision {
                 task actions: {
@@ -157,7 +166,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
             }
         }
     }
-    
+
     @Test
     void createDirectoryWithEmptyMode() {
         withUser('devops') { inventory ->
