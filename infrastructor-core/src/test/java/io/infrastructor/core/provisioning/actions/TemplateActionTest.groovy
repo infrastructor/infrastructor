@@ -7,14 +7,12 @@ import org.junit.Test
 class TemplateActionTest extends InventoryAwareTestBase {
 
     @Test
-    void generateAFileOnRemoteServer() {
+    void "generate a file on remote server"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // setup
-                    shell(user: 'root', command: "groupadd infra")
+                    shell user: 'root', command: "groupadd infra"
 
-                    // execution
                     template {
                         user = 'root'
                         source = 'build/resources/test/test.tmpl'
@@ -25,9 +23,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
                         mode = '600'
                     }
 
-                    // assertion
                     def result = shell(user: 'root', command: "ls -alh /test.txt")
-
                     assert result.output.contains("test.txt")
                     assert result.output.contains("devops infra")
                     assert result.output.contains("-rw-------")
@@ -40,7 +36,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     }
     
     @Test
-    void generateAFileOnRemoteServerWithEmptyBindings() {
+    void "generate a file on remote server with empty bindings"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -51,7 +47,6 @@ class TemplateActionTest extends InventoryAwareTestBase {
                         bindings = [message: "simple!"]
                     }
 
-                    // assertion
                     assert shell(user: 'root', command: "cat /test.txt").output.contains("simple")
                 }
             }
@@ -59,11 +54,46 @@ class TemplateActionTest extends InventoryAwareTestBase {
     }
 
     @Test
-    void createADeepFolderBeforeTemplateUpload() {
+    void "generate a file on remote server with sudo and a password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    template {
+                        user = 'root'
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/test.txt'
+                        bindings = [message: "simple!"]
+                        sudopass = 'sudops'
+                    }
+
+                    assert shell(user: 'root', sudopass: 'sudops', command: "cat /test.txt").output.contains("simple")
+                }
+            }
+        }
+    }
+
+    @Test(expected = TaskExecutionException)
+    void "generate a file on remote server with sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    template {
+                        user = 'root'
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/test.txt'
+                        bindings = [message: "simple!"]
+                        sudopass = 'wrong'
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    void "create a deep folder before template upload"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // execution
                     template {
                         source = 'build/resources/test/test.tmpl'
                         target = '/etc/deep/deep/folder/test.txt'
@@ -79,7 +109,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     }
     
     @Test(expected = TaskExecutionException)
-    void templateWithUnknownOwner() {
+    void "template with an unknown owner"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -95,7 +125,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     }
     
     @Test(expected = TaskExecutionException)
-    void templateWithUnknownGroup() {
+    void "template with an unknown group"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -111,7 +141,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     }
     
     @Test(expected = TaskExecutionException)
-    void templateWithInvalidMode() {
+    void "template with an invalid mode"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -127,7 +157,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     }
     
     @Test
-    void templateWithEncryptedValues() {
+    void "template with encrypted values"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -150,7 +180,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     
     @Test
-    void templateWithFullyEncryptedContent() {
+    void "template with fully encrypted content"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
