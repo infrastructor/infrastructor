@@ -7,7 +7,7 @@ import org.junit.Test
 class ShellActionTest extends InventoryAwareTestBase {
 
     @Test
-    void singleLineShellAction() {
+    void "singleline shell action"() {
         def result = [:]
         withUser(DEVOPS) { inventory ->
             inventory.provision {
@@ -23,7 +23,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     }
 
     @Test
-    void multilineShellAction() {
+    void "multiline shell action"() {
         def result = [:]
 
         withUser(DEVOPS) { inventory ->
@@ -45,7 +45,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     }
 
     @Test(expected = TaskExecutionException)
-    void multilineRestrictedShellActionWithoutSudo() {
+    void "multiline restricted shell action without sudo"() {
 
         withUser(DEVOPS) { inventory ->
             inventory.provision {
@@ -61,7 +61,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     }
 
     @Test
-    void multilineRestrictedShellActionWithSudo() {
+    void "multiline restricted shell action with sudo"() {
         def result = [:]
 
         withUser(DEVOPS) { inventory ->
@@ -81,7 +81,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     }
 
     @Test(expected = TaskExecutionException)
-    void multilineShellActionWithErrorScript() {
+    void "multiline shell action with error script"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'simpleShellAction', actions: {
@@ -94,7 +94,7 @@ class ShellActionTest extends InventoryAwareTestBase {
     }
 
     @Test
-    void singlelineShellActionWithUserSwitch() {
+    void "singleline shell action with user switch"() {
         def result = [:]
 
         withUser(DEVOPS) { inventory ->
@@ -114,7 +114,34 @@ class ShellActionTest extends InventoryAwareTestBase {
     }
 
     @Test
-    void multilineShellActionWithUserSwitch() {
+    void "singleline shell action with sudo and a password"() {
+        def result = [:]
+
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    result = shell user: 'root', command: 'whoami', sudopass: 'sudops'
+                }
+            }
+        }
+
+        assert result.exitcode == 0
+        assert result.output.contains("root")
+    }
+
+    @Test(expected = TaskExecutionException)
+    void "singleline shell action with sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    result = shell user: 'root', command: 'whoami', sudopass: 'sudops'
+                }
+            }
+        }
+    }
+
+    @Test
+    void "multiline shell action with user switch"() {
         def result = [:]
 
         withUser(DEVOPS) { inventory ->
@@ -123,12 +150,43 @@ class ShellActionTest extends InventoryAwareTestBase {
                     user name: 'test', user: 'root'
                     result = shell user: 'test', command: '''
                     whoami
-                '''
+                    '''
                 }
             }
         }
 
         assert result.exitcode == 0
         assert result.output.contains("test")
+    }
+
+    @Test
+    void "multiline shell action with sudo and a password"() {
+        def result = [:]
+
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    result = shell user: 'root', sudopass: 'sudops', command: '''
+                    whoami
+                    '''
+                }
+            }
+        }
+
+        assert result.exitcode == 0
+        assert result.output.contains("root")
+    }
+
+    @Test(expected = TaskExecutionException)
+    void "multiline shell action with sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    result = shell user: 'root', sudopass: 'wrong', command: '''
+                    whoami
+                    '''
+                }
+            }
+        }
     }
 }
