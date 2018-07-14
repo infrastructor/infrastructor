@@ -7,7 +7,7 @@ import org.junit.Test
 class ReplaceActionTest extends InventoryAwareTestBase {
 
     @Test
-    void replaceAllOccurrencesInFileUsingRegex() {
+    void "replace all occurrences in a file using a regex"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -38,7 +38,68 @@ class ReplaceActionTest extends InventoryAwareTestBase {
     }
 
     @Test
-    void replaceFirstOccurrenceInFileUsingRegex() {
+    void "replace all occurrences in a file using a regex, sudo and a password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    file {
+                        user = 'root'
+                        target = '/test.txt'
+                        content = """\
+                        line 1
+                        line 2
+                        """
+                        sudopass = 'sudops'
+                    }
+
+                    replace {
+                        user = 'root'
+                        target = '/test.txt'
+                        regexp = /(?m)line/
+                        content = "another"
+                        all = true
+                        sudopass = 'sudops'
+                    }
+
+                    assert shell(command: "cat /test.txt", user: 'root', sudopass: 'sudops').output == """\
+                    another 1
+                    another 2
+                    """.stripMargin().stripIndent()
+                }
+            }
+        }
+    }
+
+    @Test(expected = TaskExecutionException)
+    void "replace all occurrences in a file using a regex, sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    file {
+                        user = 'root'
+                        target = '/test.txt'
+                        content = """\
+                        line 1
+                        line 2
+                        """
+                        sudopass = 'sudops'
+                    }
+
+                    replace {
+                        user = 'root'
+                        target = '/test.txt'
+                        regexp = /(?m)line/
+                        content = "another"
+                        all = true
+                        sudopass = 'wrong'
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    void "replace first occurrence in a file using a regex"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -69,7 +130,7 @@ class ReplaceActionTest extends InventoryAwareTestBase {
     }
 
     @Test(expected = TaskExecutionException)
-    void replaceBlockWithUnknownOwner() {
+    void "replace a text block with an unknown owner"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -87,7 +148,7 @@ class ReplaceActionTest extends InventoryAwareTestBase {
     }
 
     @Test(expected = TaskExecutionException)
-    void replaceBlockWithUnknownGroup() {
+    void "replace a text block with an unknown group"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -108,7 +169,7 @@ class ReplaceActionTest extends InventoryAwareTestBase {
     }
 
     @Test(expected = TaskExecutionException)
-    void replaceBlockWithInvalidMode() {
+    void "replace a text block with an invalid mode"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -124,4 +185,3 @@ class ReplaceActionTest extends InventoryAwareTestBase {
         }
     }
 }
-
