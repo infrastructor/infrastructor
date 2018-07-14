@@ -7,7 +7,7 @@ import org.junit.Test
 class FileActionTest extends InventoryAwareTestBase {
    
     @Test
-    void writeAContentToAFileOnRemoteServerWithSudo() {
+    void "create a file with sudo"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -57,9 +57,28 @@ class FileActionTest extends InventoryAwareTestBase {
             }
         }
     }
+
+    @Test(expected = TaskExecutionException)
+    void "create a file with sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    file {
+                        content  = 'message'
+                        target   = '/test.txt'
+                        owner    = SUDOPS
+                        group    = SUDOPS
+                        mode     = '600'
+                        user     = 'root'
+                        sudopass = "wrong"
+                    }
+                }
+            }
+        }
+    }
     
     @Test(expected = TaskExecutionException)
-    void writeAFileOnRemoteServerWithoutSudo() {
+    void "create a file without sudo"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -73,17 +92,15 @@ class FileActionTest extends InventoryAwareTestBase {
     }
     
     @Test
-    void writeAFileOnRemoteServerAsRoot() {
+    void "create a file as root"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // execution
                     def result = file {
                         user    = 'root'
                         content = 'another message'
                         target  = '/test.txt'
                     }
-                    // assertion
                     assert result.exitcode == 0
                     assert shell(user: 'root', command: "cat /test.txt").output.contains("another message")
                 }
@@ -92,7 +109,7 @@ class FileActionTest extends InventoryAwareTestBase {
     }
     
     @Test(expected = TaskExecutionException)
-    void createFileWithUnknownOwner() {
+    void "create a file with an unknown owner"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -103,7 +120,7 @@ class FileActionTest extends InventoryAwareTestBase {
     }
  
     @Test(expected = TaskExecutionException)
-    void createFileWithUnknownGroup() {
+    void "create a file with an unexisting group"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -114,7 +131,7 @@ class FileActionTest extends InventoryAwareTestBase {
     }
     
     @Test(expected = TaskExecutionException)
-    void createFileWithInvalidMode() {
+    void "create a file with an invalid group"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
