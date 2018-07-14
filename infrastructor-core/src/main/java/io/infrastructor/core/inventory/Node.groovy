@@ -70,18 +70,19 @@ class Node {
     
     def writeFile(def target, def input, def user = '', def sudopass = '') {
         execute command: CMD {
-            add sudopass, "echo $sudopass |"
+            add sudopass, "echo '$sudopass' |"
             add sudopass || user, "sudo -S"
             add user, "-u $user"
             add "sh -c \"dirname '$target' | xargs -I '{}' mkdir -p '{}'\""
         }
             
         execute input: input, command: CMD {
-            add "cat | "
-            add sudopass, "echo $sudopass |"
+            add sudopass,         "{ echo '$sudopass'; cat -; } |"
             add sudopass || user, "sudo -S"
-            add user, "-u $user"
-            add "tee '$target'"
+            add user,             "-u $user"
+            add                   "tee '$target'"
+
+            // sudo -k && echo 'some text' | { echo 'mypassword'; cat -; } | sudo -S -u user tee -a /etc/test.txt
         }
     }
     

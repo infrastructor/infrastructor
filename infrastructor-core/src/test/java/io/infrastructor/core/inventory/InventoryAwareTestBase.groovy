@@ -8,8 +8,10 @@ import static InlineDockerInventory.inlineDockerInventory
 @RunWith(Parameterized.class)
 abstract class InventoryAwareTestBase {
 
-    def static USERNAME = 'devops'
-    def static PASSWORD = 'devops'
+    def static DEVOPS = 'devops'
+    def static SUDOPS = 'sudops'
+    def static ROOT   = 'root'
+
     def static UBUNTU_IMAGE = 'infrastructor/ubuntu-sshd:0.0.3'
     def static CENTOS_IMAGE = 'infrastructor/centos-sshd:0.0.3'
 

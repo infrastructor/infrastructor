@@ -8,7 +8,7 @@ class InsertBlockTest extends InventoryAwareTestBase {
     
     @Test
     void insertBlockAtTheBeginningOfAFile() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'insertBlockAtTheBeginningOfAFile', actions: {
                     file {
@@ -39,7 +39,7 @@ class InsertBlockTest extends InventoryAwareTestBase {
     
     @Test
     void insertBlockAtTheEndingOfAFile() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -70,7 +70,7 @@ class InsertBlockTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void insertBlockWithoutPermissions() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -94,7 +94,7 @@ class InsertBlockTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void insertBlockToUnexistedFileReturnError() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     insertBlock {
@@ -109,7 +109,7 @@ class InsertBlockTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void insertBlockWithUnknownOwner() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
@@ -127,7 +127,7 @@ class InsertBlockTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void insertBlockWithUnknownGroup() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
@@ -145,7 +145,7 @@ class InsertBlockTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void insertBlockWithInvalidMode() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"

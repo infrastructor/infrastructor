@@ -8,7 +8,7 @@ class RetryActionTest extends InventoryAwareTestBase {
 
     @Test
     void retryWithoutFail() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry without fail', actions: {
                     retry actions: {
@@ -22,7 +22,7 @@ class RetryActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void retryWithRuntimeException() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry with runtime exception', actions: {
                     retry count: 1, delay: 1, actions: {
@@ -35,7 +35,7 @@ class RetryActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void retryWithAssertionError() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry with assertion error', actions: {
                     retry count: 1, delay: 1, actions: {
@@ -48,7 +48,7 @@ class RetryActionTest extends InventoryAwareTestBase {
     
     @Test
     void retryThreeTimesWithoutAssertionError() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry three times without assertion error', actions: {
                     def x = 0
@@ -63,7 +63,7 @@ class RetryActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void retryNegativeCountNumber() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry incorrect count number', actions: {
                     retry count: -1, delay: 1, actions: {}
@@ -74,7 +74,7 @@ class RetryActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void retryZeroCountNumber() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry incorrect count number', actions: {
                     retry count: 0, delay: 1, actions: {}
@@ -85,7 +85,7 @@ class RetryActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void retryNegativeDelay() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry negative delay', actions: {
                     retry count: 1, delay: -1, actions: {}
@@ -96,7 +96,7 @@ class RetryActionTest extends InventoryAwareTestBase {
     
     @Test
     void retryWithZeroDelay() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry negative delay', actions: {
                     def x = false
@@ -109,7 +109,7 @@ class RetryActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void retryNullActions() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry with null action', actions: {
                     retry count: 1, delay: 1, actions: null
@@ -120,7 +120,7 @@ class RetryActionTest extends InventoryAwareTestBase {
     
     @Test
     void retryWithDefaultCountAndDelay() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task name: 'retry with null action', actions: {
                     def x = false

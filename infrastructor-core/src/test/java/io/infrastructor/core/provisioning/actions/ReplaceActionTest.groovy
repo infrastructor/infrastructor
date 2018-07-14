@@ -8,7 +8,7 @@ class ReplaceActionTest extends InventoryAwareTestBase {
 
     @Test
     void replaceAllOccurrencesInFileUsingRegex() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -39,7 +39,7 @@ class ReplaceActionTest extends InventoryAwareTestBase {
 
     @Test
     void replaceFirstOccurrenceInFileUsingRegex() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -70,7 +70,7 @@ class ReplaceActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void replaceBlockWithUnknownOwner() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
@@ -88,7 +88,7 @@ class ReplaceActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void replaceBlockWithUnknownGroup() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
@@ -109,7 +109,7 @@ class ReplaceActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void replaceBlockWithInvalidMode() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"

@@ -13,13 +13,14 @@ class InsertBlockAction {
     def group
     def mode
     def user
+    def sudopass
 
     private static final int START = 0
     private static final int END   = 1
 
     def execute(def node) {
         def stream = new ByteArrayOutputStream()
-        node.readFile(target, stream, user)
+        node.readFile(target, stream, user, sudopass)
         def content = stream.toString()
 
         switch(position) {
@@ -31,10 +32,10 @@ class InsertBlockAction {
                 break
         }
 
-        node.writeText(target, content, user)
-        node.updateOwner(target, owner, user)
-        node.updateGroup(target, group, user)
-        node.updateMode(target, mode, user)
+        node.writeText(target, content, user, sudopass)
+        node.updateOwner(target, owner, user, sudopass)
+        node.updateGroup(target, group, user, sudopass)
+        node.updateMode(target, mode, user, sudopass)
         node.lastResult
     }
 }

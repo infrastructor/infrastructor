@@ -8,29 +8,50 @@ class FileActionTest extends InventoryAwareTestBase {
    
     @Test
     void writeAContentToAFileOnRemoteServerWithSudo() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // setup
                     shell user: 'root', command: "groupadd infra"
 
-                    // execution
                     file {
                         content = 'message'
                         target = '/test.txt'
-                        owner = 'devops'
+                        owner = DEVOPS
                         group = 'infra'
                         mode = '600'
                         user = 'root'
                     }
 
-                    // assertion
                     def result = shell("ls -alh /test.txt")
                     assert result.output.contains("test.txt")
                     assert result.output.contains("devops infra")
                     assert result.output.contains("-rw-------")
+                    assert shell("cat /test.txt").output.contains("message")
+                }
+            }
+        }
+    }
 
-                    // check file content
+
+    @Test
+    void "create a file with sudo and a password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    file {
+                        content  = 'message'
+                        target   = '/test.txt'
+                        owner    = SUDOPS
+                        group    = SUDOPS
+                        mode     = '600'
+                        user     = 'root'
+                        sudopass = "sudops"
+                    }
+
+                    def result = shell("ls -alh /test.txt")
+                    assert result.output.contains("test.txt")
+                    assert result.output.contains("sudops sudops")
+                    assert result.output.contains("-rw-------")
                     assert shell("cat /test.txt").output.contains("message")
                 }
             }
@@ -39,11 +60,10 @@ class FileActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void writeAFileOnRemoteServerWithoutSudo() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // execution
-                    def result = file {
+                    file {
                         content = 'message'
                         target = '/test.txt'
                     }
@@ -54,7 +74,7 @@ class FileActionTest extends InventoryAwareTestBase {
     
     @Test
     void writeAFileOnRemoteServerAsRoot() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     // execution
@@ -73,7 +93,7 @@ class FileActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void createFileWithUnknownOwner() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file user: 'root', target: '/etc/simple', content: "simple", owner: 'doesnotexist'
@@ -84,7 +104,7 @@ class FileActionTest extends InventoryAwareTestBase {
  
     @Test(expected = TaskExecutionException)
     void createFileWithUnknownGroup() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file user: 'root', target: '/etc/simple', content: "simple", group: 'doesnotexist'
@@ -95,7 +115,7 @@ class FileActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void createFileWithInvalidMode() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file user: 'root', target: '/etc/simple', content: "simple", mode: '8888'

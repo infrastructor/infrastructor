@@ -9,12 +9,14 @@ class ShellAction {
     @NotNull
     def command
     def user
-    
+    def sudopass
     def execute(def node) {
         if (command.contains("\n")) {
 
             def result = node.execute command: CMD {
-                add user, "sudo -s -u $user"
+                add sudopass, "echo $sudopass |"
+                add sudopass || user, "sudo -S"
+                add user, "-u $user"
                 add "mktemp"
             }
             
@@ -23,20 +25,26 @@ class ShellAction {
             try {
                 node.writeText(temp, command.stripIndent(), user)
                 node.execute command: CMD {
-                    add user, "sudo -s -u $user"
+                    add sudopass, "echo $sudopass |"
+                    add sudopass || user, "sudo -S"
+                    add user, "-u $user"
                     add "sh $temp"
                 }
                 
                 return node.lastResult
             } finally {
                 node.execute command: CMD {
-                    add user, "sudo -s -u $user"
+                    add sudopass, "echo $sudopass |"
+                    add sudopass || user, "sudo -S"
+                    add user, "-u $user"
                     add "rm $temp"
                 }
             }
         } else {
             node.execute command: CMD {
-                add user, "sudo -s -u $user"
+                add sudopass, "echo $sudopass |"
+                add sudopass || user, "sudo -S"
+                add user, "-u $user"
                 add command
             }
         }

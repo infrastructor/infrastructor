@@ -11,7 +11,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     @Test
     void "create a directory as root"() {
         def result
-        withUser('devops') {
+        withUser(DEVOPS) {
             it.provision {
                 task actions: {
                     user user: 'root', name: "testuser"
@@ -31,10 +31,10 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     @Test
     void "create a directory as devops with sudo"() {
         def result
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    directory user: 'root', target: '/etc/simple', owner: 'devops', group: 'devops', mode: '0600'
+                    directory user: 'root', target: '/etc/simple', owner: DEVOPS, group: DEVOPS, mode: '0600'
                     result = shell("ls -dalh /etc/simple")
                 }
             }
@@ -48,10 +48,10 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     @Test
     void "create a directory as sudops with sudo and a password"() {
         def result
-        withUser('sudops') { inventory ->
+        withUser(SUDOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    directory user: 'root', sudopass: 'sudops', target: '/etc/simple', owner: 'sudops', group: 'sudops', mode: '600'
+                    directory user: 'root', sudopass: SUDOPS, target: '/etc/simple', owner: SUDOPS, group: SUDOPS, mode: '600'
                     result = shell("ls -dalh /etc/simple")
                 }
             }
@@ -64,10 +64,10 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void "create a directory as sudops with sudo and a wrong password"() {
-        withUser('sudops') { inventory ->
+        withUser(SUDOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    directory user: 'root', sudopass: 'wrong', target: '/etc/simple', owner: 'sudops', group: 'sudops', mode: '600'
+                    directory user: 'root', sudopass: 'wrong', target: '/etc/simple', owner: SUDOPS, group: SUDOPS, mode: '600'
                 }
             }
         }
@@ -76,10 +76,10 @@ class DirectoryActionTest extends InventoryAwareTestBase {
     @Test
     void "create a directory as devops without any password"() {
         def result
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    directory user: 'root', sudopass: 'devops', target: '/etc/simple', owner: 'sudops', group: 'sudops', mode: '600'
+                    directory user: 'root', sudopass: DEVOPS, target: '/etc/simple', owner: SUDOPS, group: SUDOPS, mode: '600'
                     result = shell("ls -dalh /etc/simple")
                 }
             }
@@ -92,7 +92,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test
     void "create nested directories"() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     // execute
@@ -125,7 +125,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void "create a directory as devops without sudo"() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     directory target: '/etc/simple'
@@ -136,7 +136,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void "create a directory with an unknown owner"() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     directory target: '/etc/simple', owner: 'doesnotexist'
@@ -147,7 +147,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void "create a directory with an unknown group"() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     directory target: '/etc/simple', group: 'doesnotexist'
@@ -158,7 +158,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void "create a directory with an invalid mode"() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     directory user: 'root', target: '/etc/simple', mode: '8888'
@@ -169,7 +169,7 @@ class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test
     void createDirectoryWithEmptyMode() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     assert directory(user: 'root', target: '/etc/simple/test1', mode: '').exitcode == 0

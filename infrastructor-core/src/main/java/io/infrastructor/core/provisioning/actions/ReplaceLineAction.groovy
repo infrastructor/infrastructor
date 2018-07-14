@@ -13,21 +13,22 @@ class ReplaceLineAction {
     def owner
     def group
     def mode
-    def user = false
-    
+    def user
+    def sudopass
+
     def execute(def node) {
         def stream = new ByteArrayOutputStream()
-        node.readFile(target, stream, user)
+        node.readFile(target, stream, user, sudopass)
             
         def original = stream.toString()
         def updated = original.split('\n').collect { 
             (it ==~ regexp) ? line : it 
         }.join('\n')
         
-        node.writeText(target, updated, user)
-        node.updateOwner(target, owner, user)
-        node.updateGroup(target, group, user)
-        node.updateMode(target, mode, user)
+        node.writeText(target, updated, user, sudopass)
+        node.updateOwner(target, owner, user, sudopass)
+        node.updateGroup(target, group, user, sudopass)
+        node.updateMode(target, mode, user, sudopass)
         node.lastResult
     }
 }

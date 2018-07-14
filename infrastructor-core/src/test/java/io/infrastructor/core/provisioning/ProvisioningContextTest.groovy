@@ -7,7 +7,7 @@ import org.junit.Test
 class ProvisioningContextTest extends InventoryAwareTestBase {
     @Test
     void provisionASingleNodeInventory() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             ProvisioningContext.provision(inventory) {
                 task name: 'test task', actions: {
                     def result = shell 'ls /'
@@ -19,7 +19,7 @@ class ProvisioningContextTest extends InventoryAwareTestBase {
 
     @Test
     void checkInventoryIsAvailableInContext() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             def size = 0
             ProvisioningContext.provision(inventory) { BasicInventory provisioningInventory ->
                 size = provisioningInventory.size()

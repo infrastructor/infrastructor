@@ -10,7 +10,7 @@ class FetchActionTest extends InventoryAwareTestBase {
     @Test
     void fetchFileFromRemoteHost() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -34,7 +34,7 @@ class FetchActionTest extends InventoryAwareTestBase {
     @Test(expected = TaskExecutionException)
     void fetchFileFromRemoteHostWithoutPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -57,7 +57,7 @@ class FetchActionTest extends InventoryAwareTestBase {
     @Test
     void fetchFileFromRemoteHostWithPermissions() {
         def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -81,7 +81,7 @@ class FetchActionTest extends InventoryAwareTestBase {
         
     @Test(expected = TaskExecutionException)
     void fetchFileWithEmptyArguments() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     fetch { user = 'root' }
@@ -90,30 +90,31 @@ class FetchActionTest extends InventoryAwareTestBase {
         }
     }
 
-//    @Test
-//    void fetchFileFromRemoteHostWithSudopass() {
-//        def resultFile = "/tmp/INFRATEST" + FlatUUID.flatUUID()
-//        withUser('sudops') { inventory ->
-//            inventory.provision {
-//                task actions: {
-//                    file {
-//                        content = 'message'
-//                        target = '/test.txt'
-//                        owner = 'root'
-//                        mode = '0600'
-//                        user = 'sudops'
-//                        sudopass = 'sudops'
-//                    }
-//                    def result = fetch {
-//                        source = '/test.txt'
-//                        target = resultFile
-//                        user = 'sudops'
-//                        sudopass = 'sudops'
-//                    }
-//                    assert result.exitcode == 0
-//                }
-//                assert new File(resultFile).text == 'message'
-//            }
-//        }
-//    }
+    @Test
+    void fetchFileFromRemoteHostWithSudopass() {
+        def result_file = "/tmp/INFRATEST" + FlatUUID.flatUUID()
+
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    file {
+                        content = 'message'
+                        target = '/test.txt'
+                        owner = SUDOPS
+                        mode = '0600'
+                        user = 'root'
+                        sudopass = SUDOPS
+                    }
+                    def result = fetch {
+                        source = '/test.txt'
+                        target = result_file
+                        user = 'root'
+                        sudopass = SUDOPS
+                    }
+                    assert result.exitcode == 0
+                }
+                assert new File(result_file).text == 'message'
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@ class ReplaceLineActionTest extends InventoryAwareTestBase {
 
     @Test
     void replaceLineInFile() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -40,7 +40,7 @@ class ReplaceLineActionTest extends InventoryAwareTestBase {
 
     @Test
     void replaceLineWithoutChange() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -73,7 +73,7 @@ class ReplaceLineActionTest extends InventoryAwareTestBase {
 
     @Test
     void replaceLineChangeAttributes() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {

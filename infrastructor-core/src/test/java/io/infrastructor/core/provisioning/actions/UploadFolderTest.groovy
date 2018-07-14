@@ -7,7 +7,7 @@ class UploadFolderTest extends InventoryAwareTestBase {
 
     @Test
     void uploadFolderContentToRemoteHost() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
@@ -32,7 +32,7 @@ class UploadFolderTest extends InventoryAwareTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithIncludes() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
@@ -54,7 +54,7 @@ class UploadFolderTest extends InventoryAwareTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithIncludesNested() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
@@ -80,7 +80,7 @@ class UploadFolderTest extends InventoryAwareTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithIncludesNestedMultiple() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
@@ -106,7 +106,7 @@ class UploadFolderTest extends InventoryAwareTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithExcludes() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
@@ -133,7 +133,7 @@ class UploadFolderTest extends InventoryAwareTestBase {
     
     @Test
     void uploadFolderContentToRemoteHostWithExcludesOnly() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {

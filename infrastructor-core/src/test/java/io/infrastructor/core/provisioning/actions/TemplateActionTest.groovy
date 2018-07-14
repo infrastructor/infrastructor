@@ -8,7 +8,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
 
     @Test
     void generateAFileOnRemoteServer() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     // setup
@@ -20,7 +20,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
                         source = 'build/resources/test/test.tmpl'
                         target = '/test.txt'
                         bindings = [message: "simple!"]
-                        owner = 'devops'
+                        owner = DEVOPS
                         group = 'infra'
                         mode = '600'
                     }
@@ -41,7 +41,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void generateAFileOnRemoteServerWithEmptyBindings() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -60,7 +60,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
 
     @Test
     void createADeepFolderBeforeTemplateUpload() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     // execution
@@ -80,7 +80,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void templateWithUnknownOwner() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -96,7 +96,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void templateWithUnknownGroup() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -112,7 +112,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void templateWithInvalidMode() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -128,7 +128,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void templateWithEncryptedValues() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -151,7 +151,7 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     @Test
     void templateWithFullyEncryptedContent() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {

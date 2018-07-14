@@ -7,7 +7,7 @@ import org.junit.Test
 class WaitForPortTest extends InventoryAwareTestBase {
     @Test(expected = TaskExecutionException)
     void waitForUnlistenedPort() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     waitForPort port: 10000
@@ -18,7 +18,7 @@ class WaitForPortTest extends InventoryAwareTestBase {
     
     @Test(expected = TaskExecutionException)
     void waitForUnknownPort() {
-        withUser('devops') { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     waitForPort delay: 100, attempts: 3
