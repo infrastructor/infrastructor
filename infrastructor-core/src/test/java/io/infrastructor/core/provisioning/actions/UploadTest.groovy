@@ -7,7 +7,7 @@ import org.junit.Test
 class UploadTest extends InventoryAwareTestBase {
     
     @Test
-    void uploadAFileToRemoteHost() {
+    void "upload a file"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -27,10 +27,46 @@ class UploadTest extends InventoryAwareTestBase {
                 }
             }
         }
-    } 
+    }
+
+    @Test
+    void "upload a file with sudo and a password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    upload {
+                        user = 'root'
+                        source = 'build/resources/test/fileupload.txt'
+                        target = '/fileupload.txt'
+                        sudopass = 'sudops'
+                    }
+
+                    assert shell("cat /fileupload.txt").output.find(/simple/)
+                }
+            }
+        }
+    }
+
+    @Test(expected = TaskExecutionException)
+    void "upload a file with sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    upload {
+                        user = 'root'
+                        source = 'build/resources/test/fileupload.txt'
+                        target = '/fileupload.txt'
+                        sudopass = 'wrong'
+                    }
+
+                    assert shell("cat /fileupload.txt").output.find(/simple/)
+                }
+            }
+        }
+    }
     
     @Test
-    void uploadAFileToADeepFolder() {
+    void "upload a file to a deep folder"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -53,7 +89,7 @@ class UploadTest extends InventoryAwareTestBase {
     } 
     
     @Test(expected = TaskExecutionException)
-    void uploadAFileToRemoteHostWithoutPermissions() {
+    void "upload a file without permissions"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -67,7 +103,7 @@ class UploadTest extends InventoryAwareTestBase {
     }
     
     @Test
-    void uploadAFileToRemoteHostWithSudo() {
+    void "upload a file with sudo"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -85,7 +121,7 @@ class UploadTest extends InventoryAwareTestBase {
     }
     
     @Test(expected = TaskExecutionException)
-    void uploadFileWithUnknownOwner() {
+    void "upload a file with an unknown owner"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -96,7 +132,7 @@ class UploadTest extends InventoryAwareTestBase {
     }
  
     @Test(expected = TaskExecutionException)
-    void uploadFileWithUnknownGroup() {
+    void "upload a file with an unknown group"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -107,7 +143,7 @@ class UploadTest extends InventoryAwareTestBase {
     }
     
     @Test(expected = TaskExecutionException)
-    void uploadFileWithInvalidMode() {
+    void "upload a file with an unknown mode"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
@@ -118,7 +154,7 @@ class UploadTest extends InventoryAwareTestBase {
     }
     
     @Test
-    void decryptAndUploadFileToRemoteHost() {
+    void "decrypt and upload file"() {
         withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
