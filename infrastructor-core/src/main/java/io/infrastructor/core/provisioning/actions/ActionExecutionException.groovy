@@ -4,7 +4,7 @@ import io.infrastructor.core.provisioning.TaskExecutionException
 
 class ActionExecutionException extends TaskExecutionException {
     
-    public ActionExecutionException(String message) {
+    ActionExecutionException(String message) {
         super(message)
     }
 }
