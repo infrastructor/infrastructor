@@ -10,7 +10,7 @@ class ApplyActionTest extends InventoryAwareTestBase {
 
     @Test
     void applyActionsDefinedInExternalClosure() {
-        withInventory { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def the_closure = { params -> shell(params.command) }
@@ -29,7 +29,7 @@ class ApplyActionTest extends InventoryAwareTestBase {
 
     @Test
     void loadActionFromExternalFileInsideNodesSection() {
-        withInventory { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def directory_action_set = load 'build/resources/test/apply_action/directory.groovy'
@@ -44,7 +44,7 @@ class ApplyActionTest extends InventoryAwareTestBase {
 
     @Test(expected = TaskExecutionException)
     void loadActionFromUnxesistingFile() {
-        withInventory { inventory ->
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     load 'build/resources/test/apply_action/missing.groovy'

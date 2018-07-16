@@ -12,10 +12,13 @@ class UserAction {
     def shell
     def home
     def user
+    def sudopass
 
     def execute(def node) {
         node.execute command: CMD {
-            add user, "sudo -s -u $user"
+            add sudopass, "echo $sudopass |"
+            add sudopass || user, "sudo -S"
+            add user, "-u $user"
             add "useradd"
             add uid,   "-u $uid"
             add shell, "-s $shell"

@@ -1,32 +1,29 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class TemplateActionTest extends InventoryAwareTestBase {
 
     @Test
-    void generateAFileOnRemoteServer() {
-        withInventory { inventory ->
+    void "generate a file on remote server"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // setup
-                    shell(user: 'root', command: "groupadd infra")
+                    shell user: 'root', command: "groupadd infra"
 
-                    // execution
                     template {
                         user = 'root'
                         source = 'build/resources/test/test.tmpl'
                         target = '/test.txt'
                         bindings = [message: "simple!"]
-                        owner = 'devops'
+                        owner = DEVOPS
                         group = 'infra'
                         mode = '600'
                     }
 
-                    // assertion
                     def result = shell(user: 'root', command: "ls -alh /test.txt")
-
                     assert result.output.contains("test.txt")
                     assert result.output.contains("devops infra")
                     assert result.output.contains("-rw-------")
@@ -39,8 +36,8 @@ class TemplateActionTest extends InventoryAwareTestBase {
     }
     
     @Test
-    void generateAFileOnRemoteServerWithEmptyBindings() {
-        withInventory { inventory ->
+    void "generate a file on remote server with empty bindings"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -50,9 +47,6 @@ class TemplateActionTest extends InventoryAwareTestBase {
                         bindings = [message: "simple!"]
                     }
 
-                    // assertion
-                    def result = shell user: 'root', command: "ls -alh /test.txt"
-
                     assert shell(user: 'root', command: "cat /test.txt").output.contains("simple")
                 }
             }
@@ -60,11 +54,46 @@ class TemplateActionTest extends InventoryAwareTestBase {
     }
 
     @Test
-    void createADeepFolderBeforeTemplateUpload() {
-        withInventory { inventory ->
+    void "generate a file on remote server with sudo and a password"() {
+        withUser(SUDOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // execution
+                    template {
+                        user = 'root'
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/test.txt'
+                        bindings = [message: "simple!"]
+                        sudopass = 'sudops'
+                    }
+
+                    assert shell(user: 'root', sudopass: 'sudops', command: "cat /test.txt").output.contains("simple")
+                }
+            }
+        }
+    }
+
+    @Test(expected = TaskExecutionException)
+    void "generate a file on remote server with sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    template {
+                        user = 'root'
+                        source = 'build/resources/test/test.tmpl'
+                        target = '/test.txt'
+                        bindings = [message: "simple!"]
+                        sudopass = 'wrong'
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    void "create a deep folder before template upload"() {
+        withUser(DEVOPS) { inventory ->
+            inventory.provision {
+                task actions: {
                     template {
                         source = 'build/resources/test/test.tmpl'
                         target = '/etc/deep/deep/folder/test.txt'
@@ -79,66 +108,57 @@ class TemplateActionTest extends InventoryAwareTestBase {
         }
     }
     
-    @Test
-    void templateWithUnknownOwner() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "template with an unknown owner"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = template {
+                    template {
                         source = 'build/resources/test/test.tmpl'
                         target = '/tmp/test.txt'
                         bindings = [message: "simple!"]
                         owner = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid spec/)
                 }
             }
         }
     }
     
-    @Test
-    void templateWithUnknownGroup() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "template with an unknown group"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = template {
+                    template {
                         source = 'build/resources/test/test.tmpl'
                         target = '/tmp/test.txt'
                         bindings = [message: "simple!"]
                         group = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid group/)
                 }
             }
         }
     }
     
-    @Test
-    void templateWithInvalidMode() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "template with an invalid mode"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = template {
+                    template {
                         source = 'build/resources/test/test.tmpl'
                         target = '/tmp/test.txt'
                         bindings = [message: "simple!"]
                         mode = '888'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid mode/)
                 }
             }
         }
     }
     
     @Test
-    void templateWithEncryptedValues() {
-        withInventory { inventory ->
+    void "template with encrypted values"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {
@@ -160,8 +180,8 @@ class TemplateActionTest extends InventoryAwareTestBase {
     
     
     @Test
-    void templateWithFullyEncryptedContent() {
-        withInventory { inventory ->
+    void "template with fully encrypted content"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     template {

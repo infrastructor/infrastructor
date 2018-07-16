@@ -10,10 +10,13 @@ class GroupAction {
     def name
     def gid
     def user
+    def sudopass
 
     def execute(def node) {
         def cmd = CMD {
-            add user, "sudo -s -u $user"
+            add sudopass, "echo $sudopass |"
+            add sudopass || user, "sudo -S"
+            add user, "-u $user"
             add "groupadd"
             add gid, "-g $gid"
             add name

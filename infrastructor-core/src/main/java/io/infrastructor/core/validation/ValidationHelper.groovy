@@ -3,9 +3,9 @@ package io.infrastructor.core.validation
 import javax.validation.ConstraintViolation
 import javax.validation.Validation
 
-public class ValidationHelper {
+class ValidationHelper {
 
-    public static def validate(def objectToValidate) throws ValidationException {
+    static def validate(def objectToValidate) throws ValidationException {
         def validationResult = Validation.buildDefaultValidatorFactory().getValidator().validate(objectToValidate)
         
         if (!validationResult.isEmpty()) {

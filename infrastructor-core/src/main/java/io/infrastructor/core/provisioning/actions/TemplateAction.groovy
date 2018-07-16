@@ -18,6 +18,7 @@ class TemplateAction {
     def owner
     def mode
     def user
+    def sudopass
     def decryptionKey
     def decryptionMode = PART
     def engine = new SimpleTemplateEngine()
@@ -39,10 +40,10 @@ class TemplateAction {
             throw new ActionExecutionException("Unable to process template using decryption mode: $decryptionMode")
         }
 
-        node.writeText(target, content.toString(), user)
-        node.updateOwner(target, owner, user)
-        node.updateGroup(target, group, user)
-        node.updateMode(target, mode, user)
+        node.writeText(target, content.toString(), user, sudopass)
+        node.updateOwner(target, owner, user, sudopass)
+        node.updateGroup(target, group, user, sudopass)
+        node.updateMode(target, mode, user, sudopass)
         node.lastResult
     }
 }

@@ -1,15 +1,16 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class InsertBlockTest extends InventoryAwareTestBase {
     
     @Test
-    void insertBlockAtTheBeginningOfAFile() {
-        withInventory { inventory ->
+    void "insert a text block at the beginning of the file"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
-                task name: 'insertBlockAtTheBeginningOfAFile', actions: {
+                task actions: {
                     file {
                         user = 'root'
                         target = '/test.txt'
@@ -34,11 +35,72 @@ class InsertBlockTest extends InventoryAwareTestBase {
                 }
             }
         }
-    } 
+    }
+
+
+    @Test
+    void "insert a text block with sudo and a password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    file {
+                        user = 'root'
+                        target = '/test.txt'
+                        content = """\
+                        line 1
+                        line 2
+                        """
+                        sudopass = 'sudops'
+                    }
+
+                    insertBlock {
+                        user = 'root'
+                        target = '/test.txt'
+                        block = "line 0\n"
+                        position = START
+                        sudopass = 'sudops'
+                    }
+
+                    assert shell("cat /test.txt").output == """\
+                    line 0
+                    line 1
+                    line 2
+                    """.stripMargin().stripIndent()
+                }
+            }
+        }
+    }
+
+    @Test(expected = TaskExecutionException)
+    void "insert a text block with sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    file {
+                        user = 'root'
+                        target = '/test.txt'
+                        content = """\
+                        line 1
+                        line 2
+                        """
+                        sudopass = 'sudops'
+                    }
+
+                    insertBlock {
+                        user = 'root'
+                        target = '/test.txt'
+                        block = "line 0\n"
+                        position = START
+                        sudopass = 'wrong'
+                    }
+                }
+            }
+        }
+    }
     
     @Test
-    void insertBlockAtTheEndingOfAFile() {
-        withInventory { inventory ->
+    void "insert a text block at the end of the file"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -67,9 +129,9 @@ class InsertBlockTest extends InventoryAwareTestBase {
         }
     } 
     
-    @Test
-    void insertBlockWithoutPermissions() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "insert a block without file permissions"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file {
@@ -81,92 +143,79 @@ class InsertBlockTest extends InventoryAwareTestBase {
                         mode = '0600'
                     }
 
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "line 0\n"
                         position = END
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/Permission denied/)
                 }
             }
         }
     }
     
-    @Test
-    void insertBlockToUnexistedFileReturnError() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "insert a text block when the target file does not exists"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "line 0\n"
                         position = END
-                    }.exitcode != 0
+                    }
                 }
             }
         }
     }
     
-    @Test
-    void insertBlockWithUnknownOwner() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "insert a text block and assign an unexisting owner"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
 
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "dummy"
                         position = END
                         owner = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid spec/)
                 }
             }
         }
     }
     
-    @Test
-    void insertBlockWithUnknownGroup() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "insert a text block and assign an unexisting group"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
 
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "dummy"
                         position = END
                         group = 'unknown'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid group/)
                 }
             }
         }
     }
     
-    @Test
-    void insertBlockWithInvalidMode() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "insert a text block and assign an invalid mode"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     file target: '/tmp/test.txt', content: "dummy"
-
-                    def result = insertBlock {
+                    insertBlock {
                         target = '/tmp/test.txt'
                         block = "dummy"
                         position = END
                         mode = '888'
                     }
-
-                    assert result.exitcode != 0
-                    assert result.error.find(/invalid mode/)
                 }
             }
         }

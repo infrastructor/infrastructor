@@ -9,10 +9,11 @@ class FetchAction {
     @NotNull
     def target
     def user
+    def sudopass
 
     def execute(def node) {
         new FileOutputStream(target).withCloseable {
-            node.readFile(source, it, user)
+            node.readFile(source, it, user, sudopass)
         }
         node.lastResult
     }

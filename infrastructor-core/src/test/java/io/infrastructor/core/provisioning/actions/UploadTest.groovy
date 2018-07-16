@@ -1,13 +1,14 @@
 package io.infrastructor.core.provisioning.actions
 
 import io.infrastructor.core.inventory.InventoryAwareTestBase
+import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
 class UploadTest extends InventoryAwareTestBase {
     
     @Test
-    void uploadAFileToRemoteHost() {
-        withInventory { inventory ->
+    void "upload a file"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     user user: 'root', name: 'test'
@@ -26,11 +27,47 @@ class UploadTest extends InventoryAwareTestBase {
                 }
             }
         }
-    } 
+    }
+
+    @Test
+    void "upload a file with sudo and a password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    upload {
+                        user = 'root'
+                        source = 'build/resources/test/fileupload.txt'
+                        target = '/fileupload.txt'
+                        sudopass = 'sudops'
+                    }
+
+                    assert shell("cat /fileupload.txt").output.find(/simple/)
+                }
+            }
+        }
+    }
+
+    @Test(expected = TaskExecutionException)
+    void "upload a file with sudo and a wrong password"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    upload {
+                        user = 'root'
+                        source = 'build/resources/test/fileupload.txt'
+                        target = '/fileupload.txt'
+                        sudopass = 'wrong'
+                    }
+
+                    assert shell("cat /fileupload.txt").output.find(/simple/)
+                }
+            }
+        }
+    }
     
     @Test
-    void uploadAFileToADeepFolder() {
-        withInventory { inventory ->
+    void "upload a file to a deep folder"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     user user: 'root', name: 'test'
@@ -51,25 +88,23 @@ class UploadTest extends InventoryAwareTestBase {
         }
     } 
     
-    @Test
-    void uploadAFileToRemoteHostWithoutPermissions() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "upload a file without permissions"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    def result = upload {
+                    upload {
                         source = 'build/resources/test/fileupload.txt'
                         target = '/fileupload.txt'
                     }
-
-                    assert result.exitcode != 0
                 }
             }
         }
     }
     
     @Test
-    void uploadAFileToRemoteHostWithSudo() {
-        withInventory { inventory ->
+    void "upload a file with sudo"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
@@ -85,54 +120,42 @@ class UploadTest extends InventoryAwareTestBase {
         }
     }
     
-    @Test
-    void uploadFileWithUnknownOwner() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "upload a file with an unknown owner"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // execute
-                    def result = upload source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', owner: 'doesnotexist'
-
-                    // assert
-                    assert result.exitcode != 0
+                    upload source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', owner: 'doesnotexist'
                 }
             }
         }
     }
  
-    @Test
-    void uploadFileWithUnknownGroup() {
-        withInventory { inventory ->
+    @Test(expected = TaskExecutionException)
+    void "upload a file with an unknown group"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
-                    // execute
-                    def result = upload user: 'root', source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', group: 'doesnotexist'
-
-                    // assert
-                    assert result.exitcode != 0
+                    upload user: 'root', source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', group: 'doesnotexist'
+                }
+            }
+        }
+    }
+    
+    @Test(expected = TaskExecutionException)
+    void "upload a file with an unknown mode"() {
+        withUser(DEVOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    upload user: 'root', source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', mode: '8888'
                 }
             }
         }
     }
     
     @Test
-    void uploadFileWithInvalidMode() {
-        withInventory { inventory ->
-            inventory.provision {
-                task actions: {
-                    // execute
-                    def result = upload user: 'root', source: 'build/resources/test/fileupload.txt', target: '/tmp/simple.txt', mode: '8888'
-
-                    // assert
-                    assert result.exitcode != 0
-                }
-            }
-        }
-    }
-    
-    @Test
-    void decryptAndUploadFileToRemoteHost() {
-        withInventory { inventory ->
+    void "decrypt and upload file"() {
+        withUser(DEVOPS) { inventory ->
             inventory.provision {
                 task actions: {
                     def result = upload {
