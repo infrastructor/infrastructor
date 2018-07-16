@@ -43,7 +43,13 @@ class SshClient {
                     void log(int level, String message) { trace "jsch: $message" }
                 })
 
-            if (keyfile) { jsch.addIdentity(keyfile, keypass.getBytes()) }
+            if (keyfile && keypass) {
+                jsch.addIdentity(keyfile, keypass.getBytes())
+            }
+            else {
+                jsch.addIdentity(keyfile)
+            }
+
             session = jsch.getSession(username, host, port)
             if (password) session.setPassword(password)
             session.setServerAliveInterval(5000)
