@@ -46,7 +46,7 @@ class SshClient {
             if (keyfile && keypass) {
                 jsch.addIdentity(keyfile, keypass.getBytes())
             }
-            else {
+            else if (keyfile) {
                 jsch.addIdentity(keyfile)
             }
 
