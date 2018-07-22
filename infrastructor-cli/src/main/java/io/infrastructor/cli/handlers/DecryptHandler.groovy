@@ -98,7 +98,8 @@ class DecryptHandler extends LoggingAwareHandler {
 
             if (tool == CryptoUtils.TOOL && algorithm == CryptoUtils.ALGORITHM && encoding == CryptoUtils.OUTPUT_ENCODING) {
                 // file was encrypted, checking the key hash
-                if (encryptionKeyHash(password) == keyHash) {
+                def originKeyHash = encryptionKeyHash(password)
+                if (originKeyHash == keyHash) {
                     decrypted = decryptFull(password, file.text)
                 } else {
                     info "${yellow('encrypted with a different key:')} '${file.getCanonicalPath()}'"

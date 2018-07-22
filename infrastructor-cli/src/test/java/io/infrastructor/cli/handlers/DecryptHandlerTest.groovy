@@ -7,9 +7,9 @@ class DecryptHandlerTest {
     @Test
     void decryptFull() {
         def file = 'build/resources/test/decryption/file.txt'
-        DecryptHandler handler = new DecryptHandler(files: [file], password: 'test')
+        DecryptHandler handler = new DecryptHandler(files: [file], password: 'secret')
         handler.execute()
-        assert "simple\ntest\n" == new File(file).text
+        assert "secret message" == new File(file).text
     }
     
     @Test

@@ -21,7 +21,7 @@ class CryptoUtils {
     def static final OUTPUT_BLOCK_SIZE = 80
 
     private static SecretKeySpec prepareKey(byte[] key) {
-        return new SecretKeySpec(Arrays.copyOf(key, 32), "AES")
+        return new SecretKeySpec(Arrays.copyOf(key, 16), "AES")
     }
 
     private static GCMParameterSpec prepareParams(byte[] iv) {
