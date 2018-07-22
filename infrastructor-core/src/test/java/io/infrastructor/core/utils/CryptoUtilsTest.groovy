@@ -21,7 +21,6 @@ class CryptoUtilsTest {
 
     @Test
     void encryptDecryptBytes() {
-
         byte[] iv = generateIV()
         byte[] encrypted = encrypt(KEY_BYTES, iv, DATA_BYTES)
         byte[] decrypted = decrypt(KEY_BYTES, iv, encrypted)
@@ -50,7 +49,7 @@ class CryptoUtilsTest {
     @Test
     void decryptPart() {
         def template = '''
-            message: "${decrypt('Xi4Hwkd4apQSlRnAX/iJpNMRofIxay7rmhGWiQmc', '8WJJgQSAyHaFD3Ot')}"
+            message: "${decrypt('TAXnnwy88N8+9tdZU0n8neVC4BUWcLBSfVbFVgZ/', 'dDyxo7Xm1ccPHcAv')}"
         '''
 
         assert decryptPart(KEY, template).contains(DATA)
