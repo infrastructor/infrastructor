@@ -25,3 +25,4 @@ deploy:
     script: "./gradlew clean build bintrayUpload -x test -PbintrayUser=${BINTRAY_USER} -PbintrayPass=${BINTRAY_PASS} --info"
     on:
       branch: master
+      tags: true
