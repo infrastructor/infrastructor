@@ -28,7 +28,6 @@ class CryptoUtilsTest {
         assert decrypted == DATA_BYTES
     }
 
-
     @Test
     void encryptDecryptText() {
         def (String encrypted, String iv) = encryptText(KEY, DATA_BYTES)
