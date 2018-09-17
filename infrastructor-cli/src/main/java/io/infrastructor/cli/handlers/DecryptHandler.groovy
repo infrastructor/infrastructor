@@ -88,6 +88,11 @@ class DecryptHandler extends LoggingAwareHandler {
     def decrypt(File file) {
         def decrypted
 
+        if (file.text == '') {
+            info "${yellow('skipping empty file:')} '${file.getCanonicalPath()}'"
+            return
+        }
+
         if (mode == FULL) {
             def (
             String tool,

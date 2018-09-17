@@ -76,6 +76,10 @@ class EncryptHandler extends LoggingAwareHandler {
     }
     
     def encrypt(File file) {
+        if (file.text == '') {
+            info "${yellow('skipping empty file:')} '${file.getCanonicalPath()}'"
+            return
+        }
 
         if (mode == FULL) {
             // check if the file has already been encrypted
