@@ -66,6 +66,9 @@ class CryptoUtils {
     }
 
     static List<String> encryptFull(String encryption_key, byte[] data) {
+
+        if (data == null || data.length == 0) return ["", ""]
+
         byte[] iv  = generateIV()
         byte[] key = sha256(encryption_key)
 
@@ -77,6 +80,9 @@ class CryptoUtils {
     }
 
     static byte[] decryptFull(String encryption_key, String data) {
+
+        if (data == null || data.length() == 0) return []
+
         def (
         String tool,
         String algorithm,
@@ -95,11 +101,15 @@ class CryptoUtils {
     }
 
     static String decryptPart(String key, String template, def bindings = [:]) {
+        if (template == null || template.isEmpty()) return ""
+
         bindings.decrypt = { data, iv -> "${decryptText(key, iv, data)}" }
         new SimpleTemplateEngine().createTemplate(template).make(bindings).toString()
     }
 
     static String encryptPart(String key, String template, def bindings = [:]) {
+        if (template == null || template.isEmpty()) return ""
+
         bindings.encrypt = { data ->
             def (encrypted, ivBase64) = encryptText(key, toBytes(data))
             "\${decrypt('$encrypted', '$ivBase64')}"

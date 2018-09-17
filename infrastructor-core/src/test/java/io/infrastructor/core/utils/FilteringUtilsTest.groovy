@@ -2,7 +2,7 @@ package io.infrastructor.core.utils
 
 import org.junit.Test
 
-public class FilteringUtilsTest {
+class FilteringUtilsTest {
     @Test
     void matchTags() {
         assert true  == FilteringUtils.match(['a', 'b', 'c']) { 'a' && 'b' } 

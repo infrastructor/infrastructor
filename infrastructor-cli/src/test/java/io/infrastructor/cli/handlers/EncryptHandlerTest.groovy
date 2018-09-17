@@ -19,5 +19,13 @@ class EncryptHandlerTest {
         handler.execute()
         assert new File(file).text.contains('message: ${decrypt(')
     }
+
+    @Test
+    void "encrypt an empty file"() {
+        def file = 'build/resources/test/empty.txt'
+        EncryptHandler handler = new EncryptHandler(files: [file], password: 'test')
+        handler.execute()
+        assert new File(file).text == ''
+    }
 }
 
