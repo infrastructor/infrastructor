@@ -54,4 +54,21 @@ class BasicInventoryTest {
         assert inventory.size() == 2
         assert inventory[ID_Y].host == "10.0.0.3"
     }
+
+
+    @Test
+    void iterateUsingForEachMethod() {
+        def inventory = new BasicInventory()
+        inventory << new Node(id: ID_X, host: "10.0.0.1", username: "root", tags: [role: 'gateway'])
+        inventory << new Node(id: ID_Y, host: "10.0.0.2", username: "root", tags: [role: 'service'])
+
+        int counter = 0
+        inventory.each { id, node ->
+            assert id instanceof String
+            assert node instanceof Node
+            counter++
+        }
+
+        assert counter == 2
+    }
 }

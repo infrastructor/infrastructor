@@ -36,5 +36,9 @@ class BasicInventory implements Inventory {
     Node getAt(String id) {
         nodes[id]
     }
+
+    void each (Closure closure) {
+        nodes.each(closure)
+    }
 }
 
