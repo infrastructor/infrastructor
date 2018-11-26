@@ -5,11 +5,11 @@ dependencies {
     compile 'com.jcraft:jsch:0.1.54'
     compile 'javax.validation:validation-api:2.0.1.Final'
     compile 'org.apache.bval:bval-jsr:1.1.2'
-    compile 'org.codehaus.groovy:groovy-all:2.5.0'
+    compile 'org.codehaus.groovy:groovy-all:2.5.4'
     compile 'org.fusesource.jansi:jansi:1.17.1'
     compile 'org.apache.ivy:ivy:2.4.0'
-    compile 'org.apache.httpcomponents:httpclient:4.5.5'
-    compile 'org.apache.ant:ant:1.10.3'
+    compile 'org.apache.httpcomponents:httpclient:4.5.6'
+    compile 'org.apache.ant:ant:1.10.5'
 }
 
 processResources {
