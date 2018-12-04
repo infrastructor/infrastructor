@@ -1,0 +1,12 @@
+#/usr/bin/env bash
+
+_infrastructor_completions()
+{
+  COMPREPLY+=("run")
+  COMPREPLY+=("encrypt")
+  COMPREPLY+=("descrypt")
+  COMPREPLY+=("version")
+  COMPREPLY+=("version")
+}
+
+complete -F _infrastructor_completions infrastructor
