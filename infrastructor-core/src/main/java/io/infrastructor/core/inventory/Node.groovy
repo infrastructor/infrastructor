@@ -27,8 +27,7 @@ class Node {
     
     protected def client
     protected def lastResult = [:]
-    protected def stopOnError = true
-    
+
     def connect() {
         if (!client?.isConnected()) {
             client = sshClient(host: host, port: port, username: username, password: password, keyfile: keyfile, keypass: keypass)
@@ -52,7 +51,7 @@ class Node {
         
         lastResult = client.execute(command)
         
-        if (stopOnError && lastResult.exitcode != 0 && failfast) {
+        if (lastResult.exitcode != 0 && failfast) {
             throw new RemoteExecutionException([*:command, result: lastResult] as String)
         }
             
