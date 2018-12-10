@@ -71,8 +71,7 @@ class DockerNode {
                 keyfile: keyfile,
                 keypass: keypass,
                 tags: tags,
-                metadata: metadata,
-                stopOnError: true
+                metadata: metadata
         )
     }
 

@@ -10,6 +10,8 @@ class ShellAction {
     def user
     def sudopass
 
+    def failfast = true
+
     def execute(def node) {
         if (command.contains("\n")) {
 
@@ -18,7 +20,7 @@ class ShellAction {
                 add sudopass || user, "sudo -S"
                 add user, "-u $user"
                 add "sh -c 'mktemp'"
-            }
+            }, failfast
             
             def temp = result.output.trim()
 
@@ -29,7 +31,7 @@ class ShellAction {
                     add sudopass || user, "sudo -S"
                     add user, "-u $user"
                     add "sh $temp"
-                }
+                }, failfast
                 
                 return node.lastResult
             } finally {
@@ -38,7 +40,7 @@ class ShellAction {
                     add sudopass || user, "sudo -S"
                     add user, "-u $user"
                     add "rm $temp"
-                }
+                }, failfast
             }
         } else {
             node.execute command: CMD {
@@ -46,7 +48,7 @@ class ShellAction {
                 add sudopass || user, "sudo -S"
                 add user, "-u $user"
                 add command
-            }
+            }, failfast
         }
         
         node.lastResult
