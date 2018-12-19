@@ -30,6 +30,30 @@ class FetchActionTest extends InventoryAwareTestBase {
 
         assert new File(resultFile).text == 'message'
     }
+
+    @Test
+    void "fetch a file to a deep directory"() {
+        def resultFile = "/tmp/deep/deep/INFRATEST" + FlatUUID.flatUUID()
+        withUser(DEVOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    file {
+                        user = 'root'
+                        content = 'message'
+                        target = '/test.txt'
+                    }
+
+                    fetch {
+                        user = 'root'
+                        source = '/test.txt'
+                        target = resultFile
+                    }
+                }
+            }
+        }
+
+        assert new File(resultFile).text == 'message'
+    }
     
     @Test(expected = TaskExecutionException)
     void "fetch a file without permissions"() {

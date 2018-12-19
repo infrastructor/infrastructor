@@ -189,4 +189,27 @@ class ShellActionTest extends InventoryAwareTestBase {
             }
         }
     }
+
+    @Test(expected = TaskExecutionException)
+    void "failsafe shell execution: throw an exception in case of error"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    result = shell user: 'root', sudopass: 'sudops', command: 'abc'
+                }
+            }
+        }
+    }
+
+    @Test
+    void "failsafe shell execution: do not throw an exception in case of error"() {
+        withUser(SUDOPS) { inventory ->
+            inventory.provision {
+                task actions: {
+                    def result = shell user: 'root', sudopass: 'sudops', command: 'abc', failfast: false
+                    assert 0 != result.exitcode
+                }
+            }
+        }
+    }
 }

@@ -27,8 +27,7 @@ class Node {
     
     protected def client
     protected def lastResult = [:]
-    protected def stopOnError = true
-    
+
     def connect() {
         if (!client?.isConnected()) {
             client = sshClient(host: host, port: port, username: username, password: password, keyfile: keyfile, keypass: keypass)
@@ -47,12 +46,12 @@ class Node {
         }
     }
     
-    def execute(Map command) {
+    def execute(Map command, boolean failfast = true) {
         connect()
         
         lastResult = client.execute(command)
         
-        if (stopOnError && lastResult.exitcode != 0) { 
+        if (lastResult.exitcode != 0 && failfast) {
             throw new RemoteExecutionException([*:command, result: lastResult] as String)
         }
             
@@ -81,8 +80,6 @@ class Node {
             add sudopass || user, "sudo -S"
             add user,             "-u $user"
             add                   "tee '$target'"
-
-            // sudo -k && echo 'some text' | { echo 'mypassword'; cat -; } | sudo -S -u user tee -a /etc/test.txt
         }
     }
     

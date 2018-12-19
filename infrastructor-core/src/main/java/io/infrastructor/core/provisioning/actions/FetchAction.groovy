@@ -12,7 +12,9 @@ class FetchAction {
     def sudopass
 
     def execute(def node) {
-        new FileOutputStream(target).withCloseable {
+        def file = new File(target)
+        file.getParentFile().mkdirs()
+        new FileOutputStream(file).withCloseable {
             node.readFile(source, it, user, sudopass)
         }
         node.lastResult
