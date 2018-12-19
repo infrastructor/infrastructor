@@ -1,0 +1,42 @@
+#/usr/bin/env bash
+
+_infrastructor()
+{
+    local cur prev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    #
+    #  The basic options we'll complete.
+    #
+    opts="run encrypt decrypt"
+
+
+    #
+    #  Complete the arguments to some of the basic commands.
+    #
+    case "${prev}" in
+        run)
+            local run_help=$(for x in `infrastructor help run | grep -E 'run' |grep '\-\-' |grep -v 'File'| awk '{print $3}' | uniq`; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${run_help}" -- ${cur}) )
+            return 0
+            ;;
+        encrypt)
+            local encrypt_help=$(for x in `infrastructor help encrypt |grep '\-\-' | awk -F '  ' '{print $2}'|awk '{print $1}' | tr -d ','`; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${encrypt_help}" -- ${cur}) )
+            return 0
+            ;;
+        decrypt)
+            local decrypt_help=$(for x in `infrastructor help decrypt |grep '\-\-' | awk -F '  ' '{print $2}'|awk '{print $1}' | tr -d ','`; do echo ${x}; done)
+            COMPREPLY=( $(compgen -W "${decrypt_help}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+        ;;
+    esac
+
+   COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+   return 0
+}
+complete -F _infrastructor infrastructor
