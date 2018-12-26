@@ -15,9 +15,7 @@ class Task {
     def filter = { true }
     def parallel = 1
     def actions = {}
-    def onSuccess = {}
-    def onFailure = { throw new TaskExecutionException(":task '$name' - failed on ${context.failed.size()} node|s") }
-    
+
     def execute(def inventory) {
 
         def filtered = inventory.filter(filter)
@@ -54,11 +52,9 @@ class Task {
         
         // determine if we can go to the next task or we should stop the execution
         if (failedNodes.size() > 0) {
-            provision(inventory, [failed: failedNodes], onFailure)
-        } else {
-            provision(inventory, onSuccess)
+            throw new TaskExecutionException(":task '$name' - failed on ${failedNodes.size()} node|s")
         }
-                    
+
         info "${green("task: '$name', done on ${filtered.size()} node|s")}"
     }
 }
