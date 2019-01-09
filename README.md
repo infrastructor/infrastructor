@@ -1,4 +1,4 @@
-# ![Infrastructor](https://i.ibb.co/yPkntsT/infrastructor-logo.png) [![Build Status](https://travis-ci.org/infrastructor/infrastructor.svg?branch=master)](https://travis-ci.org/infrastructor/infrastructor)
+# ![Infrastructor](https://i.ibb.co/tK87m7d/infrastructor-logo-light.png) [![Build Status](https://travis-ci.org/infrastructor/infrastructor.svg?branch=master)](https://travis-ci.org/infrastructor/infrastructor)
 
 
 ### Overview
