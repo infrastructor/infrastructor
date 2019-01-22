@@ -180,39 +180,5 @@ class TaskExecutorTest {
         }
         assert collector.size() == 0
     }
-    
-    @Test
-    void runActionsOnSuccess() {
-        def collector = []
-        inlineInventory {
-            node id: "testA", host: "testA", username: "dummy", tags: [id: 'tag A']
-            node id: "testB", host: "testB", username: "dummy", tags: [id: 'tag B']
-            node id: "testC", host: "testC", username: "dummy", tags: [id: 'tag C']
-        }.provision {
-            task actions: {
-                collector << node.host
-            }, onSuccess: {
-                task actions: { collector << node.host }
-            }
-        }
-        assert collector.size() == 6
-    }
-    
-    @Test
-    void runActionsOnFailed() {
-        def collector = []
-        inlineInventory {
-            node id: 'testA', host: "testA", username: "dummy", tags: [id: 'tag A']
-            node id: 'testB', host: "testB", username: "dummy", tags: [id: 'tag B']
-            node id: 'testC', host: "testC", username: "dummy", tags: [id: 'tag C']
-        }.provision {
-            task actions: {
-                throw new RuntimeException("managed fail")
-            }, onFailure: { 
-                task actions: { collector << node.host }
-            }
-        }
-        assert collector.size() == 3
-    }
 }
 
