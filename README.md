@@ -1,4 +1,4 @@
-# Infrastructor [![Build Status](https://travis-ci.org/infrastructor/infrastructor.svg?branch=master)](https://travis-ci.org/infrastructor/infrastructor)
+# ![Infrastructor](/files/infrastructor-logo-light.png) [![Build Status](https://travis-ci.org/infrastructor/infrastructor.svg?branch=master)](https://travis-ci.org/infrastructor/infrastructor)
 
 ### Overview
 Infrastructor is a server provisioning and configuration management tool written in Groovy programming language. It implements Infrastructure as Code paradigm. Here are key features of Infrasructor:
@@ -19,7 +19,6 @@ sdk install infrastructor
 ```
 As an alternative you can download and unpack a ZIP file from the [releases page](https://github.com/infrastructor/infrastructor/releases)
  
-
 ### Documentation
 Building comprehensive documentation can be a long process and it can always be a bit out of date.
 Please check the [wiki](https://github.com/infrastructor/infrastructor/wiki) for the currently available tutorials and references.
@@ -27,3 +26,15 @@ You may also find these slides interesting: [Bring your infrastructure under con
 
 ### Examples
 A catalog of examples grows [here](https://github.com/infrastructor/examples) 
+
+### Contribution
+
+Have a great idea and want to contribute? Here's what can be a good way to help Infrastructor:
+- new action implementations
+- code / usage examples
+- documentation improvements
+- issue reports and bug fixes
+- any UX improvements
+- any other ideas that makes sense to talk about!
+
+Looking forward to your pull request!
