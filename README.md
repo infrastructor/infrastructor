@@ -22,7 +22,9 @@ As an alternative you can download and unpack a ZIP file from the [releases page
 ### Documentation
 Building comprehensive documentation can be a long process and it can always be a bit out of date.
 Please check the [wiki](https://github.com/infrastructor/infrastructor/wiki) for the currently available tutorials and references.
-You may also find these slides interesting: [Bring your infrastructure under control with Infrastructor](https://www.slideshare.net/nirro/bring-you-infrastructure-under-control-at-gr8conf-europe-2018)
+You may also find these slides interesting:
+
+[![Infrastructor](https://svgshare.com/i/E73.svg)](https://drive.google.com/file/d/16UNLtlF9LhEtXA77cZ0zeiVK5ttMiiQP/view)
 
 ### Examples
 A catalog of examples grows [here](https://github.com/infrastructor/examples) 
