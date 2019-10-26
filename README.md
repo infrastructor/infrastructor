@@ -13,7 +13,7 @@ Infrastructor is a server provisioning and configuration management tool written
 It is also designed to be easy to learn and provides rich programming functionality and extensibility. Thank you for your interest in Infrastructor! 
 
 ### Installation
-At first make sure Java 1.8 is present or your machine. Then Infrastructor can be installed using [SDKMAN](https://sdkman.io):
+At first make sure Java 1.8 is present on your machine. Then Infrastructor can be installed using [SDKMAN](https://sdkman.io):
 ```
 sdk install infrastructor
 ```
