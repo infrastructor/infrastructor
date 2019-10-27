@@ -5,11 +5,12 @@ dependencies {
     compile 'com.jcraft:jsch:0.1.55'
     compile 'javax.validation:validation-api:2.0.1.Final'
     compile 'org.apache.bval:bval-jsr:1.1.2'
-    compile 'org.codehaus.groovy:groovy-all:2.5.7'
+    compile 'org.codehaus.groovy:groovy-all:3.0.0-beta-3'
     compile 'org.fusesource.jansi:jansi-project:1.18'
     compile 'org.apache.ivy:ivy:2.4.0'
     compile 'org.apache.httpcomponents:httpclient:4.5.8'
     compile 'org.apache.ant:ant:1.10.5'
+    compile 'javax.xml.bind:jaxb-api:2.3.1'
 }
 
 processResources {
@@ -21,5 +22,5 @@ processResources {
 }
 
 test {
-    maxParallelForks = 16
+    maxParallelForks = 6
 }
