@@ -23,6 +23,7 @@ As an alternative you can download and unpack a ZIP file from the [releases page
 Building comprehensive documentation can be a long process and it can always be a bit out of date.
 Please check the [wiki](https://github.com/infrastructor/infrastructor/wiki) for the currently available tutorials and references.
 You may also find these slides interesting: 
+
 [![Infrastructor](https://svgshare.com/i/E73.svg)](https://drive.google.com/file/d/16UNLtlF9LhEtXA77cZ0zeiVK5ttMiiQP/view)
 
 ### Examples
