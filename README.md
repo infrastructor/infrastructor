@@ -13,7 +13,7 @@ Infrastructor is a server provisioning and configuration management tool written
 It is also designed to be easy to learn and provides rich programming functionality and extensibility. Thank you for your interest in Infrastructor! 
 
 ### Installation
-At first make sure Java 1.8 is present or your machine. Then Infrastructor can be installed using [SDKMAN](https://sdkman.io):
+At first make sure Java 1.8 is present on your machine. Then Infrastructor can be installed using [SDKMAN](https://sdkman.io):
 ```
 sdk install infrastructor
 ```
@@ -22,7 +22,9 @@ As an alternative you can download and unpack a ZIP file from the [releases page
 ### Documentation
 Building comprehensive documentation can be a long process and it can always be a bit out of date.
 Please check the [wiki](https://github.com/infrastructor/infrastructor/wiki) for the currently available tutorials and references.
-You may also find these slides interesting: [Bring your infrastructure under control with Infrastructor](https://www.slideshare.net/nirro/bring-you-infrastructure-under-control-at-gr8conf-europe-2018)
+You may also find these slides interesting: 
+
+[![Infrastructor](https://svgshare.com/i/E73.svg)](https://drive.google.com/file/d/16UNLtlF9LhEtXA77cZ0zeiVK5ttMiiQP/view)
 
 ### Examples
 A catalog of examples grows [here](https://github.com/infrastructor/examples) 
