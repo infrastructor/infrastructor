@@ -24,7 +24,7 @@ Building comprehensive documentation can be a long process and it can always be 
 Please check the [wiki](https://github.com/infrastructor/infrastructor/wiki) for the currently available tutorials and references.
 You may also find these slides interesting: 
 
-[![Infrastructor](https://svgshare.com/i/E73.svg)](https://drive.google.com/file/d/16UNLtlF9LhEtXA77cZ0zeiVK5ttMiiQP/view)
+[![Infrastructor](https://svgshare.com/i/FvC.svg)](https://drive.google.com/file/d/16UNLtlF9LhEtXA77cZ0zeiVK5ttMiiQP/view)
 
 ### Examples
 A catalog of examples grows [here](https://github.com/infrastructor/examples) 
