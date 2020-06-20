@@ -6,7 +6,6 @@ import io.infrastructor.core.provisioning.actions.NodeContext
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
 import static io.infrastructor.core.logging.status.LightweightTaskProgressLogger.withLightweightTaskProgressLogger
-import static io.infrastructor.core.provisioning.ProvisioningContext.provision
 import static io.infrastructor.core.utils.ParallelUtils.executeParallel
 
 class Task {

@@ -10,10 +10,9 @@ abstract class InventoryAwareTestBase {
 
     def static DEVOPS = 'devops'
     def static SUDOPS = 'sudops'
-    def static ROOT   = 'root'
 
     def static UBUNTU_IMAGE = 'infrastructor/ubuntu-sshd:0.0.3'
-    def static CENTOS_IMAGE = 'infrastructor/centos-sshd:0.0.3'
+    def static CENTOS_IMAGE = 'infrastructor/centos-sshd:0.0.4'
 
     @Parameterized.Parameter
     public Closure withUser = { user, closure -> }

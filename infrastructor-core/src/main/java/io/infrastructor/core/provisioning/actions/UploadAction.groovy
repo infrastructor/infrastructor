@@ -1,8 +1,8 @@
 package io.infrastructor.core.provisioning.actions
 
-import static io.infrastructor.core.utils.CryptoUtils.decryptFull
-
 import javax.validation.constraints.NotNull
+
+import static io.infrastructor.core.utils.CryptoUtils.decryptFull
 
 class UploadAction {
     

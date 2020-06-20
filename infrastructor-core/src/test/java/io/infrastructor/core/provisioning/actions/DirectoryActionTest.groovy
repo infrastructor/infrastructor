@@ -4,8 +4,6 @@ import io.infrastructor.core.inventory.InventoryAwareTestBase
 import io.infrastructor.core.provisioning.TaskExecutionException
 import org.junit.Test
 
-import static io.infrastructor.core.inventory.InlineDockerInventory.inlineDockerInventory
-
 class DirectoryActionTest extends InventoryAwareTestBase {
 
     @Test

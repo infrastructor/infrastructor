@@ -5,9 +5,7 @@ import io.infrastructor.core.inventory.Node
 
 import javax.validation.constraints.NotNull
 
-import static io.infrastructor.core.logging.ConsoleLogger.cyan
 import static io.infrastructor.core.logging.ConsoleLogger.debug
-import static io.infrastructor.core.logging.ConsoleLogger.info
 import static io.infrastructor.core.utils.FlatUUID.flatUUID
 import static io.infrastructor.core.utils.NodeUtils.randomPort
 

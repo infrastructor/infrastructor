@@ -1,9 +1,9 @@
 package io.infrastructor.core
 
+import static io.infrastructor.core.logging.ConsoleLogger.INFO
 import static java.lang.Integer.parseInt
 import static java.lang.String.valueOf
 import static java.lang.System.getProperty
-import static io.infrastructor.core.logging.ConsoleLogger.INFO
 
 class ApplicationProperties {
     
