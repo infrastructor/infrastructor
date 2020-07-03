@@ -2,7 +2,6 @@ package io.infrastructor.core.inventory
 
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
-import com.jcraft.jsch.KeyPair
 import com.jcraft.jsch.Logger
 import com.jcraft.jsch.Session
 import groovy.transform.ToString

@@ -1,6 +1,7 @@
 package io.infrastructor.core.utils
 
 import org.junit.Test
+
 import static io.infrastructor.core.utils.CryptoUtils.*
 
 class CryptoUtilsTest {
