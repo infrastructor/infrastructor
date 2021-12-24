@@ -7,8 +7,6 @@ buildscript {
     }
 }
 
-apply plugin: 'base'
-
 allprojects {
     group = 'io.infrastructor'
     version '0.3.2-SNAPSHOT'
@@ -46,11 +44,21 @@ subprojects {
         systemProperty "ENABLE_DYNAMIC_LOGS", "false"
         testLogging.showStandardStreams = true
     }
-    
+
     dependencies {
-        testCompile "junit:junit:4.12"
+        implementation 'ch.qos.logback:logback-classic:1.2.9'
+        implementation 'com.jcraft:jsch:0.1.55'
+        implementation 'javax.validation:validation-api:2.0.1.Final'
+        implementation 'org.apache.bval:bval-jsr:1.1.2'
+        implementation 'org.codehaus.groovy:groovy-all:3.0.9'
+        implementation 'org.apache.ivy:ivy:2.5.0'
+        implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+        implementation 'javax.xml.bind:jaxb-api:2.3.1'
+        implementation 'org.apache.ant:ant:1.10.11'
+        implementation 'org.fusesource.jansi:jansi:2.4.0'
+        testImplementation "junit:junit:4.12"
     }
-    
+
     if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayPass')) {
         groovydoc {
             source = sourceSets.main.allSource

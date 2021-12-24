@@ -1,7 +1,5 @@
 package io.infrastructor.core.logging.status
 
-import org.fusesource.jansi.AnsiString
-
 import java.util.concurrent.atomic.AtomicInteger
 
 import static io.infrastructor.core.logging.ConsoleLogger.*
@@ -39,18 +37,25 @@ class LightweightTaskProgressLogger {
         taskStatus << "[TASK] '$name'"
 
         def nodesStatus = new StringBuilder()
-        nodesStatus << "[NODES] "
-        nodesStatus << "${bold(yellow('WAITING: ' + waiting))} "
-        nodesStatus << "${bold(blue('RUNNING: ' + running))} "
-        nodesStatus << "${bold(red('FAILED: ' + failed))} "
-        nodesStatus << "${bold(green('DONE: ' + done))}"
 
-        def plain = new AnsiString(nodesStatus.toString())
+        def wating_count  = 'WAITING: ' + waiting
+        def running_count = 'RUNNING: ' + running
+        def failed_count  = 'FAILED: ' + failed
+        def done_count    = 'DONE: ' + done
+
+        nodesStatus << "[NODES] "
+        nodesStatus << "${bold(yellow(wating_count))} "
+        nodesStatus << "${bold(blue(running_count))} "
+        nodesStatus << "${bold(red(failed_count))} "
+        nodesStatus << "${bold(green(done_count))}"
+
+        def plain = nodesStatus.toString()
+        def plainLegnth = wating_count.length() + 1 + running_count.length() + 1 + failed_count.length() + 1 + done_count.length()
 
         def status = new StringBuilder()
         status << taskStatus << "\n"
         status << nodesStatus << "\n"
-        status << progressLine('<', '=', '-', '>', plain.length() - 10, waiting + running + failed + done, failed + done)
+        status << progressLine('', '=', '-', '', plainLegnth, waiting + running + failed + done, failed + done)
         status << "\n"
         return status
     }

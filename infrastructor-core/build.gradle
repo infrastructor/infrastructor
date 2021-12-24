@@ -1,18 +1,5 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-dependencies {
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-    compile 'com.jcraft:jsch:0.1.55'
-    compile 'javax.validation:validation-api:2.0.1.Final'
-    compile 'org.apache.bval:bval-jsr:1.1.2'
-    compile 'org.codehaus.groovy:groovy-all:3.0.1'
-    compile 'org.fusesource.jansi:jansi-project:1.18'
-    compile 'org.apache.ivy:ivy:2.5.0'
-    compile 'org.apache.httpcomponents:httpclient:4.5.12'
-    compile 'org.apache.ant:ant:1.10.8'
-    compile 'javax.xml.bind:jaxb-api:2.3.1'
-}
-
 processResources {
     filter ReplaceTokens, tokens: [
             "application.version": version,
