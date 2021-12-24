@@ -56,7 +56,7 @@ subprojects {
         implementation 'javax.xml.bind:jaxb-api:2.3.1'
         implementation 'org.apache.ant:ant:1.10.11'
         implementation 'org.fusesource.jansi:jansi:2.4.0'
-        testImplementation "junit:junit:4.12"
+        testImplementation "junit:junit:4.13.2"
     }
 
     if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayPass')) {
