@@ -1,6 +1,7 @@
 package io.infrastructor.core.inventory
 
 import com.jcraft.jsch.JSchException
+import io.infrastructor.core.utils.RetryUtils
 import org.junit.Test
 
 import static io.infrastructor.core.inventory.InlineDockerInventory.inlineDockerInventory
@@ -27,7 +28,13 @@ class SshClientTest {
             def node = inventory['docker_test_node']
 
             def client = sshClient(host: node.host, port: node.port, username: node.username, password: DEVOPS)
-            assert client.connect()
+            sleep 2000
+
+            def result = false
+            RetryUtils.retry(5, 500, {
+                result = client.connect()
+            })
+            assert result
         }
         finally {
             dockerNodes.shutdown()
@@ -46,7 +53,11 @@ class SshClientTest {
             def node = inventory['docker_test_node']
 
             def client = sshClient(host: node.host, port: node.port, username: node.username, keyfile: KEYPATH)
-            assert client.connect()
+            def result = false
+            RetryUtils.retry(5, 500, {
+                result = client.connect()
+            })
+            assert result
         }
         finally {
             dockerNodes.shutdown()
@@ -65,15 +76,11 @@ class SshClientTest {
             def node = inventory['docker_test_node']
 
             def client = sshClient(host: node.host, port: node.port, username: node.username, keypass: node.keypass, keyfile: node.keyfile)
-            assert client.connect()
-
-            def result = ""
-            inventory.provision {
-                task actions: {
-                    result = shell "whoami"
-                }
-            }
-            assert result.output.contains(DEVOPS)
+            def result = false
+            RetryUtils.retry(5, 500, {
+                result = client.connect()
+            })
+            assert result
         }
         finally {
             dockerNodes.shutdown()
