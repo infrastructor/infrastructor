@@ -1,8 +1,6 @@
 name: Release
 on:
   push:
-    branches:
-      - 'main'
     tags:
       - '*'
 jobs:
@@ -17,12 +15,10 @@ jobs:
       - uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
         with:
           arguments: clean build
-      - uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          files: infrastructor-cli/build/distributions/*.zip
-          draft: true
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ github.event.release.tag_name }}"
           prerelease: true
+          draft: true
+          files: infrastructor-cli/build/distributions/*.zip
