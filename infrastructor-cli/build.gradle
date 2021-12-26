@@ -1,7 +1,18 @@
-apply plugin: 'application'
-    
-applicationName = 'infrastructor'
-mainClassName = "io.infrastructor.cli.Starter"
+plugins {
+    id 'application'
+}
+
+application {
+    applicationName = 'infrastructor'
+    mainClass = 'io.infrastructor.cli.Starter'
+
+    startScripts {
+		doLast {
+			unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-Dapp.home=\$APP_HOME"') 
+			windowsScript.text = windowsScript.text.replace('set DEFAULT_JVM_OPTS=', 'set DEFAULT_JVM_OPTS="-Dapp.home=%APP_HOME%"')
+		}
+	}
+}    
 
 dependencies {
     implementation project(':infrastructor-core')

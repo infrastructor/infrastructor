@@ -6,7 +6,7 @@ import static io.infrastructor.core.utils.ConfigUtils.normalize
 
 class ApplicationSettings {
 
-    static final String APPLICATION_SETTINGS_PATH = normalize("${System.env['_']}/../../conf/settings.groovy")
+    static final String APPLICATION_SETTINGS_PATH = normalize("${System.getProperty('app.home')}/conf/settings.groovy")
     static final File   APPLICATION_SETTINGS_FILE = new File(APPLICATION_SETTINGS_PATH)
 
     static final String SYSTEM_SETTINGS_PATH = normalize("${System.getProperty('user.home')}/.infrastructor/settings.groovy")
