@@ -9,7 +9,7 @@ buildscript {
 
 allprojects {
     group = 'io.infrastructor'
-    version '0.3.2-SNAPSHOT'
+    version new File("version.txt").text.normalize()
 
     repositories {
         mavenLocal()

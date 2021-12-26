@@ -1,13 +1,26 @@
-name: Release
+name: create a new tag when version.txt has changed
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - 'main'
+    paths:
+      - 'version.txt'
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout current branch
+        uses: actions/checkout@v2
+      - name: read version.txt
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: version.txt
+      - name: create a new tag
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.version.outputs.content }}
       - uses: actions/setup-java@v2
         with:
           java-version: '11'
@@ -18,7 +31,7 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ github.event.release.tag_name }}"
+          automatic_release_tag: ${{ steps.version.outputs.content }}
           prerelease: true
           draft: true
           files: infrastructor-cli/build/distributions/*.zip
