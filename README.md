@@ -1,4 +1,4 @@
-# ![Infrastructor](/files/infrastructor-logo-light.png) ![example workflow](https://github.com/infrastructor/infrastructor/actions/workflows/gradle.yml/badge.svg)
+# ![Infrastructor](/files/infrastructor-logo-light.png) [![Java CI with Gradle](https://github.com/infrastructor/infrastructor/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/infrastructor/infrastructor/actions/workflows/build.yml)
 
 ### Overview
 Infrastructor is a server provisioning and configuration management tool written in Groovy programming language. It implements Infrastructure as Code paradigm. Here are key features of Infrasructor:
