@@ -1,8 +1,8 @@
 name: Java CI with Gradle
 on:
   push:
-    branches:
-      - '*'
+    branches-ignore::
+      - 'main'
 jobs:
   build:
     runs-on: ubuntu-latest
