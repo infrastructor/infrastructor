@@ -21,7 +21,7 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.version.outputs.content }}
-            - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
