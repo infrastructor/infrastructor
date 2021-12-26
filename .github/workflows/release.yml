@@ -1,4 +1,4 @@
-name: create a new tag when version.txt has changed
+name: release new version
 on:
   push:
     branches:
