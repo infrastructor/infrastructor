@@ -1,0 +1,23 @@
+name: create a new tag when version.txt has changed
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'version.txt'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout current branch
+        uses: actions/checkout@v2
+      - name: read version.txt
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: version.txt
+      - name: create a new tag
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.version.outputs.content }}
